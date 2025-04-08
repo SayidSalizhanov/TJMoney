@@ -5,5 +5,9 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record ReminderSettingsRequest (String title, LocalDateTime sendAt, String message) {
+public record ReminderSettingsRequest (
+        String title,
+        LocalDateTime sendAt,
+        String message
+) {
 }

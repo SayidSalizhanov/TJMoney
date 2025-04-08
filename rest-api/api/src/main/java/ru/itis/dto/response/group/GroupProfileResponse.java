@@ -7,5 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 @Builder
-public record GroupProfileResponse (List<Map<String, Integer>> transactionsGenerals, String userRole, Long id, String name, LocalDateTime createdAt, String description) {
+public record GroupProfileResponse (
+        List<Map<String, Integer>> transactionsGenerals,
+        String userRole,
+        Long id,
+        String name,
+        LocalDateTime createdAt,
+        String description
+) {
 }

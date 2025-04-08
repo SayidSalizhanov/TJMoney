@@ -5,5 +5,9 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record GroupMemberResponse (String username, LocalDateTime joinedAt, String role) {
+public record GroupMemberResponse (
+        String username,
+        LocalDateTime joinedAt,
+        String role
+) {
 }

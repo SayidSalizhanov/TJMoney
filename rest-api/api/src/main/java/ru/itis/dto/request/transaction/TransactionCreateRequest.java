@@ -5,5 +5,11 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record TransactionCreateRequest (Integer amount, String type, String category, LocalDateTime dateTime, String description) {
+public record TransactionCreateRequest (
+        Integer amount,
+        String type,
+        String category,
+        LocalDateTime dateTime,
+        String description
+) {
 }
