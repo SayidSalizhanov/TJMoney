@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: sayid
+      preConditions:
+        - not:
+            tableExists:
+              tableName: group_members
+      changes:
+        - createTable:
+            tableName: group_members
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_group_members_user
+                    references: Users(id)
+                    onDelete: CASCADE
+              - column:
+                  name: group_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_group_members_group
+                    references: Groups(id)
+                    onDelete: CASCADE
+              - column:
+                  name: joined_at
+                  type: timestamp
+              - column:
+                  name: role
+                  type: varchar

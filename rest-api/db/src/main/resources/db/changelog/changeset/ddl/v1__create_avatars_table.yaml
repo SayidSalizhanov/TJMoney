@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10
+      author: sayid
+      preConditions:
+        - not:
+            tableExists:
+              tableName: avatars
+      changes:
+        - createTable:
+            tableName: avatars
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_avatars_user
+                    references: Users(id)
+                    onDelete: CASCADE
+              - column:
+                  name: url
+                  type: varchar

@@ -1,0 +1,32 @@
+package ru.itis.impl.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "applications")
+public class Application {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "group_id")
+    private Long groupId;
+
+    @Column(name = "send_at")
+    private LocalDateTime sendAt;
+
+    @Column(name = "status")
+    private String status;
+}

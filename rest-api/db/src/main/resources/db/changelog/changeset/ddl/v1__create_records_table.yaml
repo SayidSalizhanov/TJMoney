@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6
+      author: sayid
+      preConditions:
+        - not:
+            tableExists:
+              tableName: records
+      changes:
+        - createTable:
+            tableName: records
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_records_user
+                    references: Users(id)
+                    onDelete: CASCADE
+              - column:
+                  name: group_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_records_group
+                    references: Groups(id)
+                    onDelete: CASCADE
+              - column:
+                  name: title
+                  type: varchar
+              - column:
+                  name: content
+                  type: varchar
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: updated_at
+                  type: timestamp

@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 9
+      author: sayid
+      preConditions:
+        - not:
+            tableExists:
+              tableName: articles
+      changes:
+        - createTable:
+            tableName: articles
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: varchar
+              - column:
+                  name: content
+                  type: varchar
+              - column:
+                  name: author
+                  type: varchar
+              - column:
+                  name: published_at
+                  type: timestamp
