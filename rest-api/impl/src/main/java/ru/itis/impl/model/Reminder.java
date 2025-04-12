@@ -18,12 +18,6 @@ public class Reminder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
-
-    @Column(name = "group_id")
-    private Long groupId;
-
     @Column
     private String title;
 
@@ -35,4 +29,14 @@ public class Reminder {
 
     @Column
     private String status;
+
+    //----------
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_id")
+    private Group group;
 }

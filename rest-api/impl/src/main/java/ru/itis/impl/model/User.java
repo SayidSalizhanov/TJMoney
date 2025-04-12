@@ -2,14 +2,19 @@ package ru.itis.impl.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
+@Builder
 public class User {
 
     @Id
@@ -33,4 +38,27 @@ public class User {
 
     @Column(name = "sending_to_email")
     private Boolean sendingToEmail;
+
+    //----------
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<GroupMember> groupMembers;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Avatar avatar;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Application> applications = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Goal> goals = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Record> records = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Reminder> reminders;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Transaction> transactions;
 }
