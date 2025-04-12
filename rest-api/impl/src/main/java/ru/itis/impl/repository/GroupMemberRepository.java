@@ -2,8 +2,23 @@ package ru.itis.impl.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ru.itis.impl.model.Group;
 import ru.itis.impl.model.GroupMember;
+import ru.itis.impl.model.User;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> {
+
+    void deleteByGroupAndUser(Group group, User user);
+
+    Optional<GroupMember> findByGroupAndUser(Group group, User user);
+
+    List<GroupMember> findByGroup(Group group);
+
+    List<GroupMember> findByUser(User user);
+
+    List<GroupMember> findByUserAndRole(User user, String role);
 }
