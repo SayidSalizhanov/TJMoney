@@ -12,15 +12,15 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: serial
+                  type: bigserial
                   constraints:
                     primaryKey: true
               - column:
                   name: user_id
-                  type: int
+                  type: bigint
                   constraints:
                     foreignKeyName: fk_avatars_user
-                    references: Users(id)
+                    references: users(id)
                     onDelete: CASCADE
               - column:
                   name: url
