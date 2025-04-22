@@ -6,6 +6,6 @@ import lombok.Builder;
 public record GoalListResponse (
         Long id,
         String title,
-        String progress
+        Integer progress
 ) {
 }

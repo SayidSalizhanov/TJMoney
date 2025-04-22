@@ -9,8 +9,8 @@ import ru.itis.dto.response.article.ArticleMainPageResponse;
 
 import java.util.List;
 
-@RequestMapping("/mainPage")
-public interface MainPageApi {
+@RequestMapping("/articles")
+public interface ArticleApi {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

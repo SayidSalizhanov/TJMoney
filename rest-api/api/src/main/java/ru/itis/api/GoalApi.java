@@ -35,17 +35,17 @@ public interface GoalApi {
     @ResponseStatus(HttpStatus.OK)
     List<GoalListResponse> getGoals(
             @RequestParam("userId") Long userId,
-            @RequestParam(value = "groupId", required = false, defaultValue = "null") Long groupId,
+            @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
             @RequestParam(value = "sort", required = false, defaultValue = "title") String sort
     );
 
-    @PostMapping("/new")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     Long createGoal(
             @RequestParam("userId") Long userId,
-            @RequestParam(value = "groupId", required = false, defaultValue = "null") Long groupId,
+            @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestBody GoalCreateRequest request
     );
 }
