@@ -1,7 +1,10 @@
-package ru.itis.impl.exception;
+package ru.itis.impl.exception.not_found;
 
-public class UserNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+import ru.itis.impl.exception.ServiceException;
+
+public class UserNotFoundException extends ServiceException {
     public UserNotFoundException(String message) {
-        super(message);
+        super(message, HttpStatus.NOT_FOUND);
     }
 }

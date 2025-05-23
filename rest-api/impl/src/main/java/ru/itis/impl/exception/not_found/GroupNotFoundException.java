@@ -1,7 +1,10 @@
-package ru.itis.impl.exception;
+package ru.itis.impl.exception.not_found;
 
-public class GroupNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+import ru.itis.impl.exception.ServiceException;
+
+public class GroupNotFoundException extends ServiceException {
     public GroupNotFoundException(String message) {
-        super(message, Htt);
+        super(message, HttpStatus.NOT_FOUND);
     }
 }

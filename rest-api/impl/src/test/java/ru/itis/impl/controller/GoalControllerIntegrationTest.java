@@ -14,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.dto.request.goal.GoalCreateRequest;
 import ru.itis.dto.request.goal.GoalSettingsRequest;
+import ru.itis.dto.response.exception.ExceptionMessage;
 import ru.itis.dto.response.goal.GoalListResponse;
 import ru.itis.dto.response.goal.GoalSettingsResponse;
 import ru.itis.impl.config.TestRestTemplateConfig;
@@ -71,6 +72,26 @@ public class GoalControllerIntegrationTest {
                 .toList();
 
         assertEquals(expectedResult, response.getBody());
+    }
+
+    @Test
+    void testGetGoals_invalidUserId_shouldThrowUserNotFoundException() {
+        //given
+        long userId = 2;
+
+        //when
+        ResponseEntity<ExceptionMessage> response = testRestTemplate.exchange(
+                "/goals?userId={userId}",
+                HttpMethod.GET,
+                null,
+                ExceptionMessage.class,
+                userId
+        );
+
+        //then
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -134,6 +155,26 @@ public class GoalControllerIntegrationTest {
                 goalRepository.findById(id).orElseThrow()
         );
         assertEquals(expectedResult, response.getBody());
+    }
+
+    @Test
+    void testGetGoalById_invalidId_shouldThrowGoalNotFoundException() {
+        //given
+        long id = 15;
+
+        //when
+        ResponseEntity<ExceptionMessage> response = testRestTemplate.exchange(
+                "/goals/{id}",
+                HttpMethod.GET,
+                null,
+                ExceptionMessage.class,
+                id
+        );
+
+        //then
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
