@@ -1,3 +1,40 @@
 databaseChangeLog:
-  - includeAll:
-      path: db/changelog/changeset/ddl
+  - include:
+      file: changeset/ddl/v1__create_users_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_groups_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_applications_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_articles_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_avatars_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_goals_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_group_members_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_records_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_reminders_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_transactions_table.sql
+      relativeToChangelogFile: true
