@@ -10,6 +10,7 @@ import ru.itis.dto.request.goal.GoalCreateRequest;
 import ru.itis.dto.request.goal.GoalSettingsRequest;
 import ru.itis.dto.response.goal.GoalListResponse;
 import ru.itis.dto.response.goal.GoalSettingsResponse;
+import ru.itis.impl.annotations.MayBeNull;
 import ru.itis.impl.exception.not_found.GoalNotFoundException;
 import ru.itis.impl.exception.not_found.GroupNotFoundException;
 import ru.itis.impl.exception.not_found.UserNotFoundException;
@@ -23,6 +24,7 @@ import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.GoalService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,18 +36,19 @@ public class GoalServiceImpl implements GoalService {
     private final GoalMapper goalMapper;
 
     @Override
-    public List<GoalListResponse> getByUserOrGroup(Long userId, Long groupId, Integer page, Integer amountPerPage, String sort) {
+    @Transactional(readOnly = true)
+    public List<GoalListResponse> getByUserOrGroup(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage, String sort) {
         Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by(sort));
 
         if (groupId == null) {
-            User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
+            User user = requireUserById(userId);
 
             return goalRepository.findByUser(user, pageable).stream()
                     .map(goalMapper::toGoalListResponse)
                     .toList();
         }
 
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
+        Group group = requireGroupById(groupId);
 
         return goalRepository.findByGroup(group, pageable).stream()
                 .map(goalMapper::toGoalListResponse)
@@ -53,16 +56,17 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GoalSettingsResponse getGoal(Long goalId) {
-        Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new GoalNotFoundException("Цель с таким id не найдена"));
-
+        Goal goal = requireById(goalId);
         return goalMapper.toGoalSettingsResponse(goal);
     }
 
     @Override
-    public Long save(Long userId, Long groupId, GoalCreateRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
-        Group group = groupId == null ? null : groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
+    @Transactional
+    public Long save(Long userId, @MayBeNull Long groupId, GoalCreateRequest request) {
+        User user = requireUserById(userId);
+        Group group = groupId == null ? null : requireGroupById(groupId);
 
         Goal goal = Goal.builder()
                 .title(request.title())
@@ -84,11 +88,24 @@ public class GoalServiceImpl implements GoalService {
     @Override
     @Transactional
     public void update(GoalSettingsRequest request, Long goalId) {
-        goalRepository.update(
-                request.title(),
-                request.description(),
-                request.progress(),
-                goalId
-        );
+        Goal goal = requireById(goalId);
+        goal.setTitle(request.title());
+        goal.setDescription(request.description());
+        goal.setProgress(request.progress());
+        goalRepository.save(goal);
+    }
+
+    private Goal requireById(Long goalId) {
+        Optional<Goal> optionalGoal = goalRepository.findById(goalId);
+        if (optionalGoal.isEmpty()) throw new GoalNotFoundException("Цель с таким id не найдена");
+        return optionalGoal.get();
+    }
+
+    private User requireUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
+    }
+
+    private Group requireGroupById(Long groupId) {
+        return groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
     }
 }

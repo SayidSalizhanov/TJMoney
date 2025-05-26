@@ -18,17 +18,17 @@ public class GoalController implements GoalApi {
     private final GoalService goalService;
 
     @Override
-    public GoalSettingsResponse getGoal(Long id) {
+    public GoalSettingsResponse getGoal(Long id, Long userId) {
         return goalService.getGoal(id);
     }
 
     @Override
-    public void updateGoalInfo(Long id, GoalSettingsRequest request) {
+    public void updateGoalInfo(Long id, Long userId, GoalSettingsRequest request) {
         goalService.update(request, id);
     }
 
     @Override
-    public void deleteGoal(Long id) {
+    public void deleteGoal(Long id, Long userId) {
         goalService.delete(id);
     }
 
