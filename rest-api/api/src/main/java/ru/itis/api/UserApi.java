@@ -18,25 +18,29 @@ public interface UserApi {
     @GetMapping("/{id}/settings")
     @ResponseStatus(HttpStatus.OK)
     UserSettingsResponse getUserSettingsInfo(
-            @PathVariable("id") Long id
+            @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId // todo get from authentication
     );
 
     @PutMapping("/{id}/settings")
     @ResponseStatus(HttpStatus.OK)
     void updateUserSettingsInfo(
             @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestBody UserSettingsRequest request
     );
 
     @DeleteMapping("/{id}/settings")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteUser(
-            @PathVariable("id") Long id
+            @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId // todo get from authentication
     );
 
     @GetMapping("/{id}/groups")
     List<UserGroupResponse> getUserGroups(
             @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
             @RequestParam(value = "sort", required = false, defaultValue = "groupName") String sort
@@ -46,6 +50,7 @@ public interface UserApi {
     @ResponseStatus(HttpStatus.OK)
     List<ApplicationToGroupResponse> getUserApplicationsToGroup(
             @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
             @RequestParam(value = "sort", required = false, defaultValue = "groupName") String sort
@@ -55,6 +60,7 @@ public interface UserApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteUserApplicationToGroup(
             @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestBody Long applicationId
     );
 
@@ -62,38 +68,44 @@ public interface UserApi {
     @ResponseStatus(HttpStatus.OK)
     void changeUserPassword(
             @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestBody UserPasswordChangeRequest request
     );
 
     @GetMapping("/{id}/changeAvatar")
     @ResponseStatus(HttpStatus.OK)
     String getUserAvatarUrl(
-            @PathVariable("id") Long id
+            @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId // todo get from authentication
     );
 
     @PatchMapping("/{id}/changeAvatar")
     @ResponseStatus(HttpStatus.OK)
     void changeUserAvatarUrl(
             @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestBody Part avatarImage
     );
 
     @DeleteMapping("/{id}/changeAvatar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteUserAvatar(
-            @PathVariable("id") Long id
+            @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId // todo get from authentication
     );
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     UserProfileResponse getUserProfileInfo(
             @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "period", required = false, defaultValue = "allTime") String period
     );
 
     @GetMapping("/{id}/logout")
     @ResponseStatus(HttpStatus.OK)
     void logout(
-            @PathVariable("id") Long id
+            @PathVariable("id") Long id,
+            @RequestParam("userId") Long userId // todo get from authentication
     );
 }
