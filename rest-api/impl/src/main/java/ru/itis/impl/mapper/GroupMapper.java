@@ -1,0 +1,52 @@
+package ru.itis.impl.mapper;
+
+import org.springframework.stereotype.Component;
+import ru.itis.dto.response.group.GroupListResponse;
+import ru.itis.dto.response.group.GroupProfileResponse;
+import ru.itis.dto.response.group.GroupSettingsResponse;
+import ru.itis.dto.response.group.GroupViewingResponse;
+import ru.itis.impl.model.Group;
+
+import java.util.List;
+import java.util.Map;
+
+@Component
+public class GroupMapper {
+
+    public GroupListResponse toGroupListResponse(Group group) {
+        return GroupListResponse.builder()
+                .id(group.getId())
+                .name(group.getName())
+                .build();
+    }
+
+    public GroupProfileResponse toGroupProfileResponse(List<Map<String, Integer>> transactionsGeneral, String userRole, Group group) {
+        return GroupProfileResponse.builder()
+                .transactionsGenerals(transactionsGeneral)
+                .userRole(userRole)
+                .id(group.getId())
+                .name(group.getName())
+                .createdAt(group.getCreatedAt())
+                .description(group.getDescription())
+                .build();
+    }
+
+    public GroupSettingsResponse toGroupSettingsResponse(Group group) {
+        return GroupSettingsResponse.builder()
+                .id(group.getId())
+                .name(group.getName())
+                .description(group.getDescription())
+                .build();
+    }
+
+    public GroupViewingResponse toGroupViewingResponse(Group group, Integer membersCount, String adminName) {
+        return GroupViewingResponse.builder()
+                .id(group.getId())
+                .name(group.getName())
+                .createdAt(group.getCreatedAt())
+                .description(group.getDescription())
+                .membersCount(membersCount)
+                .adminName(adminName)
+                .build();
+    }
+}

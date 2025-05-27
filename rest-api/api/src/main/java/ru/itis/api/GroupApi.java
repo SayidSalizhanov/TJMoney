@@ -90,10 +90,10 @@ public interface GroupApi {
 
     @DeleteMapping("/{id}/members")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteMember(
+    void deleteMemberFromAdminSide(
             @PathVariable("id") Long id,
             @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestBody String usernameForDelete
+            @RequestParam("userIdForDelete") Long userIdForDelete
     );
 
     @GetMapping("/{id}/applications")

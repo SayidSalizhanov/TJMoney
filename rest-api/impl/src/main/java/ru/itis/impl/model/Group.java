@@ -2,6 +2,7 @@ package ru.itis.impl.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "groups")
+@Builder
 public class Group {
 
     @Id

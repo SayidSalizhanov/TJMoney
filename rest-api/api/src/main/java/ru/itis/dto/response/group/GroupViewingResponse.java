@@ -11,6 +11,6 @@ public record GroupViewingResponse (
         LocalDateTime createdAt,
         String description,
         Integer membersCount,
-        String admin
+        String adminName
 ) {
 }

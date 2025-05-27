@@ -11,14 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> {
-
     void deleteByGroupAndUser(Group group, User user);
-
     Optional<GroupMember> findByGroupAndUser(Group group, User user);
-
-    List<GroupMember> findByGroup(Group group);
-
+    List<GroupMember> findAllByGroup(Group group);
     List<GroupMember> findByUser(User user);
-
     List<GroupMember> findByUserAndRole(User user, String role);
 }

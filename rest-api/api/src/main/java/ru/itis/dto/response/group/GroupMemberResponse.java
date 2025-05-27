@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record GroupMemberResponse (
+        Long userId,
         String username,
         LocalDateTime joinedAt,
         String role

@@ -7,12 +7,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.itis.impl.model.Group;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
     Optional<Group> findByName(String name);
+
+    List<Group> findByIdNotIn(List<Long> excludedIds);
 
     @Modifying
     @Query("UPDATE Group g SET g.name = :name, g.description = :description WHERE g.id = :id")
