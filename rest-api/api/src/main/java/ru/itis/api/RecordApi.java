@@ -38,7 +38,7 @@ public interface RecordApi {
     @ResponseStatus(HttpStatus.OK)
     List<RecordListResponse> getRecords(
             @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestParam(value = "groupId", required = false, defaultValue = "null") Long groupId,
+            @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
             @RequestParam(value = "sort", required = false, defaultValue = "title") String sort
@@ -48,7 +48,7 @@ public interface RecordApi {
     @ResponseStatus(HttpStatus.CREATED)
     Long createRecord(
             @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestParam(value = "groupId", required = false, defaultValue = "null") Long groupId,
+            @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestBody RecordCreateRequest request
     );
 }

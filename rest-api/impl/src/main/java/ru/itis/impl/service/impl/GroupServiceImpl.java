@@ -235,7 +235,8 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
     }
 
-    private void checkUserIsGroupMemberVoid(User user, Group group) {
+    @Override
+    public void checkUserIsGroupMemberVoid(User user, Group group) {
         Optional<GroupMember> optionalGroupMember = groupMemberRepository.findByGroupAndUser(group, user);
         if (optionalGroupMember.isEmpty()) throw new AccessDeniedException("Доступ к данным имеют только участники группы");
     }
@@ -246,7 +247,8 @@ public class GroupServiceImpl implements GroupService {
         return optionalGroupMember.get();
     }
 
-    private void checkUserIsGroupAdmin(User user, Group group) {
+    @Override
+    public void checkUserIsGroupAdmin(User user, Group group) {
         GroupMember groupMember = checkUserIsGroupMember(user, group);
         if (!groupMember.getRole().equalsIgnoreCase("ADMIN")) throw new AccessDeniedException("Чтобы иметь доступ к настройкам группы, нужно обладать правами админа группы");
     }
