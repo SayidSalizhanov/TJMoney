@@ -2,9 +2,9 @@ spring:
   application:
     name: impl
   datasource:
-    url: jdbc:postgresql://localhost:5432/tj-money
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5432/db
+    username:
+    password:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -21,6 +21,6 @@ aspect:
   enabled: false
 
 cloudinary:
-  api-key: 864998561278635
-  api-secret: Vr4fsd2vm2OrybMZKdsjPkDG52U
-  cloud-name: dfmh8zgee
+  api-key:
+  api-secret:
+  cloud-name:

@@ -16,6 +16,9 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.6.0'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0'
 
+    implementation 'com.cloudinary:cloudinary-core:2.2.0'
+    implementation 'com.opencsv:opencsv:5.11'
+
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'

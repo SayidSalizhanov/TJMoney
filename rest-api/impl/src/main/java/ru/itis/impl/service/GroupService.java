@@ -25,4 +25,5 @@ public interface GroupService {
     Long answerApplication(Long id, Long userId, ApplicationAnswerRequest request);
     void checkUserIsGroupAdmin(User user, Group group);
     void checkUserIsGroupMemberVoid(User user, Group group);
+    boolean checkUserIsGroupAdminBoolean(User user, Group group);
 }

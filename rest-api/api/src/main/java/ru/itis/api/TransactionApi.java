@@ -1,8 +1,8 @@
 package ru.itis.api;
 
-import jakarta.servlet.http.Part;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.itis.dto.request.transaction.TransactionCreateRequest;
 import ru.itis.dto.request.transaction.TransactionSettingsRequest;
 import ru.itis.dto.response.transaction.TransactionListResponse;
@@ -55,8 +55,9 @@ public interface TransactionApi {
 
     @PostMapping("/new/uploadTransactions")
     @ResponseStatus(HttpStatus.CREATED)
-    List<Long> uploadXlsTransactions(
+    List<Long> uploadCsvTransactions(
             @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestBody Part xlsFile
+            @RequestParam("groupId") Long groupId,
+            @RequestPart("file") MultipartFile csvFile
     );
 }

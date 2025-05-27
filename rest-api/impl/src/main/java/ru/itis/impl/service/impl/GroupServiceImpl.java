@@ -252,4 +252,10 @@ public class GroupServiceImpl implements GroupService {
         GroupMember groupMember = checkUserIsGroupMember(user, group);
         if (!groupMember.getRole().equalsIgnoreCase("ADMIN")) throw new AccessDeniedException("Чтобы иметь доступ к настройкам группы, нужно обладать правами админа группы");
     }
+
+    @Override
+    public boolean checkUserIsGroupAdminBoolean(User user, Group group) {
+        GroupMember groupMember = checkUserIsGroupMember(user, group);
+        return groupMember.getRole().equalsIgnoreCase("ADMIN");
+    }
 }
