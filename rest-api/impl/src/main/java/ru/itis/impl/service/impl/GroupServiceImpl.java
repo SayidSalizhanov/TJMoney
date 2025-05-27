@@ -71,7 +71,7 @@ public class GroupServiceImpl implements GroupService {
     @Transactional(readOnly = true)
     public List<GroupListResponse> getWhereUserNotJoined(Long userId) {
         User user = requireUserById(userId);
-        List<GroupMember> groupMembers = groupMemberRepository.findByUser(user);
+        List<GroupMember> groupMembers = groupMemberRepository.findAllByUser(user);
         List<Long> userGroups = groupMembers.stream()
                 .map(gm -> gm.getGroup().getId())
                 .toList();

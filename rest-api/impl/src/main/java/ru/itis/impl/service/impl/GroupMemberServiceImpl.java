@@ -26,8 +26,15 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GroupMember> getGroupMembers(Group group) {
         return groupMemberRepository.findAllByGroup(group);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GroupMember> getByUser(User user) {
+        return groupMemberRepository.findAllByUser(user);
     }
 
     @Override

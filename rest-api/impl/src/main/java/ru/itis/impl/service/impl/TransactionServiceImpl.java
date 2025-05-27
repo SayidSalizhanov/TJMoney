@@ -15,7 +15,6 @@ import ru.itis.impl.exception.not_found.TransactionNotFoundException;
 import ru.itis.impl.exception.not_found.UserNotFoundException;
 import ru.itis.impl.mapper.TransactionMapper;
 import ru.itis.impl.model.Group;
-import ru.itis.impl.model.Record;
 import ru.itis.impl.model.Transaction;
 import ru.itis.impl.model.User;
 import ru.itis.impl.repository.GroupRepository;
@@ -42,6 +41,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     public List<Map<String, Integer>> getGroupTransactionsGenerals(Long groupId, String period) {
         List<Transaction> transactions = getGroupTransactions(groupId, period);
+        return getTransactionsGeneralsMaps(transactions);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Map<String, Integer>> getUserTransactionsGenerals(Long userId, String period) {
+        List<Transaction> transactions = getUserTransactions(userId, period);
         return getTransactionsGeneralsMaps(transactions);
     }
 
@@ -90,7 +96,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         List<Transaction> transactions;
 
-        if (group == null) transactions = transactionRepository.findByUser(user);
+        if (group == null) transactions = transactionRepository.findAllByUser(user);
         else {
             groupService.checkUserIsGroupMemberVoid(user, group);
             transactions = transactionRepository.findAllByGroup(group);
@@ -170,6 +176,21 @@ public class TransactionServiceImpl implements TransactionService {
             case "month" -> transactionRepository.findByGroupWithPeriod(group, LocalDateTime.now().minusMonths(1));
             case "year" -> transactionRepository.findByGroupWithPeriod(group, LocalDateTime.now().minusYears(1));
             default -> transactionRepository.findAllByGroup(group);
+        };
+
+        return transactions;
+    }
+
+    @Transactional
+    protected List<Transaction> getUserTransactions(Long userId, String period) {
+        List<Transaction> transactions;
+        User user = requireUserById(userId);
+
+        transactions = switch (period) {
+            case "day" -> transactionRepository.findByUserWithPeriod(user, LocalDateTime.now().minusDays(1));
+            case "month" -> transactionRepository.findByUserWithPeriod(user, LocalDateTime.now().minusMonths(1));
+            case "year" -> transactionRepository.findByUserWithPeriod(user, LocalDateTime.now().minusYears(1));
+            default -> transactionRepository.findAllByUser(user);
         };
 
         return transactions;

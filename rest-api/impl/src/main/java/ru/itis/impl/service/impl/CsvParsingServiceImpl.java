@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.itis.impl.annotations.MayBeNull;
-import ru.itis.impl.exception.CsvParsingException;
+import ru.itis.impl.exception.FileProcessingException;
 import ru.itis.impl.exception.not_found.GroupNotFoundException;
 import ru.itis.impl.exception.not_found.UserNotFoundException;
 import ru.itis.impl.model.Group;
@@ -51,11 +51,11 @@ public class CsvParsingServiceImpl implements CsvParsingService {
         }
 
         if (file.isEmpty()) {
-            throw new CsvParsingException("Файл пуст", HttpStatus.BAD_REQUEST);
+            throw new FileProcessingException("Файл пуст", HttpStatus.BAD_REQUEST);
         }
 
         if (!file.getOriginalFilename().endsWith(".csv")) {
-            throw new CsvParsingException("Тип файла не поддерживается, используйте файлы типа .csv", HttpStatus.BAD_REQUEST);
+            throw new FileProcessingException("Тип файла не поддерживается, используйте файлы типа .csv", HttpStatus.BAD_REQUEST);
         }
 
         List<Transaction> transactions = new ArrayList<>();
@@ -87,7 +87,7 @@ public class CsvParsingServiceImpl implements CsvParsingService {
                 }
             }
         } catch (IOException | CsvValidationException e) {
-            throw new CsvParsingException("Не удалось прочитать содержимое файла", HttpStatus.BAD_REQUEST);
+            throw new FileProcessingException("Не удалось прочитать содержимое файла", HttpStatus.BAD_REQUEST);
         }
 
         return transactionRepository.saveAll(transactions).stream()

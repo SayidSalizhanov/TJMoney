@@ -45,10 +45,17 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    @Transactional
     public void updateStatus(Long applicationId, String status) {
         Application application = requireById(applicationId);
         application.setStatus(status);
         applicationRepository.save(application);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long applicationId) {
+        applicationRepository.deleteById(applicationId);
     }
 
     private Application requireById(Long id) {

@@ -15,4 +15,5 @@ public interface TransactionService {
     void delete(Long id, Long userId);
     List<TransactionListResponse> getAll(Long userId, Long groupId, Integer page, Integer amountPerPage, String sort);
     Long create(Long userId, Long groupId, TransactionCreateRequest request);
+    List<Map<String, Integer>> getUserTransactionsGenerals(Long userId, String period);
 }

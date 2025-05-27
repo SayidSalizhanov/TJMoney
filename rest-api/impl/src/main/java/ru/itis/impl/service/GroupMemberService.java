@@ -10,5 +10,6 @@ import java.util.List;
 public interface GroupMemberService {
     GroupMember getGroupMember(User user, Group group);
     List<GroupMember> getGroupMembers(Group group);
+    List<GroupMember> getByUser(User user);
     Long save(User user, Group group);
 }

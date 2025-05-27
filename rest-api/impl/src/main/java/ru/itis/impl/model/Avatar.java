@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "avatars")
+@Builder
 public class Avatar {
 
     @Id
@@ -18,7 +19,8 @@ public class Avatar {
     private Long id;
 
     @Column
-    private String url;
+    @Builder.Default
+    private String url = "/static/defaultAvatar.png";
 
     //----------
 

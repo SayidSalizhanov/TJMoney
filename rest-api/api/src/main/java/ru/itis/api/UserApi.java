@@ -3,6 +3,7 @@ package ru.itis.api;
 import jakarta.servlet.http.Part;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.itis.dto.request.user.UserPasswordChangeRequest;
 import ru.itis.dto.request.user.UserSettingsRequest;
 import ru.itis.dto.response.application.ApplicationToGroupResponse;
@@ -84,7 +85,7 @@ public interface UserApi {
     void changeUserAvatarUrl(
             @PathVariable("id") Long id,
             @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestBody Part avatarImage
+            @RequestBody MultipartFile avatarImage
     );
 
     @DeleteMapping("/{id}/changeAvatar")
@@ -100,12 +101,5 @@ public interface UserApi {
             @PathVariable("id") Long id,
             @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "period", required = false, defaultValue = "allTime") String period
-    );
-
-    @GetMapping("/{id}/logout")
-    @ResponseStatus(HttpStatus.OK)
-    void logout(
-            @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId // todo get from authentication
     );
 }
