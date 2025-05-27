@@ -45,7 +45,7 @@ public class RecordServiceImpl implements RecordService {
 
         checkAccessToRecordGranted(record, user);
 
-        return recordMapper.toRecordSettingsResponse(requireById(id));
+        return recordMapper.toRecordSettingsResponse(record);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<RecordListResponse> getAll(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage, String sort) {
         User user = requireUserById(userId);
         Group group = groupId == null ? null : requireGroupById(groupId);
@@ -93,6 +93,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
+    @Transactional
     public Long create(Long userId, @MayBeNull Long groupId, RecordCreateRequest request) {
         User user = requireUserById(userId);
         Group group = groupId == null ? null : requireGroupById(groupId);
