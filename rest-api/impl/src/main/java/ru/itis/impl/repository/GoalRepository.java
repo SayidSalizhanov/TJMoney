@@ -10,11 +10,11 @@ import ru.itis.impl.model.Goal;
 import ru.itis.impl.model.Group;
 import ru.itis.impl.model.User;
 
+import java.util.List;
+
 @Repository
 public interface GoalRepository extends JpaRepository<Goal, Long> {
-
     @Query("SELECT g FROM Goal g WHERE g.user = :user AND g.group IS NULL")
-    Page<Goal> findByUser(@Param("user") User user, Pageable pageable);
-
-    Page<Goal> findByGroup(Group group, Pageable pageable);
+    List<Goal> findByUser(@Param("user") User user);
+    List<Goal> findAllByGroup(Group group);
 }

@@ -14,5 +14,5 @@ import java.util.List;
 public interface RecordRepository extends JpaRepository<Record, Long> {
     @Query("SELECT r FROM Record r WHERE r.user = :user AND r.group IS NULL")
     List<Record> findByUser(@Param("user") User user);
-    List<Record> findByGroup(Group group);
+    List<Record> findAllByGroup(Group group);
 }

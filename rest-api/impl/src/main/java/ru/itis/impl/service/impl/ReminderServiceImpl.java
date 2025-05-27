@@ -85,7 +85,7 @@ public class ReminderServiceImpl implements ReminderService {
         if (group == null) reminders = reminderRepository.findByUser(user);
         else {
             groupService.checkUserIsGroupMemberVoid(user, group);
-            reminders = reminderRepository.findByGroup(group);
+            reminders = reminderRepository.findAllByGroup(group);
         }
 
         return reminders.stream()

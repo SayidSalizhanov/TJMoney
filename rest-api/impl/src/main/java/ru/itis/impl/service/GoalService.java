@@ -8,9 +8,9 @@ import ru.itis.dto.response.goal.GoalSettingsResponse;
 import java.util.List;
 
 public interface GoalService {
-    List<GoalListResponse> getByUserOrGroup(Long userId, Long groupId, Integer page, Integer amountPerPage, String sort);
-    GoalSettingsResponse getGoal(Long goalId);
-    Long save(Long userId, Long groupId, GoalCreateRequest request);
-    void delete(Long id);
-    void update(GoalSettingsRequest request, Long goalId);
+    List<GoalListResponse> getAll(Long userId, Long groupId, Integer page, Integer amountPerPage, String sort);
+    GoalSettingsResponse getById(Long goalId, Long userId);
+    Long create(Long userId, Long groupId, GoalCreateRequest request);
+    void delete(Long id, Long userId);
+    void updateInfo(Long goalId, Long userId, GoalSettingsRequest request);
 }

@@ -84,7 +84,7 @@ public class RecordServiceImpl implements RecordService {
         if (group == null) records = recordRepository.findByUser(user);
         else {
             groupService.checkUserIsGroupMemberVoid(user, group);
-            records = recordRepository.findByGroup(group);
+            records = recordRepository.findAllByGroup(group);
         }
 
         return records.stream()

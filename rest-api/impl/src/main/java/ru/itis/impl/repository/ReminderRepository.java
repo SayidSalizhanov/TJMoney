@@ -14,5 +14,5 @@ import java.util.List;
 public interface ReminderRepository extends JpaRepository<Reminder, Long> {
     @Query("SELECT r FROM Reminder r WHERE r.user = :user AND r.group IS NULL")
     List<Reminder> findByUser(@Param("user") User user);
-    List<Reminder> findByGroup(Group group);
+    List<Reminder> findAllByGroup(Group group);
 }
