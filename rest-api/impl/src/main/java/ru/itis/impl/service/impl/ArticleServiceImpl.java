@@ -20,8 +20,8 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleMapper articleMapper;
 
     @Override
-    public List<ArticleMainPageResponse> getAll(Integer page, Integer amountPerPage, String sort) {
-        Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by(sort));
+    public List<ArticleMainPageResponse> getAll(Integer page, Integer amountPerPage) {
+        Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by("title"));
 
         return articleRepository.findAll(pageable).getContent().stream()
                 .map(articleMapper::toArticleMainPageResponse)

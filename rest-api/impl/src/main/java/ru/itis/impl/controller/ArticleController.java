@@ -15,7 +15,7 @@ public class ArticleController implements ArticleApi {
     private final ArticleService articleService;
 
     @Override
-    public List<ArticleMainPageResponse> getArticles(Integer page, Integer amountPerPage, String sort) {
-        return articleService.getAll(page, amountPerPage, sort);
+    public List<ArticleMainPageResponse> getArticles(Integer page, Integer amountPerPage) {
+        return articleService.getAll(page, amountPerPage);
     }
 }
