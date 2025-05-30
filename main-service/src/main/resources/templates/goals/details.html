@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Цель</title>
+    <link rel="stylesheet" th:href="@{/css/goals/goals.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <div class="goal-details">
+        <h2>Детали цели</h2>
+        
+        <div class="info-block">
+            <p>Название: <span th:text="${goal.title}"></span></p>
+            <p>Прогресс: <span th:text="${goal.progress}"></span>%</p>
+            <p>Описание: <span th:text="${goal.description}"></span></p>
+        </div>
+
+        <div class="actions">
+            <form th:action="@{/goals/{id}/update(id=${goalId})}" method="POST" class="edit-form">
+                <input type="hidden" name="userId" th:value="${userId}">
+                
+                <div class="form-group">
+                    <label for="title">Название:</label>
+                    <input type="text" id="title" name="title" th:value="${goal.title}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="progress">Прогресс:</label>
+                    <input type="number" id="progress" name="progress" min="0" max="100" th:value="${goal.progress}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Описание:</label>
+                    <textarea id="description" name="description" th:text="${goal.description}" required></textarea>
+                </div>
+
+                <button type="submit" class="save-button">Сохранить</button>
+            </form>
+
+            <form th:action="@{/goals/{id}/delete(id=${goalId})}" method="POST" class="delete-form">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <button type="submit" class="delete-button">Удалить цель</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

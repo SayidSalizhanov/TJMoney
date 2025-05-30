@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Группа</title>
+    <link rel="stylesheet" th:href="@{/css/group/groupViewing.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <h1>Группа</h1>
+    <div class="group-details">
+        <p><strong>id:</strong> <span th:text="${group.id}"></span></p>
+        <p><strong>Название:</strong> <span th:text="${group.name}"></span></p>
+        <p><strong>Создана:</strong> <span th:text="${group.createdAt}"></span></p>
+        <p><strong>Описание:</strong> <span th:text="${group.description}"></span></p>
+        <p><strong>Количество участников:</strong> <span th:text="${membersCount}"></span></p>
+        <p><strong>Админ:</strong> <span th:text="${admin}"></span></p>
+    </div>
+</div>
+</body>
+</html> 

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Напоминание</title>
+    <link rel="stylesheet" th:href="@{/css/reminders/reminder.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <form th:action="@{/reminder}" method="POST" class="reminder-form">
+        <div class="form">
+            <input type="hidden" name="_method" value="PUT">
+            <input type="hidden" name="groupId" th:value="${groupId}">
+            <input type="hidden" name="reminderId" th:value="${reminderId}">
+
+            <label for="title">Название:</label><br>
+            <input type="text" id="title" name="title" th:value="${reminder.title}" required><br><br>
+
+            <label for="datetime">Дата и время:</label><br>
+            <input type="datetime-local" id="datetime" name="datetime" required th:value="${reminder.sendAt}"><br><br>
+
+            <label for="status">Статус:</label><br>
+            <p id="status" th:text="${reminder.status}"></p><br>
+
+            <label for="message">Содержание:</label><br>
+            <textarea id="message" name="message" required th:text="${reminder.message}"></textarea><br><br>
+
+            <button type="submit" class="save-button">Сохранить изменения</button>
+        </div>
+    </form>
+
+    <form th:action="@{/reminder}" method="POST" class="delete-form">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="groupId" th:value="${groupId}">
+        <input type="hidden" name="reminderId" th:value="${reminderId}">
+
+        <button type="submit" class="delete-button">Удалить напоминание</button>
+    </form>
+</div>
+</body>
+</html> 

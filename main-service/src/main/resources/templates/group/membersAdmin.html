@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Администратор участников</title>
+    <link rel="stylesheet" th:href="@{/css/group/membersAdmin.css}">
+    <script th:src="@{/js/group/deleteMembers.js}" defer></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content-wrapper">
+    <div class="content">
+        <form th:action="@{/group/applications}" method="GET" class="applications-form">
+            <input type="hidden" name="groupId" th:value="${groupId}">
+            <button type="submit" class="nav-button">Заявки</button>
+        </form>
+
+        <h2>Участники группы</h2>
+        <div class="members-list">
+            <div th:each="member : ${members}" class="member">
+                <p><strong>Пользователь:</strong> <span th:text="${member.username}"></span></p>
+                <p><strong>Дата присоединения:</strong> <span th:text="${member.joinedAt}"></span></p>
+                <p><strong>Роль:</strong> <span th:text="${member.role}"></span></p>
+                <form th:if="${member.role == 'USER'}" 
+                      th:action="@{/group/members}" 
+                      method="post" 
+                      class="delete-form" 
+                      th:id="'delete-form-' + ${member.username}">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="username" th:value="${member.username}">
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <input type="hidden" name="groupId" th:value="${groupId}">
+                    <button type="submit" 
+                            class="delete-button" 
+                            th:id="'delete-button-' + ${member.username}">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

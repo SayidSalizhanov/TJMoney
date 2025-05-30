@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ошибка</title>
+    <link rel="stylesheet" th:href="@{/css/error.css}">
+</head>
+<body>
+<div class="content">
+    <div class="error-container">
+        <h1>Произошла ошибка</h1>
+        
+        <div class="error-details">
+            <p class="error-code" th:text="${status}">500</p>
+            <p class="error-message" th:text="${error}">Внутренняя ошибка сервера</p>
+            <p class="error-path" th:text="${path}">/</p>
+        </div>
+
+        <div class="error-actions">
+            <a th:href="@{/}" class="home-button">Вернуться на главную</a>
+            <button onclick="history.back()" class="back-button">Вернуться назад</button>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

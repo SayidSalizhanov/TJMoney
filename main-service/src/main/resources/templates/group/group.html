@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Группа</title>
+    <link rel="stylesheet" th:href="@{/css/group/groups.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <div class="group-details">
+        <h2>Информация о группе</h2>
+        
+        <div class="info-block">
+            <p>ID: <span th:text="${group.id}"></span></p>
+            <p>Название: <span th:text="${group.name}"></span></p>
+            <p>Создана: <span th:text="${#temporals.format(group.createdAt, 'dd.MM.yyyy HH:mm')}"></span></p>
+            <p>Описание: <span th:text="${group.description}"></span></p>
+            <p>Ваша роль: <span th:text="${group.userRole}"></span></p>
+        </div>
+
+        <div class="transactions">
+            <h3>Транзакции</h3>
+            <div th:each="general : ${group.transactionsGenerals}" class="transaction-general">
+                <p>Период: <span th:text="${general.period}"></span></p>
+                <p>Доход: <span th:text="${general.income}"></span></p>
+                <p>Расход: <span th:text="${general.expense}"></span></p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <form th:action="@{/groups/{id}/settings(id=${group.id})}" method="GET" class="settings-form">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <button type="submit" class="settings-button">Настройки</button>
+            </form>
+
+            <form th:action="@{/groups/{id}/members(id=${group.id})}" method="GET" class="members-form">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <button type="submit" class="members-button">Участники</button>
+            </form>
+
+            <form th:action="@{/groups/{id}/applications(id=${group.id})}" method="GET" class="applications-form">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <button type="submit" class="applications-button">Заявки</button>
+            </form>
+
+            <form th:action="@{/groups/{id}(id=${group.id})}" method="POST" class="leave-form">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="leave-button">Покинуть группу</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

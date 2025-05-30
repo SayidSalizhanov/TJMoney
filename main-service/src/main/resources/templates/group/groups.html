@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Группы</title>
+    <link rel="stylesheet" th:href="@{/css/group/groups.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <div class="actions">
+        <form th:action="@{/groups/new}" method="GET" class="create-group-form">
+            <input type="hidden" name="userId" th:value="${userId}">
+            <button type="submit" class="create-button">Создать группу</button>
+        </form>
+    </div>
+
+    <div class="groups-list">
+        <h2>Доступные группы</h2>
+        
+        <div th:each="group : ${groups}" class="group">
+            <div class="group-info">
+                <p>Название: <span th:text="${group.name}"></span></p>
+            </div>
+
+            <div class="group-actions">
+                <form th:action="@{/groups/{id}/viewing(id=${group.id})}" method="GET" class="view-form">
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <button type="submit" class="view-button">Просмотр</button>
+                </form>
+
+                <form th:action="@{/groups}" method="POST" class="apply-form">
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <input type="hidden" name="groupId" th:value="${group.id}">
+                    <button type="submit" class="apply-button">Подать заявку</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="empty-list" th:if="${#lists.isEmpty(groups)}">
+            <p>Нет доступных групп</p>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

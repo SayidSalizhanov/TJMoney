@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Напоминания</title>
+    <link rel="stylesheet" th:href="@{/css/reminders/reminders.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <form th:action="@{/reminders/new}" method="GET" class="create-reminder-form">
+        <input type="hidden" name="groupId" th:value="${groupId}">
+        <button type="submit" class="create-button">Создать напоминание</button>
+    </form>
+
+    <div class="reminders-list">
+        <form th:each="reminder : ${reminders}" th:action="@{/reminder}" method="get" class="reminder-form">
+            <div class="reminder">
+                <input type="hidden" name="reminderId" th:value="${reminder.id}">
+                <input type="hidden" name="groupId" th:value="${groupId}">
+                <button type="submit" class="reminder-button">
+                    <div class="reminder-details">
+                        <div class="left-column">
+                            <p>Название: <span th:text="${reminder.title}"></span></p>
+                        </div>
+                        <div class="right-column">
+                            <p>Статус: <span th:text="${reminder.status}"></span></p>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="empty-list" th:if="${#lists.isEmpty(reminders)}">
+        <p>Тут ничего нет...</p>
+    </div>
+</div>
+</body>
+</html> 

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница не найдена</title>
+    <link rel="stylesheet" th:href="@{/css/not-found.css}">
+</head>
+<body>
+<div class="content">
+    <div class="not-found-container">
+        <h1>404</h1>
+        <h2>Страница не найдена</h2>
+        
+        <div class="message">
+            <p>Запрашиваемая страница не существует или была перемещена.</p>
+        </div>
+
+        <div class="actions">
+            <a th:href="@{/}" class="home-button">Вернуться на главную</a>
+            <button onclick="history.back()" class="back-button">Вернуться назад</button>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

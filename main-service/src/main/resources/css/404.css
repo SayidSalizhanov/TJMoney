@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    background-image: url('/static/background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.error-container {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.error-container h1 {
+    color: #e74c3c;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.error-container p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.error-container a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.error-container a:hover {
+    text-decoration: underline;
+}

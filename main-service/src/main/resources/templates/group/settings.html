@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Настройки группы</title>
+    <link rel="stylesheet" th:href="@{/css/group/settings.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content-wrapper">
+    <div class="content">
+        <h2>Настройки группы</h2>
+        <form th:action="@{/group/settings}" method="post" class="settings-form">
+            <input type="hidden" name="_method" value="PUT">
+            <input type="hidden" name="groupId" th:value="${groupId}">
+
+            <div class="form-group">
+                <label for="name">Название группы:</label>
+                <input type="text" id="name" name="name" th:value="${group.name}">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Описание:</label>
+                <textarea id="description" name="description" th:text="${group.description}"></textarea>
+            </div>
+
+            <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+
+            <button type="submit" class="save-button">Сохранить изменения</button>
+        </form>
+
+        <form th:action="@{/group/settings}" method="POST" class="delete-form">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="groupId" th:value="${groupId}">
+            <button type="submit" class="delete-button">Удалить группу</button>
+        </form>
+    </div>
+</div>
+</body>
+</html> 

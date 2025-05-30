@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои группы</title>
+    <link rel="stylesheet" th:href="@{/css/user/userGroups.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <div class="actions">
+        <form th:action="@{/user/{id}/applications(id=${userId})}" method="GET" class="applications-form">
+            <button type="submit" class="action-button">Мои заявки</button>
+        </form>
+
+        <form th:action="@{/groups/new}" method="GET" class="create-group-form">
+            <input type="hidden" name="userId" th:value="${userId}">
+            <button type="submit" class="action-button">Создать группу</button>
+        </form>
+
+        <form th:action="@{/groups}" method="GET" class="find-group-form">
+            <input type="hidden" name="userId" th:value="${userId}">
+            <button type="submit" class="action-button">Найти группу</button>
+        </form>
+    </div>
+
+    <div class="groups-list">
+        <h2>Мои группы</h2>
+
+        <div class="filters">
+            <form th:action="@{/user/{id}/groups(id=${userId})}" method="GET" class="filter-form">
+                <input type="hidden" name="userId" th:value="${userId}">
+                
+                <select name="sort" class="sort-select">
+                    <option value="id" th:selected="${sort == 'id'}">По ID</option>
+                    <option value="name" th:selected="${sort == 'name'}">По названию</option>
+                    <option value="createdAt" th:selected="${sort == 'createdAt'}">По дате создания</option>
+                </select>
+
+                <select name="amountPerPage" class="page-size-select">
+                    <option value="10" th:selected="${amountPerPage == 10}">10</option>
+                    <option value="20" th:selected="${amountPerPage == 20}">20</option>
+                    <option value="50" th:selected="${amountPerPage == 50}">50</option>
+                </select>
+
+                <button type="submit" class="filter-button">Применить</button>
+            </form>
+        </div>
+
+        <div th:each="group : ${groups}" class="group">
+            <div class="group-info">
+                <p>Название: <span th:text="${group.name}"></span></p>
+                <p>Роль: <span th:text="${group.role}"></span></p>
+            </div>
+
+            <div class="group-actions">
+                <form th:action="@{/groups/{id}(id=${group.id})}" method="GET" class="view-form">
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <button type="submit" class="view-button">Просмотр</button>
+                </form>
+
+                <form th:if="${group.role == 'ADMIN'}" 
+                      th:action="@{/groups/{id}/settings(id=${group.id})}" 
+                      method="GET" class="settings-form">
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <button type="submit" class="settings-button">Настройки</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="empty-list" th:if="${#lists.isEmpty(groups)}">
+            <p>У вас пока нет групп</p>
+        </div>
+
+        <div class="pagination" th:if="${not #lists.isEmpty(groups)}">
+            <form th:action="@{/user/{id}/groups(id=${userId})}" method="GET" class="pagination-form">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <input type="hidden" name="sort" th:value="${sort}">
+                <input type="hidden" name="amountPerPage" th:value="${amountPerPage}">
+                
+                <button type="submit" name="page" th:value="${page - 1}" 
+                        th:disabled="${page == 0}" class="pagination-button">Предыдущая</button>
+                
+                <span class="page-info">Страница <span th:text="${page + 1}"></span></span>
+                
+                <button type="submit" name="page" th:value="${page + 1}" 
+                        th:disabled="${#lists.size(groups) < amountPerPage}" 
+                        class="pagination-button">Следующая</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

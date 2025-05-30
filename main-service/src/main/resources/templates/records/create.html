@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание записи</title>
+    <link rel="stylesheet" th:href="@{/css/records/records.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <div class="record-form">
+        <h2>Создание новой записи</h2>
+        
+        <form th:action="@{/records/create}" method="POST">
+            <input type="hidden" name="userId" th:value="${userId}">
+            <input type="hidden" name="groupId" th:value="${groupId}">
+            
+            <div class="form-group">
+                <label for="title">Название:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Содержание:</label>
+                <textarea id="content" name="content" required></textarea>
+            </div>
+
+            <button type="submit" class="save-button">Создать запись</button>
+        </form>
+    </div>
+</div>
+</body>
+</html> 

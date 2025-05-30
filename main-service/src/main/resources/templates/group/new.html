@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание группы</title>
+    <link rel="stylesheet" th:href="@{/css/group/groups.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <div class="group-form">
+        <h2>Создание новой группы</h2>
+        
+        <form th:action="@{/groups/new}" method="POST">
+            <input type="hidden" name="userId" th:value="${userId}">
+            
+            <div class="form-group">
+                <label for="name">Название:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Описание:</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+
+            <button type="submit" class="save-button">Создать группу</button>
+        </form>
+    </div>
+</div>
+</body>
+</html> 

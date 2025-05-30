@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: main-service
+server:
+  port: 8081
+
+api:
+  base-url: http://localhost:8080

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>О нас</title>
+    <link rel="stylesheet" th:href="@{/css/aboutUs.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <div class="about-section">
+        <h1>О нашем проекте</h1>
+        
+        <div class="mission">
+            <h2>Наша миссия</h2>
+            <p>Мы стремимся сделать управление финансами простым и эффективным для каждого. Наша платформа помогает людям лучше контролировать свои расходы, планировать бюджет и достигать финансовых целей вместе с друзьями и коллегами.</p>
+        </div>
+
+        <div class="features">
+            <h2>Основные возможности</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h3>Групповое управление финансами</h3>
+                    <p>Создавайте группы для совместного управления финансами с друзьями, семьей или коллегами.</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Напоминания</h3>
+                    <p>Получайте уведомления о важных финансовых событиях и сроках платежей.</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Финансовые записи</h3>
+                    <p>Ведите учет всех своих финансовых операций в удобном формате.</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Цели и планирование</h3>
+                    <p>Ставьте финансовые цели и отслеживайте прогресс их достижения.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="team">
+            <h2>Наша команда</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <h3>Салижханов Сайид</h3>
+                    <p>Разработчик</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact">
+            <h2>Свяжитесь с нами</h2>
+            <p>Если у вас есть вопросы или предложения, мы будем рады их услышать!</p>
+            <div class="contact-info">
+                <p>Email: <a href="mailto:sayid.salizhanov@mail.ru">sayid.salizhanov@mail.ru</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль пользователя</title>
+    <link rel="stylesheet" th:href="@{/css/user/userProfile.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <div class="profile">
+        <div class="profile-header">
+            <div class="avatar">
+                <img th:src="${avatarUrl}" alt="Аватар пользователя">
+            </div>
+            <div class="user-info">
+                <h2 th:text="${user.username}"></h2>
+                <p class="email" th:text="${user.email}"></p>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <form th:action="@{/user/{id}/groups(id=${userId})}" method="GET" class="groups-form">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <button type="submit" class="action-button">Мои группы</button>
+            </form>
+
+            <form th:action="@{/user/{id}/applications(id=${userId})}" method="GET" class="applications-form">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <button type="submit" class="action-button">Мои заявки</button>
+            </form>
+
+            <form th:action="@{/user/{id}/settings(id=${userId})}" method="GET" class="settings-form">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <button type="submit" class="action-button">Настройки</button>
+            </form>
+        </div>
+
+        <div class="profile-details">
+            <h3>Информация о пользователе</h3>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="label">ID:</span>
+                    <span class="value" th:text="${user.id}"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Имя пользователя:</span>
+                    <span class="value" th:text="${user.username}"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Email:</span>
+                    <span class="value" th:text="${user.email}"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Дата регистрации:</span>
+                    <span class="value" th:text="${user.createdAt}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Загрузка транзакций</title>
+    <link rel="stylesheet" th:href="@{/css/transactions/upload.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <div class="upload-transactions">
+        <h2>Загрузка транзакций из CSV</h2>
+
+        <div class="info-block">
+            <p>Формат CSV файла:</p>
+            <ul>
+                <li>Первая строка - заголовки</li>
+                <li>Колонки: amount,type,category,dateTime,description</li>
+                <li>Тип: INCOME или EXPENSE</li>
+                <li>Дата и время в формате: yyyy-MM-dd HH:mm:ss</li>
+            </ul>
+        </div>
+
+        <form th:action="@{/transactions/new/upload}" method="POST" enctype="multipart/form-data" class="upload-form">
+            <input type="hidden" name="userId" th:value="${userId}">
+            <input type="hidden" name="groupId" th:value="${groupId}">
+
+            <div class="form-group">
+                <label for="file">CSV файл:</label>
+                <input type="file" id="file" name="file" accept=".csv" required>
+            </div>
+
+            <button type="submit" class="upload-button">Загрузить</button>
+        </form>
+    </div>
+</div>
+</body>
+</html> 

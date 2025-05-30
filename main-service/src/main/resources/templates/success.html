@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Успех</title>
+    <link rel="stylesheet" th:href="@{/css/success.css}">
+</head>
+<body>
+<div class="content">
+    <div class="success-container">
+        <h1>Успешно!</h1>
+        
+        <div class="message">
+            <p th:text="${message}">Операция выполнена успешно.</p>
+        </div>
+
+        <div class="actions">
+            <a th:href="${redirectUrl}" class="redirect-button">Продолжить</a>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

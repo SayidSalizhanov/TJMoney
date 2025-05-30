@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Новое напоминание</title>
+    <link rel="stylesheet" th:href="@{/css/reminders/newReminder.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <form th:action="@{/reminders/new}" method="post" class="reminder-form">
+        <div class="form">
+            <label for="title">Название:</label><br>
+            <input type="text" id="title" name="title" required><br><br>
+
+            <label for="datetime">Дата и время отправки:</label><br>
+            <input type="datetime-local" id="datetime" name="datetime" required><br><br>
+
+            <label for="message">Содержание:</label><br>
+            <textarea id="message" name="message" required></textarea><br><br>
+
+            <input type="hidden" name="groupId" th:value="${groupId}">
+
+            <span th:if="${errorMessage}" style="color:red;" th:text="${errorMessage}"></span><br>
+
+            <button type="submit" class="save-button">Сохранить</button>
+        </div>
+    </form>
+</div>
+</body>
+</html> 
