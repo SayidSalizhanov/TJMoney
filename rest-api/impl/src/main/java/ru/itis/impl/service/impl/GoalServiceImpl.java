@@ -18,7 +18,6 @@ import ru.itis.impl.exception.not_found.UserNotFoundException;
 import ru.itis.impl.mapper.GoalMapper;
 import ru.itis.impl.model.Goal;
 import ru.itis.impl.model.Group;
-import ru.itis.impl.model.Record;
 import ru.itis.impl.model.User;
 import ru.itis.impl.repository.GoalRepository;
 import ru.itis.impl.repository.GroupRepository;
@@ -43,16 +42,18 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GoalListResponse> getAll(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage, String sort) {
+    public List<GoalListResponse> getAll(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage) {
         User user = requireUserById(userId);
         Group group = groupId == null ? null : requireGroupById(groupId);
 
         List<Goal> goals;
 
-        if (groupId == null) goals = goalRepository.findByUser(user);
+        Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by("title"));
+
+        if (groupId == null) goals = goalRepository.findAllByUserAndGroupIsNull(user, pageable).getContent();
         else {
             groupService.checkUserIsGroupMemberVoid(user, group);
-            goals = goalRepository.findAllByGroup(group);
+            goals = goalRepository.findAllByGroup(group, pageable).getContent();
         }
 
         return goals.stream()

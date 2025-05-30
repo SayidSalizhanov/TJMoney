@@ -33,8 +33,8 @@ public class GoalController implements GoalApi {
     }
 
     @Override
-    public List<GoalListResponse> getGoals(Long userId, Long groupId, Integer page, Integer amountPerPage, String sort) {
-        return goalService.getAll(userId, groupId, page, amountPerPage, sort);
+    public List<GoalListResponse> getGoals(Long userId, Long groupId, Integer page, Integer amountPerPage) {
+        return goalService.getAll(userId, groupId, page, amountPerPage);
     }
 
     @Override
