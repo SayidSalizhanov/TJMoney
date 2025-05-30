@@ -10,7 +10,7 @@ import ru.itis.dto.response.transaction.TransactionSettingsResponse;
 
 import java.util.List;
 
-@RequestMapping("/transactions")
+@RequestMapping("/api/transactions")
 public interface TransactionApi {
 
     @GetMapping("/{id}")
@@ -41,8 +41,7 @@ public interface TransactionApi {
             @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "groupId", required = false, defaultValue = "null") Long groupId,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
-            @RequestParam(value = "sort", required = false, defaultValue = "amount") String sort
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage
     );
 
     @PostMapping("/new")

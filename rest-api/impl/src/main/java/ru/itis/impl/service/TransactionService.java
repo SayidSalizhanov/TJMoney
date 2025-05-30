@@ -13,7 +13,7 @@ public interface TransactionService {
     TransactionSettingsResponse getById(Long id, Long userId);
     void updateInfo(Long id, Long userId, TransactionSettingsRequest request);
     void delete(Long id, Long userId);
-    List<TransactionListResponse> getAll(Long userId, Long groupId, Integer page, Integer amountPerPage, String sort);
+    List<TransactionListResponse> getAll(Long userId, Long groupId, Integer page, Integer amountPerPage);
     Long create(Long userId, Long groupId, TransactionCreateRequest request);
     List<Map<String, Integer>> getUserTransactionsGenerals(Long userId, String period);
 }

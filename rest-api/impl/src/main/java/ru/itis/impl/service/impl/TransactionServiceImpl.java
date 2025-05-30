@@ -1,6 +1,9 @@
 package ru.itis.impl.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.dto.request.transaction.TransactionCreateRequest;
@@ -15,12 +18,13 @@ import ru.itis.impl.exception.not_found.TransactionNotFoundException;
 import ru.itis.impl.exception.not_found.UserNotFoundException;
 import ru.itis.impl.mapper.TransactionMapper;
 import ru.itis.impl.model.Group;
+import ru.itis.impl.model.GroupMember;
 import ru.itis.impl.model.Transaction;
 import ru.itis.impl.model.User;
+import ru.itis.impl.repository.GroupMemberRepository;
 import ru.itis.impl.repository.GroupRepository;
 import ru.itis.impl.repository.TransactionRepository;
 import ru.itis.impl.repository.UserRepository;
-import ru.itis.impl.service.GroupService;
 import ru.itis.impl.service.TransactionService;
 
 import java.time.LocalDateTime;
@@ -35,7 +39,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
-    private final GroupService groupService;
+
+    private final GroupMemberRepository groupMemberRepository;
 
     @Override
     @Transactional
@@ -90,16 +95,18 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TransactionListResponse> getAll(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage, String sort) {
+    public List<TransactionListResponse> getAll(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage) {
         User user = requireUserById(userId);
         Group group = groupId == null ? null : requireGroupById(groupId);
 
         List<Transaction> transactions;
 
-        if (group == null) transactions = transactionRepository.findAllByUser(user);
+        Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by("amount"));
+
+        if (group == null) transactions = transactionRepository.findAllByUserAndGroupIsNull(user, pageable).getContent();
         else {
-            groupService.checkUserIsGroupMemberVoid(user, group);
-            transactions = transactionRepository.findAllByGroup(group);
+            checkUserIsGroupMemberVoid(user, group);
+            transactions = transactionRepository.findAllByGroup(group, pageable).getContent();
         }
 
         return transactions.stream()
@@ -190,7 +197,7 @@ public class TransactionServiceImpl implements TransactionService {
             case "day" -> transactionRepository.findByUserWithPeriod(user, LocalDateTime.now().minusDays(1));
             case "month" -> transactionRepository.findByUserWithPeriod(user, LocalDateTime.now().minusMonths(1));
             case "year" -> transactionRepository.findByUserWithPeriod(user, LocalDateTime.now().minusYears(1));
-            default -> transactionRepository.findAllByUser(user);
+            default -> transactionRepository.findAllByUserAndGroupIsNull(user);
         };
 
         return transactions;
@@ -219,9 +226,25 @@ public class TransactionServiceImpl implements TransactionService {
             checkUserIsTransactionOwner(transaction, user);
         }
         else {
-            if (!Objects.equals(transaction.getUser().getId(), user.getId()) && groupService.checkUserIsGroupAdminBoolean(user, group)) {
+            if (!Objects.equals(transaction.getUser().getId(), user.getId()) && checkUserIsGroupAdminBoolean(user, group)) {
                 throw new AccessDeniedException("Доступ к транзакции имеет только ее владелец или админ группы");
             }
         }
+    }
+
+    public void checkUserIsGroupMemberVoid(User user, Group group) {
+        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findByGroupAndUser(group, user);
+        if (optionalGroupMember.isEmpty()) throw new AccessDeniedException("Доступ к данным имеют только участники группы");
+    }
+
+    public boolean checkUserIsGroupAdminBoolean(User user, Group group) {
+        GroupMember groupMember = checkUserIsGroupMember(user, group);
+        return groupMember.getRole().equalsIgnoreCase("ADMIN");
+    }
+
+    private GroupMember checkUserIsGroupMember(User user, Group group) {
+        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findByGroupAndUser(group, user);
+        if (optionalGroupMember.isEmpty()) throw new AccessDeniedException("Доступ к данным имеют только участники группы");
+        return optionalGroupMember.get();
     }
 }

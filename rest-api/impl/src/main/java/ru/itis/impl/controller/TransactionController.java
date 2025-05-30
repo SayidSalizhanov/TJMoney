@@ -36,8 +36,8 @@ public class TransactionController implements TransactionApi {
     }
 
     @Override
-    public List<TransactionListResponse> getTransactions(Long userId, Long groupId, Integer page, Integer amountPerPage, String sort) {
-        return transactionService.getAll(userId, groupId, page, amountPerPage, sort);
+    public List<TransactionListResponse> getTransactions(Long userId, Long groupId, Integer page, Integer amountPerPage) {
+        return transactionService.getAll(userId, groupId, page, amountPerPage);
     }
 
     @Override
