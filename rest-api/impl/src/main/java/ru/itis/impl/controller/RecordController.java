@@ -33,8 +33,8 @@ public class RecordController implements RecordApi {
     }
 
     @Override
-    public List<RecordListResponse> getRecords(Long userId, Long groupId, Integer page, Integer amountPerPage, String sort) {
-        return recordService.getAll(userId, groupId, page, amountPerPage, sort);
+    public List<RecordListResponse> getRecords(Long userId, Long groupId, Integer page, Integer amountPerPage) {
+        return recordService.getAll(userId, groupId, page, amountPerPage);
     }
 
     @Override

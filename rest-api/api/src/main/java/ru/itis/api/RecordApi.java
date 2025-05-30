@@ -9,7 +9,7 @@ import ru.itis.dto.response.record.RecordSettingsResponse;
 
 import java.util.List;
 
-@RequestMapping("/records")
+@RequestMapping("/api/records")
 public interface RecordApi {
 
     @GetMapping("/{id}")
@@ -40,8 +40,7 @@ public interface RecordApi {
             @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
-            @RequestParam(value = "sort", required = false, defaultValue = "title") String sort
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage
     );
 
     @PostMapping("/new")

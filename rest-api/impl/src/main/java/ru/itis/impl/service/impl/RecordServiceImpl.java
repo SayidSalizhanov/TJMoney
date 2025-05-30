@@ -1,6 +1,9 @@
 package ru.itis.impl.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.dto.request.record.RecordCreateRequest;
@@ -75,16 +78,18 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<RecordListResponse> getAll(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage, String sort) {
+    public List<RecordListResponse> getAll(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage) {
         User user = requireUserById(userId);
         Group group = groupId == null ? null : requireGroupById(groupId);
 
         List<Record> records;
 
-        if (group == null) records = recordRepository.findByUser(user);
+        Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by("title"));
+
+        if (group == null) records = recordRepository.findAllByUserAndGroupIsNull(user, pageable).getContent();
         else {
             groupService.checkUserIsGroupMemberVoid(user, group);
-            records = recordRepository.findAllByGroup(group);
+            records = recordRepository.findAllByGroup(group, pageable).getContent();
         }
 
         return records.stream()

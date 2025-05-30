@@ -11,6 +11,6 @@ public interface RecordService {
     RecordSettingsResponse getById(Long id, Long userId);
     void updateInfo(Long id, Long userId, RecordSettingsRequest request);
     void delete(Long id, Long userId);
-    List<RecordListResponse> getAll(Long userId, Long groupId, Integer page, Integer amountPerPage, String sort);
+    List<RecordListResponse> getAll(Long userId, Long groupId, Integer page, Integer amountPerPage);
     Long create(Long userId, Long groupId, RecordCreateRequest request);
 }
