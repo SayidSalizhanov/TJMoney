@@ -19,9 +19,9 @@ public interface GroupService {
     void delete(Long id, Long userId);
     GroupViewingResponse getView(Long id, Long userId);
     Long create(Long id, Long userId, GroupCreateRequest request);
-    List<GroupMemberResponse> getMembers(Long id, Long userId, Integer page, Integer amountPerPage, String sort);
+    List<GroupMemberResponse> getMembers(Long id, Long userId, Integer page, Integer amountPerPage);
     void deleteGroupMemberFromAdminSide(Long id, Long userId, Long userIdForDelete);
-    List<ApplicationWithUserInfoResponse> getApplications(Long id, Long userId, Integer page, Integer amountPerPage, String sort);
+    List<ApplicationWithUserInfoResponse> getApplications(Long id, Long userId, Integer page, Integer amountPerPage);
     Long answerApplication(Long id, Long userId, ApplicationAnswerRequest request);
     void checkUserIsGroupAdmin(User user, Group group);
     void checkUserIsGroupMemberVoid(User user, Group group);

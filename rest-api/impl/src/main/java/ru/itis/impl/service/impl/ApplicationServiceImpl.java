@@ -1,6 +1,7 @@
 package ru.itis.impl.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.impl.exception.not_found.ApplicationNotFoundException;
@@ -40,8 +41,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Application> getGroupApplicationsByGroupIdAndByStatus(Long groupId, String status) {
-        return applicationRepository.findByGroupAndStatus(requireGroupById(groupId), status);
+    public List<Application> getGroupApplicationsByGroupIdAndByStatus(Long groupId, String status, Pageable pageable) {
+        return applicationRepository.findAllByGroupAndStatus(requireGroupById(groupId), status, pageable).getContent();
     }
 
     @Override

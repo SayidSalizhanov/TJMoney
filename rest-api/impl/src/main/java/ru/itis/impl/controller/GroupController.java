@@ -66,8 +66,8 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    public List<GroupMemberResponse> getGroupMembers(Long id, Long userId, Integer page, Integer amountPerPage, String sort) {
-        return groupService.getMembers(id, userId, page, amountPerPage, sort);
+    public List<GroupMemberResponse> getGroupMembers(Long id, Long userId, Integer page, Integer amountPerPage) {
+        return groupService.getMembers(id, userId, page, amountPerPage);
     }
 
     @Override
@@ -76,8 +76,8 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    public List<ApplicationWithUserInfoResponse> getApplications(Long id, Long userId, Integer page, Integer amountPerPage, String sort) {
-        return groupService.getApplications(id, userId, page, amountPerPage, sort);
+    public List<ApplicationWithUserInfoResponse> getApplications(Long id, Long userId, Integer page, Integer amountPerPage) {
+        return groupService.getApplications(id, userId, page, amountPerPage);
     }
 
     @Override

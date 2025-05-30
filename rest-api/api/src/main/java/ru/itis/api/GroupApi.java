@@ -10,7 +10,7 @@ import ru.itis.dto.response.group.*;
 
 import java.util.List;
 
-@RequestMapping("/groups")
+@RequestMapping("/api/groups")
 public interface GroupApi {
 
     @GetMapping
@@ -84,8 +84,7 @@ public interface GroupApi {
             @PathVariable("id") Long id,
             @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
-            @RequestParam(value = "sort", required = false, defaultValue = "username") String sort
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage
     );
 
     @DeleteMapping("/{id}/members")
@@ -102,8 +101,7 @@ public interface GroupApi {
             @PathVariable("id") Long id,
             @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
-            @RequestParam(value = "sort", required = false, defaultValue = "sendAt") String sort
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage
     );
 
     @PostMapping("/{id}/applications")

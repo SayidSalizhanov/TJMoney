@@ -1,6 +1,7 @@
 package ru.itis.impl.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.impl.exception.not_found.GroupMemberNotFoundException;
@@ -29,6 +30,11 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     @Transactional(readOnly = true)
     public List<GroupMember> getGroupMembers(Group group) {
         return groupMemberRepository.findAllByGroup(group);
+    }
+
+    @Override
+    public List<GroupMember> getGroupMembersWithPagination(Group group, Pageable pageable) {
+        return groupMemberRepository.findAllByGroup(group, pageable).getContent();
     }
 
     @Override

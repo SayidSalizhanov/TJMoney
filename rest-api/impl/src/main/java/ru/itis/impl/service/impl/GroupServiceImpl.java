@@ -1,6 +1,10 @@
 package ru.itis.impl.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.dto.request.application.ApplicationAnswerRequest;
@@ -175,13 +179,15 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GroupMemberResponse> getMembers(Long id, Long userId, Integer page, Integer amountPerPage, String sort) {
+    public List<GroupMemberResponse> getMembers(Long id, Long userId, Integer page, Integer amountPerPage) {
         User user = requireUserById(userId);
         Group group = requireGroupById(id);
 
         checkUserIsGroupMemberVoid(user, group);
 
-        return groupMemberService.getGroupMembers(group).stream()
+        Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by("username"));
+
+        return groupMemberService.getGroupMembersWithPagination(group, pageable).stream()
                 .map(groupMemberMapper::toGroupMemberResponse)
                 .toList();
     }
@@ -198,13 +204,15 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ApplicationWithUserInfoResponse> getApplications(Long id, Long userId, Integer page, Integer amountPerPage, String sort) {
+    public List<ApplicationWithUserInfoResponse> getApplications(Long id, Long userId, Integer page, Integer amountPerPage) {
         User user = requireUserById(userId);
         Group group = requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
 
-        List<Application> applications = applicationService.getGroupApplicationsByGroupIdAndByStatus(id, "В ожидании");
+        Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by("sendAt"));
+
+        List<Application> applications = applicationService.getGroupApplicationsByGroupIdAndByStatus(id, "В ожидании", pageable);
         return applications.stream()
                 .map(applicationMapper::toApplicationWithUserInfoResponse)
                 .toList();
