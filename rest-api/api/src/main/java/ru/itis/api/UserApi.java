@@ -13,7 +13,7 @@ import ru.itis.dto.response.user.UserSettingsResponse;
 
 import java.util.List;
 
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public interface UserApi {
 
     @GetMapping("/{id}/settings")
@@ -41,20 +41,14 @@ public interface UserApi {
     @GetMapping("/{id}/groups")
     List<UserGroupResponse> getUserGroups(
             @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
-            @RequestParam(value = "sort", required = false, defaultValue = "groupName") String sort
+            @RequestParam("userId") Long userId // todo get from authentication
     );
 
     @GetMapping("/{id}/applications")
     @ResponseStatus(HttpStatus.OK)
     List<ApplicationToGroupResponse> getUserApplicationsToGroup(
             @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
-            @RequestParam(value = "sort", required = false, defaultValue = "groupName") String sort
+            @RequestParam("userId") Long userId // todo get from authentication
     );
 
     @DeleteMapping("/{id}/applications")

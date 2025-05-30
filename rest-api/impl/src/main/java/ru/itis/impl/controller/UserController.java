@@ -37,13 +37,13 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public List<UserGroupResponse> getUserGroups(Long id, Long userId, Integer page, Integer amountPerPage, String sort) {
-        return userService.getGroups(id, userId, page, amountPerPage, sort);
+    public List<UserGroupResponse> getUserGroups(Long id, Long userId) {
+        return userService.getGroups(id, userId);
     }
 
     @Override
-    public List<ApplicationToGroupResponse> getUserApplicationsToGroup(Long id, Long userId, Integer page, Integer amountPerPage, String sort) {
-        return userService.getApplications(id, userId, page, amountPerPage, sort);
+    public List<ApplicationToGroupResponse> getUserApplicationsToGroup(Long id, Long userId) {
+        return userService.getApplications(id, userId);
     }
 
     @Override

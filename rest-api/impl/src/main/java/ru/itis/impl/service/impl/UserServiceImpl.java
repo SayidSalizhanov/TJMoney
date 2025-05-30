@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserGroupResponse> getGroups(Long id, Long userId, Integer page, Integer amountPerPage, String sort) {
+    public List<UserGroupResponse> getGroups(Long id, Long userId) {
         User user = requireUserById(id);
         User currentSessionUser = requireUserById(userId);
 
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ApplicationToGroupResponse> getApplications(Long id, Long userId, Integer page, Integer amountPerPage, String sort) {
+    public List<ApplicationToGroupResponse> getApplications(Long id, Long userId) {
         User user = requireUserById(id);
         User currentSessionUser = requireUserById(userId);
 

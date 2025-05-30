@@ -14,8 +14,8 @@ public interface UserService {
     UserSettingsResponse getInfo(Long id, Long userId);
     void updateInfo(Long id, Long userId, UserSettingsRequest request);
     void delete(Long id, Long userId);
-    List<UserGroupResponse> getGroups(Long id, Long userId, Integer page, Integer amountPerPage, String sort);
-    List<ApplicationToGroupResponse> getApplications(Long id, Long userId, Integer page, Integer amountPerPage, String sort);
+    List<UserGroupResponse> getGroups(Long id, Long userId);
+    List<ApplicationToGroupResponse> getApplications(Long id, Long userId);
     void deleteApplication(Long id, Long userId, Long applicationId);
     void changePassword(Long id, Long userId, UserPasswordChangeRequest request);
     String getAvatarUrl(Long id, Long userId);
