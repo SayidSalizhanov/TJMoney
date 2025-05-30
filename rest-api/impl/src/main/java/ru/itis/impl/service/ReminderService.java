@@ -11,6 +11,6 @@ public interface ReminderService {
     ReminderSettingsResponse getById(Long id, Long userId);
     void updateInfo(Long id, Long userId, ReminderSettingsRequest request);
     void delete(Long id, Long userId);
-    List<ReminderListResponse> getAll(Long userId, Long groupId, Integer page, Integer amountPerPage, String sort);
+    List<ReminderListResponse> getAll(Long userId, Long groupId, Integer page, Integer amountPerPage);
     Long create(Long userId, Long groupId, ReminderCreateRequest request);
 }

@@ -33,8 +33,8 @@ public class ReminderController implements ReminderApi {
     }
 
     @Override
-    public List<ReminderListResponse> getReminders(Long userId, Long groupId, Integer page, Integer amountPerPage, String sort) {
-        return reminderService.getAll(userId, groupId, page, amountPerPage, sort);
+    public List<ReminderListResponse> getReminders(Long userId, Long groupId, Integer page, Integer amountPerPage) {
+        return reminderService.getAll(userId, groupId, page, amountPerPage);
     }
 
     @Override

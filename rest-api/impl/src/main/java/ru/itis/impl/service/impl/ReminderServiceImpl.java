@@ -1,6 +1,9 @@
 package ru.itis.impl.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.dto.request.reminder.ReminderCreateRequest;
@@ -76,16 +79,18 @@ public class ReminderServiceImpl implements ReminderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReminderListResponse> getAll(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage, String sort) {
+    public List<ReminderListResponse> getAll(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage) {
         User user = requireUserById(userId);
         Group group = groupId == null ? null : requireGroupById(groupId);
 
         List<Reminder> reminders;
 
-        if (group == null) reminders = reminderRepository.findByUser(user);
+        Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by("title"));
+
+        if (group == null) reminders = reminderRepository.findAllByUserAndGroupIsNull(user, pageable).getContent();
         else {
             groupService.checkUserIsGroupMemberVoid(user, group);
-            reminders = reminderRepository.findAllByGroup(group);
+            reminders = reminderRepository.findAllByGroup(group, pageable).getContent();
         }
 
         return reminders.stream()
