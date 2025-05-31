@@ -94,6 +94,7 @@ public class UserController {
     public String getUserProfile(@PathVariable Long id, @RequestParam Long userId, @RequestParam(required = false) String period, Model model) {
         UserProfileResponse profile = userService.getUserProfileInfo(id, userId, period);
         model.addAttribute("profile", profile);
+        model.addAttribute("currentSessionUserId", userId);
         return "user/profile";
     }
 } 

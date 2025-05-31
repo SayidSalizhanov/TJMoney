@@ -3,59 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <title>Профиль пользователя</title>
-    <link rel="stylesheet" th:href="@{/css/user/userProfile.css}">
+    <link rel="stylesheet" th:href="@{/css/user/profile.css}">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="content">
-    <div class="profile">
-        <div class="profile-header">
+<div class="content-wrapper">
+    <div class="content">
+        <div class="info-avatar">
+            <div class="info">
+                <h2>Информация о пользователе</h2>
+                <p><strong>ID:</strong> <span th:text="${profile.id}"/></p>
+                <p><strong>Имя пользователя:</strong> <span th:text="${profile.username()}"/></p>
+                <p><strong>Почта:</strong> <span th:text="${profile.email}"/></p>
+                <p th:if="${#strings.isEmpty(profile.telegramId)}"><strong>Telegram:</strong> отсутствует</p>
+                <p th:if="${not #strings.isEmpty(profile.telegramId)}"><strong>Telegram:</strong> <span th:text="${profile.telegramId()}"/></p>
+            </div>
             <div class="avatar">
-                <img th:src="${avatarUrl}" alt="Аватар пользователя">
-            </div>
-            <div class="user-info">
-                <h2 th:text="${user.username}"></h2>
-                <p class="email" th:text="${user.email}"></p>
+                <img th:src="${profile.urlAvatar}" alt="Avatar" class="rounded-circle" width="200" height="200">
             </div>
         </div>
 
-        <div class="profile-actions">
-            <form th:action="@{/user/{id}/groups(id=${userId})}" method="GET" class="groups-form">
-                <input type="hidden" name="userId" th:value="${userId}">
-                <button type="submit" class="action-button">Мои группы</button>
+        <div class="actions-container" th:if="${profile.id == currentSessionUserId}">
+
+            <div class="button-group">
+                <form th:action="@{/user/{id}/settings(id=${profile.id})}" method="GET">
+                    <input type="hidden" name="userId" th:value="${currentSessionUserId}">
+
+                    <button type="submit" class="nav-button">Настройки</button>
+                </form>
+
+                <form th:action="@{/user/{id}/groups(id=${profile.id})}" method="GET">
+                    <input type="hidden" name="userId" th:value="${currentSessionUserId}">
+
+                    <button type="submit" class="nav-button">Группы</button>
+                </form>
+
+                <form th:action="@{/transactions}" method="GET">
+                    <input type="hidden" name="userId" th:value="${currentSessionUserId}">
+
+                    <button type="submit" class="nav-button">Транзакции</button>
+                </form>
+            </div>
+
+            <hr>
+
+            <form th:action="@{/user/{id}(id=${profile.id})}" method="GET" class="filter-form">
+                <label for="incomePeriod">Выбрать период:</label>
+                <select id="incomePeriod" name="period">
+                    <option value="all">Все время</option>
+                    <option value="day">День</option>
+                    <option value="month">Месяц</option>
+                    <option value="year">Год</option>
+                </select>
+                <button type="submit">Применить</button>
             </form>
 
-            <form th:action="@{/user/{id}/applications(id=${userId})}" method="GET" class="applications-form">
-                <input type="hidden" name="userId" th:value="${userId}">
-                <button type="submit" class="action-button">Мои заявки</button>
-            </form>
+            <div class="financial-section" th:if="${profile.transactionsGenerals != null}">
+                <div class="financial-info">
+                    <h2>Доходы</h2>
+                    <p><strong>Общий доход:</strong> <span th:text="${profile.transactionsGenerals[0]['income']}"/></p>
+                    <p><strong>Заработная плата:</strong> <span th:text="${profile.transactionsGenerals[0]['Заработная_плата']}"/></p>
+                    <p><strong>Прибыль от бизнеса:</strong> <span th:text="${profile.transactionsGenerals[0]['Прибыль_от_бизнеса']}"/></p>
+                    <p><strong>Дивиденты:</strong> <span th:text="${profile.transactionsGenerals[0]['Дивиденты']}"/></p>
+                    <p><strong>Аренда:</strong> <span th:text="${profile.transactionsGenerals[0]['Аренда']}"/></p>
+                    <p><strong>Премии и бонусы:</strong> <span th:text="${profile.transactionsGenerals[0]['Премии_и_бонусы']}"/></p>
+                    <p><strong>Интересы:</strong> <span th:text="${profile.transactionsGenerals[0]['Интересы']}"/></p>
+                    <p><strong>Пенсии и пособия:</strong> <span th:text="${profile.transactionsGenerals[0]['Пенсии_и_пособия']}"/></p>
+                    <p><strong>Другое:</strong> <span th:text="${profile.transactionsGenerals[0]['Другие_доходы']}"/></p>
+                </div>
 
-            <form th:action="@{/user/{id}/settings(id=${userId})}" method="GET" class="settings-form">
-                <input type="hidden" name="userId" th:value="${userId}">
-                <button type="submit" class="action-button">Настройки</button>
-            </form>
-        </div>
+                <div class="financial-info">
+                    <h2>Расходы</h2>
+                    <p><strong>Общие расходы:</strong> <span th:text="${profile.transactionsGenerals[1]['expense']}"/></p>
+                    <p><strong>Еда и напитки:</strong> <span th:text="${profile.transactionsGenerals[1]['Еда_и_напитки']}"/></p>
+                    <p><strong>Транспорт:</strong> <span th:text="${profile.transactionsGenerals[1]['Транспорт']}"/></p>
+                    <p><strong>Жилье:</strong> <span th:text="${profile.transactionsGenerals[1]['Жилье']}"/></p>
+                    <p><strong>Развлечения:</strong> <span th:text="${profile.transactionsGenerals[1]['Развлечения']}"/></p>
+                    <p><strong>Одежда:</strong> <span th:text="${profile.transactionsGenerals[1]['Одежда']}"/></p>
+                    <p><strong>Здоровье:</strong> <span th:text="${profile.transactionsGenerals[1]['Здоровье']}"/></p>
+                    <p><strong>Образование:</strong> <span th:text="${profile.transactionsGenerals[1]['Образование']}"/></p>
+                    <p><strong>Другое:</strong> <span th:text="${profile.transactionsGenerals[1]['Другие_расходы']}"/></p>
+                </div>
+            </div>
 
-        <div class="profile-details">
-            <h3>Информация о пользователе</h3>
-            <div class="details-grid">
-                <div class="detail-item">
-                    <span class="label">ID:</span>
-                    <span class="value" th:text="${user.id}"></span>
+            <hr><br>
+
+            <div class="button-group-wrapper">
+                <div class="button-group">
+                    <form action="/goals" method="GET">
+                        <input type="hidden" name="userId" th:value="${currentSessionUserId}">
+
+                        <button type="submit" class="goal-button">Цели</button>
+                    </form>
+
+                    <form action="/reminders" method="GET">
+                        <input type="hidden" name="userId" th:value="${currentSessionUserId}">
+
+                        <button type="submit" class="reminder-button">Напоминания</button>
+                    </form>
+
+                    <form action="/records" method="GET">
+                        <input type="hidden" name="userId" th:value="${currentSessionUserId}">
+
+                        <button type="submit" class="record-button">Записи</button>
+                    </form>
                 </div>
-                <div class="detail-item">
-                    <span class="label">Имя пользователя:</span>
-                    <span class="value" th:text="${user.username}"></span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">Email:</span>
-                    <span class="value" th:text="${user.email}"></span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">Дата регистрации:</span>
-                    <span class="value" th:text="${user.createdAt}"></span>
-                </div>
+
+                <form action="/logout" method="post">
+                    <button type="submit" class="logout-button">Выйти</button>
+                </form>
             </div>
         </div>
     </div>
