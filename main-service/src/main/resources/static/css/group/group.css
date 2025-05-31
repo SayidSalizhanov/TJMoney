@@ -1,0 +1,151 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('/static/background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-color: #f4f4f4;
+    font-size: 16px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    width: 100%;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.content {
+    width: 80%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #333;
+}
+
+.info, .financial-info {
+    margin-bottom: 20px;
+}
+
+p {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+strong {
+    font-weight: bold;
+}
+
+.financial-section {
+    display: flex;
+    justify-content: space-between;
+}
+
+.financial-info {
+    width: 48%;
+}
+
+.nav-button, .logout-button {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.nav-button:hover {
+    background-color: #0056b3;
+}
+
+.goal-button, .reminder-button, .record-button {
+    background-color: #28a745;
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.goal-button:hover, .reminder-button:hover, .record-button:hover {
+    background-color: #218838;
+}
+
+.logout-button {
+    background-color: #dc3545;
+}
+
+.logout-button:hover {
+    background-color: #c82333;
+}
+
+.button-group-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.button-group form {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.filter-form {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.filter-form label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.filter-form select {
+    padding: 5px;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.filter-form button {
+    background-color: lightgray;
+    color: black;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filter-form button:hover {
+    background-color: dimgrey;
+}
