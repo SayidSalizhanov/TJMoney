@@ -71,9 +71,8 @@ public class UserService {
 
     public void deleteUserApplicationToGroup(Long id, Long userId, Long applicationId) {
         restTemplate.delete(
-            apiBaseUrl + "/api/user/{id}/applications?userId={userId}",
-            applicationId,
-            id, userId
+            apiBaseUrl + "/api/user/{id}/applications?userId={userId}&applicationId={applicationId}",
+            id, userId, applicationId
         );
     }
 

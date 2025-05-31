@@ -1,6 +1,7 @@
 package ru.itis.mainservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -65,10 +66,13 @@ public class UserController {
             Model model) {
         List<ApplicationToGroupResponse> applications = userService.getUserApplicationsToGroup(id, userId, page, amountPerPage);
         model.addAttribute("applications", applications);
+        model.addAttribute("userId", id);
+        model.addAttribute("currentSessionUserId", userId);
         return "user/applications";
     }
 
     @DeleteMapping("/{id}/applications")
+    @ResponseStatus(HttpStatus.OK)
     public void deleteUserApplication(@PathVariable Long id, @RequestParam Long userId, @RequestParam Long applicationId) {
         userService.deleteUserApplicationToGroup(id, userId, applicationId);
     }

@@ -7,19 +7,27 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const formData = new FormData(this);
             const applicationId = formData.get("applicationId");
+            const userId = formData.get("userId");
             const button = document.querySelector(`#delete-button-${applicationId}`);
+            const applicationDiv = button.closest('.application');
 
             fetch(this.action, {
-                method: this.method,
-                body: new URLSearchParams(formData)
+                method: 'DELETE',
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    applicationId: applicationId,
+                    userId: userId
+                })
             }).then(response => {
                 if (response.ok) {
-                    console.log("Запрос успешен");
                     button.classList.add("disabled");
                     button.setAttribute("disabled", "disabled");
-                    button.textContent = "Заявка удалена";
+                    button.innerHTML = '<i class="bi bi-check"></i>';
+                    applicationDiv.style.opacity = "0.5";
                 } else {
-                    console.error("Ошибка отправки формы");
+                    console.error("Ошибка удаления заявки");
                 }
             }).catch(error => {
                 console.error("Ошибка:", error);
