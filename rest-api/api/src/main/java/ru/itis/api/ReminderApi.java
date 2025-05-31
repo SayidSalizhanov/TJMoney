@@ -38,7 +38,7 @@ public interface ReminderApi {
     @ResponseStatus(HttpStatus.OK)
     List<ReminderListResponse> getReminders(
             @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestParam(value = "groupId", required = false, defaultValue = "null") Long groupId,
+            @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage
     );
@@ -47,7 +47,7 @@ public interface ReminderApi {
     @ResponseStatus(HttpStatus.CREATED)
     Long createReminder(
             @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestParam(value = "groupId", required = false, defaultValue = "null") Long groupId,
+            @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestBody ReminderCreateRequest request
     );
 }

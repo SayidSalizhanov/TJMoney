@@ -39,7 +39,7 @@ public interface TransactionApi {
     @ResponseStatus(HttpStatus.OK)
     List<TransactionListResponse> getTransactions(
             @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestParam(value = "groupId", required = false, defaultValue = "null") Long groupId,
+            @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage
     );
@@ -48,7 +48,7 @@ public interface TransactionApi {
     @ResponseStatus(HttpStatus.CREATED)
     Long createTransaction(
             @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestParam(value = "groupId", required = false, defaultValue = "null") Long groupId,
+            @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestBody TransactionCreateRequest request
     );
 
