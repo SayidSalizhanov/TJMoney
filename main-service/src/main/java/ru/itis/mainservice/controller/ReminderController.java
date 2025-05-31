@@ -38,10 +38,10 @@ public class ReminderController {
         model.addAttribute("userId", userId);
         model.addAttribute("groupId", groupId);
         model.addAttribute("currentDateTime", LocalDateTime.now().format(formatter));
-        return "reminders/list";
+        return "reminders/reminders";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/new")
     public String getCreateReminderPage(
             @RequestParam("userId") Long userId,
             @RequestParam(value = "groupId", required = false) Long groupId,
@@ -50,10 +50,10 @@ public class ReminderController {
         model.addAttribute("userId", userId);
         model.addAttribute("groupId", groupId);
         model.addAttribute("currentDateTime", LocalDateTime.now().format(formatter));
-        return "reminders/create";
+        return "reminders/new";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/new")
     public String createReminder(
             @RequestParam("userId") Long userId,
             @RequestParam(value = "groupId", required = false) Long groupId,
@@ -73,11 +73,11 @@ public class ReminderController {
         model.addAttribute("reminder", reminder);
         model.addAttribute("reminderId", id);
         model.addAttribute("userId", userId);
-        model.addAttribute("formattedSendAt", reminder.sendAt().format(formatter));
-        return "reminders/details";
+        model.addAttribute("formattedSendAt", reminder.sendAt());
+        return "reminders/reminder";
     }
 
-    @PostMapping("/{id}/update")
+    @PutMapping("/{id}")
     public String updateReminder(
             @PathVariable Long id,
             @RequestParam("userId") Long userId,
@@ -87,7 +87,7 @@ public class ReminderController {
         return "redirect:/reminders/" + id + "?userId=" + userId;
     }
 
-    @PostMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public String deleteReminder(
             @PathVariable Long id,
             @RequestParam("userId") Long userId) {
