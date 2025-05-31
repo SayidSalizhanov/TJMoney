@@ -25,17 +25,21 @@ public class UserController {
     public String getUserSettings(@PathVariable Long id, @RequestParam Long userId, Model model) {
         UserSettingsResponse settings = userService.getUserSettingsInfo(id, userId);
         model.addAttribute("settings", settings);
+        model.addAttribute("currentSessionUserId", userId);
+        model.addAttribute("userId", id);
         return "user/settings";
     }
 
     @PutMapping("/{id}/settings")
-    public void updateUserSettings(@PathVariable Long id, @RequestParam Long userId, @RequestBody UserSettingsRequest request) {
+    public String updateUserSettings(@PathVariable Long id, @RequestParam Long userId, UserSettingsRequest request) {
         userService.updateUserSettingsInfo(id, userId, request);
+        return "redirect:/user/" + id + "?userId=" + userId;
     }
 
     @DeleteMapping("/{id}/settings")
-    public void deleteUser(@PathVariable Long id, @RequestParam Long userId) {
+    public String deleteUser(@PathVariable Long id, @RequestParam Long userId) {
         userService.deleteUser(id, userId);
+        return "redirect:/articles";
     }
 
     @GetMapping("/{id}/groups")
@@ -68,7 +72,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/changePassword")
-    public void changeUserPassword(@PathVariable Long id, @RequestParam Long userId, @RequestBody UserPasswordChangeRequest request) {
+    public void changeUserPassword(@PathVariable Long id, @RequestParam Long userId, UserPasswordChangeRequest request) {
         userService.changeUserPassword(id, userId, request);
     }
 

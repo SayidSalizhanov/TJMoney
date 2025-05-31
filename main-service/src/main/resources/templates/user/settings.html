@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Настройки пользователя</title>
-    <link rel="stylesheet" th:href="@{/css/user/userSettings.css}">
+    <link rel="stylesheet" th:href="@{/css/user/settings.css}">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -15,7 +15,9 @@
         <div class="settings-section">
             <h3>Основная информация</h3>
             <form th:action="@{/user/{id}/settings(id=${userId})}" method="POST" class="settings-form">
-                <input type="hidden" name="userId" th:value="${userId}">
+                <input type="hidden" name="_method" value="put">
+
+                <input type="hidden" name="userId" th:value="${currentSessionUserId}">
                 
                 <div class="form-group">
                     <label for="username">Имя пользователя:</label>
@@ -23,64 +25,49 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" th:value="${settings.email}" required>
+                    <label for="telegramId">Telegram:</label>
+                    <input type="text" id="telegramId" name="telegramId" th:value="${settings.telegramId}">
+                </div>
+
+                <div class="form-group">
+                    <label for="sendingToTelegram">Хотите получать напоминания и другую информацию через телеграмм бота?</label>
+                    <input type="hidden" name="sendingToTelegram" value="false">
+                    <input type="checkbox" id="sendingToTelegram" name="sendingToTelegram"
+                           value="true"
+                           th:checked="${settings.sendingToTelegram}">
+                </div>
+
+                <div class="form-group">
+                    <label for="sendingToEmail">Хотите получать напоминания и другую информацию на почту?</label>
+                    <input type="hidden" name="sendingToEmail" value="false">
+                    <input type="checkbox" id="sendingToEmail" name="sendingToEmail"
+                           value="true"
+                           th:checked="${settings.sendingToEmail}">
                 </div>
 
                 <button type="submit" class="save-button">Сохранить изменения</button>
             </form>
         </div>
 
-        <div class="settings-section">
-            <h3>Смена пароля</h3>
-            <form th:action="@{/user/{id}/changePassword(id=${userId})}" method="POST" class="password-form">
-                <input type="hidden" name="userId" th:value="${userId}">
-                
-                <div class="form-group">
-                    <label for="currentPassword">Текущий пароль:</label>
-                    <input type="password" id="currentPassword" name="currentPassword" required>
-                </div>
+        <div class="button-group">
+            <form th:action="@{/user/{id}/changePassword(id=${userId})}" method="GET" class="settings-form-inline">
+                <input type="hidden" name="userId" th:value="${currentSessionUserId}">
 
-                <div class="form-group">
-                    <label for="newPassword">Новый пароль:</label>
-                    <input type="password" id="newPassword" name="newPassword" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="repeatNewPassword">Повторите новый пароль:</label>
-                    <input type="password" id="repeatNewPassword" name="repeatNewPassword" required>
-                </div>
-
-                <button type="submit" class="save-button">Изменить пароль</button>
-            </form>
-        </div>
-
-        <div class="settings-section">
-            <h3>Аватар</h3>
-            <form th:action="@{/user/{id}/changeAvatar(id=${userId})}" method="POST" enctype="multipart/form-data" class="avatar-form">
-                <input type="hidden" name="userId" th:value="${userId}">
-                
-                <div class="form-group">
-                    <label for="avatarImage">Выберите новый аватар:</label>
-                    <input type="file" id="avatarImage" name="avatarImage" accept="image/*">
-                </div>
-
-                <button type="submit" class="save-button">Загрузить аватар</button>
+                <button type="submit" class="small-button">Сменить пароль</button>
             </form>
 
-            <form th:action="@{/user/{id}/changeAvatar(id=${userId})}" method="POST" class="delete-avatar-form">
-                <input type="hidden" name="userId" th:value="${userId}">
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit" class="delete-button">Удалить аватар</button>
-            </form>
-        </div>
+            <form th:action="@{/user/{id}/changeAvatar(id=${userId})}" method="GET" class="settings-form-inline">
+                <input type="hidden" name="userId" th:value="${currentSessionUserId}">
 
-        <div class="settings-section danger-zone">
-            <h3>Опасная зона</h3>
-            <form th:action="@{/user/{id}(id=${userId})}" method="POST" class="delete-account-form">
-                <input type="hidden" name="userId" th:value="${userId}">
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit" class="delete-account-button">Удалить аккаунт</button>
+                <button type="submit" class="small-button photo-button">Сменить аватар</button>
+            </form>
+
+            <form th:action="@{/user/{id}/settings(id=${userId})}" method="POST" class="settings-form-inline">
+                <input type="hidden" name="_method" value="delete">
+
+                <input type="hidden" name="userId" th:value="${currentSessionUserId}">
+
+                <button type="submit" class="small-button delete-button">Удалить пользователя</button>
             </form>
         </div>
     </div>
