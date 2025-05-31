@@ -29,7 +29,7 @@ public class User {
     @Column
     private String email;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Column(name = "telegram_id")
@@ -42,6 +42,15 @@ public class User {
     private Boolean sendingToEmail;
 
     //----------
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @Builder.Default
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
     @Builder.Default
