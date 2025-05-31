@@ -3,22 +3,22 @@
 <head th:fragment="header">
     <meta charset="UTF-8">
     <title>Header</title>
-    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
 </head>
 <body>
 <header th:fragment="header">
-    <nav class="navbar">
-        <div class="nav-brand">
-            <a th:href="@{/}" class="brand-link">Finance Manager</a>
-        </div>
-        <div class="nav-links">
-            <a th:href="@{/aboutUs}" class="nav-link">О нас</a>
-            <a th:href="@{/login}" class="nav-link" th:if="${#authorization == null}">Войти</a>
-            <a th:href="@{/register}" class="nav-link" th:if="${#authorization == null}">Регистрация</a>
-            <form th:if="${#authorization != null}" th:action="@{/logout}" method="post" class="logout-form">
-                <button type="submit" class="logout-button">Выйти</button>
-            </form>
-        </div>
+    <div class="logo">
+        <img th:src="@{/logo.png}" alt="Logo">
+    </div>
+    <nav>
+        <ul class="centered-menu">
+            <li><a href="/articles">Главная</a></li>
+            <li><a href="https://kaktotak.by/kalkuliatory" target="_blank">Вычисления</a></li>
+            <li><a href="/aboutUs">О нас</a></li>
+        </ul>
+        <ul>
+            <li><a href="/user">Профиль</a></li>
+        </ul>
     </nav>
 </header>
 </body>

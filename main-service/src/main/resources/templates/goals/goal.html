@@ -19,7 +19,9 @@
         </div>
 
         <div class="actions">
-            <form th:action="@{/goals/{id}/update(id=${goal.id})}" method="POST" class="edit-form">
+            <form th:action="@{/goals/{id}(id=${goalId})}" method="post" class="goal-form">
+                <input type="hidden" name="_method" value="put">
+
                 <input type="hidden" name="userId" th:value="${userId}">
                 
                 <div class="form-group">
@@ -40,7 +42,9 @@
                 <button type="submit" class="save-button">Сохранить</button>
             </form>
 
-            <form th:action="@{/goals/{id}/delete(id=${goal.id})}" method="POST" class="delete-form">
+            <form th:action="@{/goals/{id}(id=${goalId})}" method="post" class="delete-form">
+                <input type="hidden" name="_method" value="delete">
+
                 <input type="hidden" name="userId" th:value="${userId}">
                 <button type="submit" class="delete-button">Удалить</button>
             </form>

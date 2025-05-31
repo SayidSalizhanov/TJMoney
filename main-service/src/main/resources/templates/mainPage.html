@@ -8,30 +8,13 @@
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="content-wrapper">
-    <div class="content">
-        <h2>Последние статьи</h2>
-        <div class="articles-container">
-            <div th:each="article : ${articles}" class="article-card">
-                <h3 th:text="${article.title}">Заголовок статьи</h3>
-                <p th:text="${article.content}">Содержание статьи</p>
-                <div class="article-meta">
-                    <span th:text="${article.author}">Автор</span>
-                    <span th:text="${article.publishedAt}">Дата</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="pagination" th:if="${totalPages > 1}">
-            <a th:if="${currentPage > 0}" th:href="@{/page(page=${currentPage - 1})}" class="page-link">Предыдущая</a>
-            <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                <a th:href="@{/page(page=${i})}" 
-                   th:text="${i + 1}"
-                   th:class="${currentPage == i ? 'page-link active' : 'page-link'}">
-                </a>
-            </span>
-            <a th:if="${currentPage < totalPages - 1}" th:href="@{/page(page=${currentPage + 1})}" class="page-link">Следующая</a>
-        </div>
+<h1>Последние статьи</h1>
+<div th:each="article : ${articles}" class="article-card">
+    <div class="article">
+        <h2 th:text="${article.title}">Заголовок статьи</h2>
+        <p class="content" th:text="${article.content}">Содержание статьи</p>
+        <span th:text="${article.author}">Автор</span>
+        <span th:text="${article.publishedAt}">Дата</span>
     </div>
 </div>
 </body>

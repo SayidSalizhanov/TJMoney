@@ -31,10 +31,10 @@ public class GoalController {
         model.addAttribute("goals", goals);
         model.addAttribute("userId", userId);
         model.addAttribute("groupId", groupId);
-        return "goals/list";
+        return "goals/goals";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/new")
     public String getCreateGoalPage(
             @RequestParam("userId") Long userId,
             @RequestParam(value = "groupId", required = false) Long groupId,
@@ -42,10 +42,10 @@ public class GoalController {
 
         model.addAttribute("userId", userId);
         model.addAttribute("groupId", groupId);
-        return "goals/create";
+        return "goals/new";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/new")
     public String createGoal(
             @RequestParam("userId") Long userId,
             @RequestParam(value = "groupId", required = false) Long groupId,
@@ -65,10 +65,10 @@ public class GoalController {
         model.addAttribute("goal", goal);
         model.addAttribute("goalId", id);
         model.addAttribute("userId", userId);
-        return "goals/details";
+        return "goals/goal";
     }
 
-    @PostMapping("/{id}/update")
+    @PutMapping("/{id}")
     public String updateGoal(
             @PathVariable Long id,
             @RequestParam("userId") Long userId,
@@ -78,7 +78,7 @@ public class GoalController {
         return "redirect:/goals/" + id + "?userId=" + userId;
     }
 
-    @PostMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public String deleteGoal(
             @PathVariable Long id,
             @RequestParam("userId") Long userId) {
