@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public record GroupMemberResponse (
         Long userId,
         String username,
-        LocalDateTime joinedAt,
+        String joinedAt,
         String role
 ) {
 }

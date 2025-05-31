@@ -9,7 +9,7 @@ public record TransactionSettingsResponse (
         Integer amount,
         String type,
         String category,
-        LocalDateTime dateTime,
+        String dateTime,
         String ownerName,
         String description
 ) {

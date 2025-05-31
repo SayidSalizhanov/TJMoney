@@ -5,6 +5,8 @@ import ru.itis.dto.response.transaction.TransactionListResponse;
 import ru.itis.dto.response.transaction.TransactionSettingsResponse;
 import ru.itis.impl.model.Transaction;
 
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class TransactionMapper {
 
@@ -13,7 +15,7 @@ public class TransactionMapper {
                 .amount(transaction.getAmount())
                 .type(transaction.getType())
                 .category(transaction.getCategory())
-                .dateTime(transaction.getDateTime())
+                .dateTime(transaction.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .ownerName(transaction.getUser().getUsername())
                 .description(transaction.getDescription())
                 .build();
@@ -24,7 +26,7 @@ public class TransactionMapper {
                 .id(transaction.getId())
                 .amount(transaction.getAmount())
                 .category(transaction.getCategory())
-                .dateTime(transaction.getDateTime())
+                .dateTime(transaction.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .username(transaction.getUser().getUsername())
                 .type(transaction.getType())
                 .build();

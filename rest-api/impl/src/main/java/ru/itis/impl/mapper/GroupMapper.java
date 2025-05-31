@@ -7,6 +7,7 @@ import ru.itis.dto.response.group.GroupSettingsResponse;
 import ru.itis.dto.response.group.GroupViewingResponse;
 import ru.itis.impl.model.Group;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class GroupMapper {
                 .userRole(userRole)
                 .id(group.getId())
                 .name(group.getName())
-                .createdAt(group.getCreatedAt())
+                .createdAt(group.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .description(group.getDescription())
                 .build();
     }
@@ -43,7 +44,7 @@ public class GroupMapper {
         return GroupViewingResponse.builder()
                 .id(group.getId())
                 .name(group.getName())
-                .createdAt(group.getCreatedAt())
+                .createdAt(group.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .description(group.getDescription())
                 .membersCount(membersCount)
                 .adminName(adminName)

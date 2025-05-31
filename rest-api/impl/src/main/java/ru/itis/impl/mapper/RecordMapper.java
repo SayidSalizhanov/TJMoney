@@ -5,6 +5,8 @@ import ru.itis.dto.response.record.RecordListResponse;
 import ru.itis.dto.response.record.RecordSettingsResponse;
 import ru.itis.impl.model.Record;
 
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class RecordMapper {
 
@@ -12,8 +14,8 @@ public class RecordMapper {
         return RecordSettingsResponse.builder()
                 .title(record.getTitle())
                 .content(record.getContent())
-                .createdAt(record.getCreatedAt())
-                .updatedAt(record.getUpdatedAt())
+                .createdAt(record.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .updatedAt(record.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }
 

@@ -9,6 +9,6 @@ public record ApplicationWithUserInfoResponse (
         Long applicationId,
         Long userId,
         String username,
-        LocalDateTime sendAt
+        String sendAt
 ) {
 }

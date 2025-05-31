@@ -5,6 +5,8 @@ import ru.itis.dto.response.reminder.ReminderListResponse;
 import ru.itis.dto.response.reminder.ReminderSettingsResponse;
 import ru.itis.impl.model.Reminder;
 
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class ReminderMapper {
 
@@ -12,7 +14,7 @@ public class ReminderMapper {
         return ReminderSettingsResponse.builder()
                 .title(reminder.getTitle())
                 .message(reminder.getMessage())
-                .sendAt(reminder.getSendAt())
+                .sendAt(reminder.getSendAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .status(reminder.getStatus())
                 .build();
     }

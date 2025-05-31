@@ -9,7 +9,7 @@ public record TransactionListResponse (
         Long id,
         Integer amount,
         String username,
-        LocalDateTime dateTime,
+        String dateTime,
         String category,
         String type
 ) {

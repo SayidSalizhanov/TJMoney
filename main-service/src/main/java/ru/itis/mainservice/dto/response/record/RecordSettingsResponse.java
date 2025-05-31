@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public record RecordSettingsResponse (
         String title,
         String content,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        String createdAt,
+        String updatedAt
 ) {
 }

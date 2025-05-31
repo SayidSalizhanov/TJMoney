@@ -12,7 +12,7 @@ public record GroupProfileResponse (
         String userRole,
         Long id,
         String name,
-        LocalDateTime createdAt,
+        String createdAt,
         String description
 ) {
 }

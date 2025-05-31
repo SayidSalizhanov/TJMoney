@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public record GroupViewingResponse (
         Long id,
         String name,
-        LocalDateTime createdAt,
+        String createdAt,
         String description,
         Integer membersCount,
         String adminName

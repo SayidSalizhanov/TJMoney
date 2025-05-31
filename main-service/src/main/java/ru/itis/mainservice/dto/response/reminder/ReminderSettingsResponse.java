@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Builder
 public record ReminderSettingsResponse (
         String title,
-        LocalDateTime sendAt,
+        String sendAt,
         String status,
         String message
 ) {

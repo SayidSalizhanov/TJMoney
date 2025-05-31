@@ -5,6 +5,8 @@ import ru.itis.dto.response.application.ApplicationWithUserInfoResponse;
 import ru.itis.impl.model.Application;
 import ru.itis.impl.model.User;
 
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class ApplicationMapper {
 
@@ -15,7 +17,7 @@ public class ApplicationMapper {
                 .applicationId(application.getId())
                 .userId(user.getId())
                 .username(user.getUsername())
-                .sendAt(application.getSendAt())
+                .sendAt(application.getSendAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }
 }
