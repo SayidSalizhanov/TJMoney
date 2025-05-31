@@ -31,10 +31,10 @@ public class RecordController {
         model.addAttribute("records", records);
         model.addAttribute("userId", userId);
         model.addAttribute("groupId", groupId);
-        return "records/list";
+        return "records/records";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/new")
     public String getCreateRecordPage(
             @RequestParam("userId") Long userId,
             @RequestParam(value = "groupId", required = false) Long groupId,
@@ -42,10 +42,10 @@ public class RecordController {
 
         model.addAttribute("userId", userId);
         model.addAttribute("groupId", groupId);
-        return "records/create";
+        return "records/new";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/new")
     public String createRecord(
             @RequestParam("userId") Long userId,
             @RequestParam(value = "groupId", required = false) Long groupId,
@@ -65,10 +65,10 @@ public class RecordController {
         model.addAttribute("record", record);
         model.addAttribute("recordId", id);
         model.addAttribute("userId", userId);
-        return "records/details";
+        return "records/record";
     }
 
-    @PostMapping("/{id}/update")
+    @PutMapping("/{id}")
     public String updateRecord(
             @PathVariable Long id,
             @RequestParam("userId") Long userId,
@@ -78,7 +78,7 @@ public class RecordController {
         return "redirect:/records/" + id + "?userId=" + userId;
     }
 
-    @PostMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public String deleteRecord(
             @PathVariable Long id,
             @RequestParam("userId") Long userId) {

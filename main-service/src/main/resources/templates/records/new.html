@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Создание записи</title>
-    <link rel="stylesheet" th:href="@{/css/records/records.css}">
+    <link rel="stylesheet" th:href="@{/css/records/new.css}">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="content">
-    <div class="record-form">
-        <h2>Создание новой записи</h2>
-        
-        <form th:action="@{/records/create}" method="POST">
+    <h2>Создание новой записи</h2>
+
+    <form th:action="@{/records/new}" method="POST" class="record-form">
+        <div class="form">
             <input type="hidden" name="userId" th:value="${userId}">
             <input type="hidden" name="groupId" th:value="${groupId}">
-            
+
             <div class="form-group">
                 <label for="title">Название:</label>
                 <input type="text" id="title" name="title" required>
@@ -27,8 +27,8 @@
             </div>
 
             <button type="submit" class="save-button">Создать запись</button>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 </body>
 </html> 
