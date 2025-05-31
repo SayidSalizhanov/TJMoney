@@ -16,7 +16,7 @@ import ru.itis.mainservice.service.UserService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -51,6 +51,8 @@ public class UserController {
             Model model) {
         List<UserGroupResponse> groups = userService.getUserGroups(id, userId, page, amountPerPage);
         model.addAttribute("groups", groups);
+        model.addAttribute("userId", id);
+        model.addAttribute("currentSessionUserId", userId);
         return "user/groups";
     }
 
