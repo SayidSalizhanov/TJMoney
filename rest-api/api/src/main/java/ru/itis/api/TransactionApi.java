@@ -56,7 +56,7 @@ public interface TransactionApi {
     @ResponseStatus(HttpStatus.CREATED)
     List<Long> uploadCsvTransactions(
             @RequestParam("userId") Long userId, // todo get from authentication
-            @RequestParam("groupId") Long groupId,
+            @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestPart("file") MultipartFile csvFile
     );
 }

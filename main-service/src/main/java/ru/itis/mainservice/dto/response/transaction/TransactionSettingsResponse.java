@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record TransactionSettingsResponse (
+        Long groupId,
         Integer amount,
         String type,
         String category,

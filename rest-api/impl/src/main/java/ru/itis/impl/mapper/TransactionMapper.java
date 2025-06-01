@@ -3,6 +3,7 @@ package ru.itis.impl.mapper;
 import org.springframework.stereotype.Component;
 import ru.itis.dto.response.transaction.TransactionListResponse;
 import ru.itis.dto.response.transaction.TransactionSettingsResponse;
+import ru.itis.impl.model.Group;
 import ru.itis.impl.model.Transaction;
 
 import java.time.format.DateTimeFormatter;
@@ -11,7 +12,9 @@ import java.time.format.DateTimeFormatter;
 public class TransactionMapper {
 
     public TransactionSettingsResponse toTransactionSettingsResponse(Transaction transaction) {
+        Group group = transaction.getGroup();
         return TransactionSettingsResponse.builder()
+                .groupId(group == null ? null : group.getId())
                 .amount(transaction.getAmount())
                 .type(transaction.getType())
                 .category(transaction.getCategory())

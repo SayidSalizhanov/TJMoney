@@ -77,6 +77,8 @@ public class CsvParsingServiceImpl implements CsvParsingService {
                                 .type(nextLine[2])
                                 .dateTime(LocalDateTime.parse(nextLine[3], DATE_TIME_FORMATTER))
                                 .description(nextLine[4])
+                                .user(user)
+                                .group(group)
                                 .build();
                         transactions.add(transaction);
                     } catch (NumberFormatException e) {
