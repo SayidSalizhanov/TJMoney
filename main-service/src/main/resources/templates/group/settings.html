@@ -11,18 +11,18 @@
 <div class="content-wrapper">
     <div class="content">
         <h2>Настройки группы</h2>
-        <form th:action="@{/group/settings}" method="post" class="settings-form">
+        <form th:action="@{/groups/{id}/settings(id=${settings.id})}" method="post" class="settings-form">
             <input type="hidden" name="_method" value="PUT">
-            <input type="hidden" name="groupId" th:value="${groupId}">
+            <input type="hidden" name="userId" th:value="${userId}">
 
             <div class="form-group">
                 <label for="name">Название группы:</label>
-                <input type="text" id="name" name="name" th:value="${group.name}">
+                <input type="text" id="name" name="name" th:value="${settings.name}">
             </div>
 
             <div class="form-group">
                 <label for="description">Описание:</label>
-                <textarea id="description" name="description" th:text="${group.description}"></textarea>
+                <textarea id="description" name="description" th:text="${settings.description}"></textarea>
             </div>
 
             <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
@@ -30,11 +30,13 @@
             <button type="submit" class="save-button">Сохранить изменения</button>
         </form>
 
-        <form th:action="@{/group/settings}" method="POST" class="delete-form">
-            <input type="hidden" name="_method" value="DELETE">
-            <input type="hidden" name="groupId" th:value="${groupId}">
-            <button type="submit" class="delete-button">Удалить группу</button>
-        </form>
+        <div th:if="${settings.userRole.toUpperCase() == 'ADMIN'}">
+            <form th:action="@{/groups/{id}/settings(id=${settings.id})}" method="POST" class="delete-form">
+                <input type="hidden" name="_method" value="delete">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <button type="submit" class="delete-button">Удалить группу</button>
+            </form>
+        </div>
     </div>
 </div>
 </body>

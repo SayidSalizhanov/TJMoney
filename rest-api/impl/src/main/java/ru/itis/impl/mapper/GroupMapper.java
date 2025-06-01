@@ -32,11 +32,12 @@ public class GroupMapper {
                 .build();
     }
 
-    public GroupSettingsResponse toGroupSettingsResponse(Group group) {
+    public GroupSettingsResponse toGroupSettingsResponse(Group group, String userRole) {
         return GroupSettingsResponse.builder()
                 .id(group.getId())
                 .name(group.getName())
                 .description(group.getDescription())
+                .userRole(userRole)
                 .build();
     }
 

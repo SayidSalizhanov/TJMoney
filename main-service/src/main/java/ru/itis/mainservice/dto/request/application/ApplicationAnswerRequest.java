@@ -5,7 +5,7 @@ import lombok.Builder;
 @Builder
 public record ApplicationAnswerRequest (
         Long applicationId,
-        Long userId,
+        Long userForJoinId,
         String applicationStatus
 ) {
 }

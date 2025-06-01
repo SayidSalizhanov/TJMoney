@@ -6,11 +6,11 @@ document.addEventListener("DOMContentLoaded", function() {
             event.preventDefault();
 
             const formData = new FormData(this);
-            const username = formData.get("username");
-            const button = document.querySelector(`#delete-button-${username}`);
+            const userIdForDelete = formData.get("userIdForDelete")
+            const button = document.querySelector(`#delete-button-${userIdForDelete}`);
 
             fetch(this.action, {
-                method: this.method,
+                method: 'DELETE',
                 body: new URLSearchParams(formData)
             }).then(response => {
                 if (response.ok) {

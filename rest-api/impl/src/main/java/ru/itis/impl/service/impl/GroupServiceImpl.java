@@ -88,6 +88,10 @@ public class GroupServiceImpl implements GroupService {
         excludedIds.addAll(userGroups);
         excludedIds.addAll(nonRejectedUserApplicationsGroupIds);
 
+        if (excludedIds.isEmpty()) return groupRepository.findAll().stream()
+                .map(groupMapper::toGroupListResponse)
+                .toList();
+
         return groupRepository.findByIdNotIn(excludedIds).stream()
                 .map(groupMapper::toGroupListResponse)
                 .toList();
@@ -113,7 +117,9 @@ public class GroupServiceImpl implements GroupService {
 
         checkUserIsGroupAdmin(user, group);
 
-        return groupMapper.toGroupSettingsResponse(group);
+        String userRole = groupMemberService.getGroupMember(user, group).getRole();
+
+        return groupMapper.toGroupSettingsResponse(group, userRole);
     }
 
     @Override
@@ -185,7 +191,7 @@ public class GroupServiceImpl implements GroupService {
 
         checkUserIsGroupMemberVoid(user, group);
 
-        Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by("username"));
+        Pageable pageable = PageRequest.of(page, amountPerPage);
 
         return groupMemberService.getGroupMembersWithPagination(group, pageable).stream()
                 .map(groupMemberMapper::toGroupMemberResponse)
@@ -228,8 +234,8 @@ public class GroupServiceImpl implements GroupService {
 
         applicationService.updateStatus(request.applicationId(), request.applicationStatus());
         if (request.applicationStatus().equalsIgnoreCase("Одобрено")) {
-            User joinedUser = requireUserById(request.userId());
-            groupMemberService.save(joinedUser, group);
+            User joinedUser = requireUserById(request.userForJoinId());
+            groupMemberService.saveNoAdmin(joinedUser, group);
         }
 
         return request.applicationId();

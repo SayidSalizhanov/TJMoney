@@ -3,64 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Участники группы</title>
-    <link rel="stylesheet" th:href="@{/css/group/groups.css}">
+    <link rel="stylesheet" th:href="@{/css/group/members.css}">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="content">
-    <div class="members-list">
+<div class="content-wrapper">
+    <div class="content">
         <h2>Участники группы</h2>
-
-        <div class="filters">
-            <form th:action="@{/groups/{id}/members(id=${groupId})}" method="GET" class="filter-form">
-                <input type="hidden" name="userId" th:value="${userId}">
-                
-                <select name="sort" class="sort-select">
-                    <option value="username" th:selected="${sort == 'username'}">По имени пользователя</option>
-                    <option value="role" th:selected="${sort == 'role'}">По роли</option>
-                </select>
-
-                <select name="amountPerPage" class="page-size-select">
-                    <option value="10" th:selected="${amountPerPage == 10}">10</option>
-                    <option value="20" th:selected="${amountPerPage == 20}">20</option>
-                    <option value="50" th:selected="${amountPerPage == 50}">50</option>
-                </select>
-
-                <button type="submit" class="filter-button">Применить</button>
-            </form>
-        </div>
-
-        <div class="members">
-            <div th:each="member : ${members}" class="member">
-                <div class="member-info">
-                    <p>Имя пользователя: <span th:text="${member.username}"></span></p>
-                    <p>Роль: <span th:text="${member.role}"></span></p>
+        <div class="members-list">
+            <div th:each="member : ${members}">
+                <div class="member">
+                    <p><strong>Пользователь:</strong> <span th:text="${member.username}"/></p>
+                    <p><strong>Дата присоединения:</strong> <span th:text="${member.joinedAt}"/></p>
+                    <p><strong>Роль:</strong> <span th:text="${member.role}"/></p>
                 </div>
-
-                <form th:if="${member.role != 'ADMIN'}" th:action="@{/groups/{id}/members(id=${groupId})}" method="POST" class="delete-member-form">
-                    <input type="hidden" name="userId" th:value="${userId}">
-                    <input type="hidden" name="userIdForDelete" th:value="${member.userId}">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="delete-member-button">Удалить участника</button>
-                </form>
             </div>
-        </div>
-
-        <div class="pagination" th:if="${!members.empty}">
-            <form th:action="@{/groups/{id}/members(id=${groupId})}" method="GET" class="pagination-form">
-                <input type="hidden" name="userId" th:value="${userId}">
-                <input type="hidden" name="sort" th:value="${sort}">
-                <input type="hidden" name="amountPerPage" th:value="${amountPerPage}">
-                
-                <button type="submit" name="page" th:value="${page - 1}" th:disabled="${page == 0}" class="pagination-button">Предыдущая</button>
-                <span class="page-number" th:text="${page + 1}"></span>
-                <button type="submit" name="page" th:value="${page + 1}" class="pagination-button">Следующая</button>
-            </form>
-        </div>
-
-        <div class="empty-list" th:if="${#lists.isEmpty(members)}">
-            <p>В группе пока нет участников</p>
         </div>
     </div>
 </div>

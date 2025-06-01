@@ -3,72 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Заявки на вступление</title>
-    <link rel="stylesheet" th:href="@{/css/group/groups.css}">
+    <link rel="stylesheet" th:href="@{/css/group/applications.css}">
+    <script th:src="@{/js/group/adminApplications.js}" defer></script>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="content">
-    <div class="applications-list">
+<div class="content-wrapper">
+    <div class="content">
         <h2>Заявки на вступление в группу</h2>
 
-        <div class="filters">
-            <form th:action="@{/groups/{id}/applications(id=${groupId})}" method="GET" class="filter-form">
-                <input type="hidden" name="userId" th:value="${userId}">
-                
-                <select name="sort" class="sort-select">
-                    <option value="username" th:selected="${sort == 'username'}">По имени пользователя</option>
-                    <option value="date" th:selected="${sort == 'date'}">По дате</option>
-                </select>
+        <div class="applications-list">
+            <div class="applications">
+                <div th:each="applicationOne : ${applications}" class="application">
+                    <div class="application-info">
+                        <p>Имя пользователя: <span th:text="${applicationOne.username}"></span></p>
+                        <p>Дата подачи: <span th:text="${applicationOne.sendAt}"></span></p>
+                    </div>
 
-                <select name="amountPerPage" class="page-size-select">
-                    <option value="10" th:selected="${amountPerPage == 10}">10</option>
-                    <option value="20" th:selected="${amountPerPage == 20}">20</option>
-                    <option value="50" th:selected="${amountPerPage == 50}">50</option>
-                </select>
+                    <form th:action="@{/groups/{id}/applications(id=${groupId})}" method="POST" class="action-form" th:id="|approve-form-${applicationOne.applicationId}|">
+                        <input type="hidden" name="userId" th:value="${userId}">
+                        <input type="hidden" name="userForJoinId" th:value="${applicationOne.userId}">
+                        <input type="hidden" name="applicationId" th:value="${applicationOne.applicationId}">
+                        <input type="hidden" name="applicationStatus" value="Одобрено">
+                        <button type="submit" class="approve-button" th:id="|approve-button-${applicationOne.applicationId}|">Принять</button>
+                    </form>
 
-                <button type="submit" class="filter-button">Применить</button>
-            </form>
-        </div>
-
-        <div class="applications">
-            <div th:each="application : ${applications}" class="application">
-                <div class="application-info">
-                    <p>Имя пользователя: <span th:text="${application.username}"></span></p>
-                    <p>Email: <span th:text="${application.email}"></span></p>
-                    <p>Дата подачи: <span th:text="${#temporals.format(application.createdAt, 'dd.MM.yyyy HH:mm')}"></span></p>
+                    <form th:action="@{/groups/{id}/applications(id=${groupId})}" method="POST" class="action-form" th:id="|reject-form-${applicationOne.applicationId}|">
+                        <input type="hidden" name="userId" th:value="${userId}">
+                        <input type="hidden" name="userForJoinId" th:value="${applicationOne.userId}">
+                        <input type="hidden" name="applicationId" th:value="${applicationOne.applicationId}">
+                        <input type="hidden" name="applicationStatus" value="Отклонено">
+                        <button type="submit" class="reject-button" th:id="|reject-button-${applicationOne.applicationId}|">Отклонить</button>
+                    </form>
                 </div>
-
-                <form th:action="@{/groups/{id}/applications(id=${groupId})}" method="POST" class="answer-form">
-                    <input type="hidden" name="userId" th:value="${userId}">
-                    <input type="hidden" name="applicationId" th:value="${application.id}">
-                    <input type="hidden" name="answer" value="ACCEPT">
-                    <button type="submit" class="accept-button">Принять</button>
-                </form>
-
-                <form th:action="@{/groups/{id}/applications(id=${groupId})}" method="POST" class="answer-form">
-                    <input type="hidden" name="userId" th:value="${userId}">
-                    <input type="hidden" name="applicationId" th:value="${application.id}">
-                    <input type="hidden" name="answer" value="REJECT">
-                    <button type="submit" class="reject-button">Отклонить</button>
-                </form>
             </div>
-        </div>
 
-        <div class="pagination" th:if="${!applications.empty}">
-            <form th:action="@{/groups/{id}/applications(id=${groupId})}" method="GET" class="pagination-form">
-                <input type="hidden" name="userId" th:value="${userId}">
-                <input type="hidden" name="sort" th:value="${sort}">
-                <input type="hidden" name="amountPerPage" th:value="${amountPerPage}">
-                
-                <button type="submit" name="page" th:value="${page - 1}" th:disabled="${page == 0}" class="pagination-button">Предыдущая</button>
-                <span class="page-number" th:text="${page + 1}"></span>
-                <button type="submit" name="page" th:value="${page + 1}" class="pagination-button">Следующая</button>
-            </form>
-        </div>
-
-        <div class="empty-list" th:if="${#lists.isEmpty(applications)}">
-            <p>Нет активных заявок на вступление</p>
+            <div class="empty-list" th:if="${#lists.isEmpty(applications)}">
+                <p>Нет активных заявок на вступление</p>
+            </div>
         </div>
     </div>
 </div>

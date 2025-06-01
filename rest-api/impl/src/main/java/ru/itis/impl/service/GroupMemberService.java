@@ -14,4 +14,5 @@ public interface GroupMemberService {
     List<GroupMember> getGroupMembersWithPagination(Group group, Pageable pageable);
     List<GroupMember> getByUser(User user);
     Long save(User user, Group group);
+    Long saveNoAdmin(User joinedUser, Group group);
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Группа</title>
-    <link rel="stylesheet" th:href="@{/css/group/groupViewing.css}">
+    <link rel="stylesheet" th:href="@{/css/group/viewing.css}">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -15,8 +15,8 @@
         <p><strong>Название:</strong> <span th:text="${group.name}"></span></p>
         <p><strong>Создана:</strong> <span th:text="${group.createdAt}"></span></p>
         <p><strong>Описание:</strong> <span th:text="${group.description}"></span></p>
-        <p><strong>Количество участников:</strong> <span th:text="${membersCount}"></span></p>
-        <p><strong>Админ:</strong> <span th:text="${admin}"></span></p>
+        <p><strong>Количество участников:</strong> <span th:text="${group.membersCount}"></span></p>
+        <p><strong>Админ:</strong> <span th:text="${group.adminName}"></span></p>
     </div>
 </div>
 </body>

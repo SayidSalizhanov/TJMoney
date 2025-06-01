@@ -54,6 +54,17 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         return groupMemberRepository.save(groupMember).getId();
     }
 
+    @Override
+    public Long saveNoAdmin(User joinedUser, Group group) {
+        GroupMember groupMember = GroupMember.builder()
+                .user(joinedUser)
+                .group(group)
+                .joinedAt(LocalDateTime.now())
+                .role("MEMBER")
+                .build();
+        return groupMemberRepository.save(groupMember).getId();
+    }
+
     private GroupMember requireByUserAndGroup(User user, Group group) {
         return groupMemberRepository.findByGroupAndUser(group, user).orElseThrow(() -> new GroupMemberNotFoundException("Участник группы с таким пользователем и группой не найден"));
     }

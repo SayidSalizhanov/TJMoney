@@ -1,6 +1,7 @@
 package ru.itis.mainservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,16 +27,17 @@ public class GroupController {
     ) {
         List<GroupListResponse> groups = groupService.getGroupsWhereUserNotJoined(userId);
         model.addAttribute("groups", groups);
+        model.addAttribute("userId", userId);
         return "group/groups";
     }
 
     @PostMapping
-    public String createApplicationToGroup(
+    @ResponseStatus(HttpStatus.OK)
+    public void createApplicationToGroup(
             @RequestParam Long userId,
             @RequestParam Long groupId
     ) {
         groupService.createApplicationToGroup(userId, groupId);
-        return "redirect:/groups";
     }
 
     @GetMapping("/{id}")
@@ -47,6 +49,7 @@ public class GroupController {
     ) {
         GroupProfileResponse group = groupService.getGroup(id, userId, period);
         model.addAttribute("group", group);
+        model.addAttribute("userId", userId);
         return "group/group";
     }
 
@@ -56,7 +59,7 @@ public class GroupController {
             @RequestParam Long userId
     ) {
         groupService.leaveGroup(id, userId);
-        return "redirect:/groups";
+        return "redirect:/groups?userId=" + userId;
     }
 
     @GetMapping("/{id}/settings")
@@ -67,6 +70,7 @@ public class GroupController {
     ) {
         GroupSettingsResponse settings = groupService.getGroupSettings(id, userId);
         model.addAttribute("settings", settings);
+        model.addAttribute("userId", userId);
         return "group/settings";
     }
 
@@ -74,10 +78,10 @@ public class GroupController {
     public String updateGroupInfo(
             @PathVariable Long id,
             @RequestParam Long userId,
-            @ModelAttribute GroupSettingsRequest request
+            GroupSettingsRequest request
     ) {
         groupService.updateGroupInfo(id, userId, request);
-        return "redirect:/groups/" + id + "/settings?userId=" + userId;
+        return "redirect:/groups/" + id + "?userId=" + userId;
     }
 
     @DeleteMapping("/{id}/settings")
@@ -86,7 +90,7 @@ public class GroupController {
             @RequestParam Long userId
     ) {
         groupService.deleteGroup(id, userId);
-        return "redirect:/groups";
+        return "redirect:/groups?userId=" + userId;
     }
 
     @GetMapping("/{id}/viewing")
@@ -97,18 +101,23 @@ public class GroupController {
     ) {
         GroupViewingResponse group = groupService.getGroupView(id, userId);
         model.addAttribute("group", group);
+        model.addAttribute("userId", userId);
         return "group/viewing";
     }
 
     @GetMapping("/new")
-    public String getNewGroupPage() {
+    public String getNewGroupPage(
+            @RequestParam Long userId,
+            Model model
+    ) {
+        model.addAttribute("userId", userId);
         return "group/new";
     }
 
     @PostMapping("/new")
     public String createGroup(
             @RequestParam Long userId,
-            @ModelAttribute GroupCreateRequest request
+            GroupCreateRequest request
     ) {
         Long groupId = groupService.createGroup(userId, request);
         return "redirect:/groups/" + groupId + "?userId=" + userId;
@@ -124,17 +133,26 @@ public class GroupController {
     ) {
         List<GroupMemberResponse> members = groupService.getGroupMembers(id, userId, page, amountPerPage);
         model.addAttribute("members", members);
+        model.addAttribute("groupId", id);
+        model.addAttribute("userId", userId);
+
+        for (GroupMemberResponse member : members) {
+            if (member.userId().equals(userId)) {
+                if (member.role().equalsIgnoreCase("ADMIN")) return "group/membersAdmin";
+                else return "group/members";
+            }
+        }
         return "group/members";
     }
 
     @DeleteMapping("/{id}/members")
-    public String deleteMemberFromAdminSide(
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteMemberFromAdminSide(
             @PathVariable Long id,
             @RequestParam Long userId,
             @RequestParam Long userIdForDelete
     ) {
         groupService.deleteMemberFromAdminSide(id, userId, userIdForDelete);
-        return "redirect:/groups/" + id + "/members?userId=" + userId;
     }
 
     @GetMapping("/{id}/applications")
@@ -147,16 +165,18 @@ public class GroupController {
     ) {
         List<ApplicationWithUserInfoResponse> applications = groupService.getApplications(id, userId, page, amountPerPage);
         model.addAttribute("applications", applications);
+        model.addAttribute("userId", userId);
+        model.addAttribute("groupId", id);
         return "group/applications";
     }
 
     @PostMapping("/{id}/applications")
-    public String answerApplication(
+    @ResponseStatus(HttpStatus.OK)
+    public void answerApplication(
             @PathVariable Long id,
             @RequestParam Long userId,
-            @ModelAttribute ApplicationAnswerRequest request
+            ApplicationAnswerRequest request
     ) {
         groupService.answerApplication(id, userId, request);
-        return "redirect:/groups/" + id + "/applications?userId=" + userId;
     }
 } 
