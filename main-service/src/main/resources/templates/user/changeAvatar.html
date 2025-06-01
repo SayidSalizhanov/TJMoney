@@ -15,16 +15,21 @@
             <img th:src="${urlPhoto}" alt="Avatar" class="rounded-circle" width="250" height="250">
         </div>
 
-        <form th:action="@{/user/changeAvatar}" method="post" enctype="multipart/form-data" class="avatar-form mb-4">
+        <form th:action="@{/users/{id}/changeAvatar(id=${userId})}" method="post" enctype="multipart/form-data" class="avatar-form mb-4">
+            <input type="hidden" name="_method" value="patch">
+            <input type="hidden" name="userId" th:value="${currentSessionUserId}">
+
             <div class="form-group">
-                <label for="avatarFile">Сменить аватар</label>
-                <input type="file" name="file" id="avatarFile" class="form-control-file" accept="image/*" required>
+                <label for="avatarImage">Сменить аватар</label>
+                <input type="file" name="avatarImage" id="avatarImage" class="form-control-file" accept="image/*" required>
             </div>
             <button type="submit" class="btn-success">Загрузить аватар</button>
         </form>
 
-        <form th:action="@{/user/changeAvatar}" method="post">
-            <input type="hidden" name="_method" value="DELETE">
+        <form th:action="@{/users/{id}/changeAvatar(id=${userId})}" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <input type="hidden" name="userId" th:value="${currentSessionUserId}">
+
             <button type="submit" class="btn-success delete-button">Удалить аватар</button>
         </form>
     </div>

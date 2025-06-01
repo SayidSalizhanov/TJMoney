@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.itis.dto.request.user.UserPasswordChangeRequest;
 import ru.itis.dto.request.user.UserSettingsRequest;
 import ru.itis.dto.response.application.ApplicationToGroupResponse;
+import ru.itis.dto.response.avatar.AvatarResponse;
 import ru.itis.dto.response.user.UserGroupResponse;
 import ru.itis.dto.response.user.UserProfileResponse;
 import ru.itis.dto.response.user.UserSettingsResponse;
@@ -163,9 +164,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public String getAvatarUrl(Long id, Long userId) {
+    public AvatarResponse getAvatarUrl(Long id, Long userId) {
         User user = requireUserById(id); // здесь не нужно проверки на доступ (userId бесполезен)
-        return user.getAvatar().getUrl();
+        return AvatarResponse.builder().url(user.getAvatar().getUrl()).build();
     }
 
     @Override
@@ -187,10 +188,7 @@ public class UserServiceImpl implements UserService {
                     Map uploadResult = cloudinary.uploader().upload(tempFile, Map.of());
                     String avatarUrl = (String) uploadResult.get("secure_url");
 
-                    avatarRepository.save(Avatar.builder()
-                            .user(user)
-                            .url(avatarUrl)
-                            .build());
+                    avatarRepository.update(avatarUrl, user);
                 } catch (Exception e) {
                     throw new FileProcessingException("Не удалось загрузить аватар", HttpStatus.BAD_REQUEST);
                 } finally {
@@ -211,7 +209,7 @@ public class UserServiceImpl implements UserService {
 
         checkUserHasAccessGranted(user, currentSessionUser);
 
-        avatarRepository.delete(user.getAvatar());
+        avatarRepository.update("/defaultAvatar.png", user);
     }
 
     @Override

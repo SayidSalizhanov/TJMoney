@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.itis.dto.request.user.UserPasswordChangeRequest;
 import ru.itis.dto.request.user.UserSettingsRequest;
 import ru.itis.dto.response.application.ApplicationToGroupResponse;
+import ru.itis.dto.response.avatar.AvatarResponse;
 import ru.itis.dto.response.user.UserGroupResponse;
 import ru.itis.dto.response.user.UserProfileResponse;
 import ru.itis.dto.response.user.UserSettingsResponse;
@@ -18,7 +19,7 @@ public interface UserService {
     List<ApplicationToGroupResponse> getApplications(Long id, Long userId);
     void deleteApplication(Long id, Long userId, Long applicationId);
     void changePassword(Long id, Long userId, UserPasswordChangeRequest request);
-    String getAvatarUrl(Long id, Long userId);
+    AvatarResponse getAvatarUrl(Long id, Long userId);
     void changeAvatar(Long id, Long userId, MultipartFile avatarImage);
     void deleteAvatar(Long id, Long userId);
     UserProfileResponse getProfileInfo(Long id, Long userId, String period);

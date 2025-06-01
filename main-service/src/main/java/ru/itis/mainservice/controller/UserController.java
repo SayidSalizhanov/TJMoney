@@ -34,7 +34,7 @@ public class UserController {
     @PutMapping("/{id}/settings")
     public String updateUserSettings(@PathVariable Long id, @RequestParam Long userId, UserSettingsRequest request) {
         userService.updateUserSettingsInfo(id, userId, request);
-        return "redirect:/user/" + id + "?userId=" + userId;
+        return "redirect:/users/" + id + "?userId=" + userId;
     }
 
     @DeleteMapping("/{id}/settings")
@@ -83,21 +83,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}/changeAvatar")
-    @ResponseBody
-    public String getUserAvatarUrl(@PathVariable Long id, @RequestParam Long userId) {
-        return userService.getUserAvatarUrl(id, userId);
+    public String getUserAvatarUrl(@PathVariable Long id, @RequestParam Long userId, Model model) {
+        model.addAttribute("urlPhoto", userService.getUserAvatarUrl(id, userId));
+        model.addAttribute("userId", id);
+        model.addAttribute("currentSessionUserId", userId);
+        return "user/changeAvatar";
     }
 
     @PatchMapping("/{id}/changeAvatar")
-    @ResponseBody
-    public void changeUserAvatar(@PathVariable Long id, @RequestParam Long userId, @RequestParam MultipartFile avatarImage) {
+    public String changeUserAvatar(@PathVariable Long id, @RequestParam Long userId, @RequestParam MultipartFile avatarImage) {
         userService.changeUserAvatarUrl(id, userId, avatarImage);
+        return "redirect:/users/" + id + "?userId=" + userId;
     }
 
     @DeleteMapping("/{id}/changeAvatar")
-    @ResponseBody
-    public void deleteUserAvatar(@PathVariable Long id, @RequestParam Long userId) {
+    public String deleteUserAvatar(@PathVariable Long id, @RequestParam Long userId) {
         userService.deleteUserAvatar(id, userId);
+        return "redirect:/users/" + id + "?userId=" + userId;
     }
 
     @GetMapping("/{id}")

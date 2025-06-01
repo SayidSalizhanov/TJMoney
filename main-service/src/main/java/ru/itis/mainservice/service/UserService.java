@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.itis.mainservice.dto.request.user.UserPasswordChangeRequest;
 import ru.itis.mainservice.dto.request.user.UserSettingsRequest;
 import ru.itis.mainservice.dto.response.application.ApplicationToGroupResponse;
+import ru.itis.mainservice.dto.response.avatar.AvatarResponse;
 import ru.itis.mainservice.dto.response.user.UserGroupResponse;
 import ru.itis.mainservice.dto.response.user.UserProfileResponse;
 import ru.itis.mainservice.dto.response.user.UserSettingsResponse;
@@ -88,9 +89,9 @@ public class UserService {
     public String getUserAvatarUrl(Long id, Long userId) {
         return restTemplate.getForObject(
             apiBaseUrl + "/api/user/{id}/changeAvatar?userId={userId}",
-            String.class,
+            AvatarResponse.class,
             id, userId
-        );
+        ).url();
     }
 
     public void changeUserAvatarUrl(Long id, Long userId, MultipartFile avatarImage) {
@@ -102,10 +103,9 @@ public class UserService {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        restTemplate.patchForObject(
+        restTemplate.put(
             apiBaseUrl + "/api/user/{id}/changeAvatar?userId={userId}",
             requestEntity,
-            Void.class,
             id, userId
         );
     }

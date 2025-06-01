@@ -8,6 +8,7 @@ import ru.itis.api.UserApi;
 import ru.itis.dto.request.user.UserPasswordChangeRequest;
 import ru.itis.dto.request.user.UserSettingsRequest;
 import ru.itis.dto.response.application.ApplicationToGroupResponse;
+import ru.itis.dto.response.avatar.AvatarResponse;
 import ru.itis.dto.response.user.UserGroupResponse;
 import ru.itis.dto.response.user.UserProfileResponse;
 import ru.itis.dto.response.user.UserSettingsResponse;
@@ -57,7 +58,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public String getUserAvatarUrl(Long id, Long userId) {
+    public AvatarResponse getUserAvatarUrl(Long id, Long userId) {
         return userService.getAvatarUrl(id, userId);
     }
 
