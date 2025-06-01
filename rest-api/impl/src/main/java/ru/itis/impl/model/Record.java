@@ -1,10 +1,7 @@
 package ru.itis.impl.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "records")
 @Builder
+@ToString(exclude = {"user", "group"})
 public class Record {
 
     @Id

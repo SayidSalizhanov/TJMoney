@@ -1,10 +1,7 @@
 package ru.itis.impl.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -12,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "goals")
 @Builder
+@ToString(exclude = {"user", "group"})
 public class Goal {
 
     @Id
