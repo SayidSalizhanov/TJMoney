@@ -77,9 +77,17 @@ public class UserController {
         userService.deleteUserApplicationToGroup(id, userId, applicationId);
     }
 
+    @GetMapping("/{id}/changePassword")
+    public String getChangePasswordPage(@PathVariable Long id, @RequestParam Long userId, Model model) {
+        model.addAttribute("userId", id);
+        model.addAttribute("currentSessionUserId", userId);
+        return "user/changePassword";
+    }
+
     @PatchMapping("/{id}/changePassword")
-    public void changeUserPassword(@PathVariable Long id, @RequestParam Long userId, UserPasswordChangeRequest request) {
+    public String changeUserPassword(@PathVariable Long id, @RequestParam Long userId, UserPasswordChangeRequest request) {
         userService.changeUserPassword(id, userId, request);
+        return "redirect:/users/" + id + "/changePassword?userId=" + userId;
     }
 
     @GetMapping("/{id}/changeAvatar")

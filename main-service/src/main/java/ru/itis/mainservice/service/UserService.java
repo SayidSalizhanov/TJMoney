@@ -78,10 +78,9 @@ public class UserService {
     }
 
     public void changeUserPassword(Long id, Long userId, UserPasswordChangeRequest request) {
-        restTemplate.patchForObject(
+        restTemplate.put(
             apiBaseUrl + "/api/user/{id}/changePassword?userId={userId}",
             request,
-            Void.class,
             id, userId
         );
     }

@@ -59,7 +59,7 @@ public interface UserApi {
             @RequestParam Long applicationId
     );
 
-    @PatchMapping("/{id}/changePassword")
+    @PutMapping("/{id}/changePassword")
     @ResponseStatus(HttpStatus.OK)
     void changeUserPassword(
             @PathVariable("id") Long id,
