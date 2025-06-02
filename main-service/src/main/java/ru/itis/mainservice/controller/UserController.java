@@ -12,104 +12,95 @@ import ru.itis.mainservice.dto.response.application.ApplicationToGroupResponse;
 import ru.itis.mainservice.dto.response.user.UserGroupResponse;
 import ru.itis.mainservice.dto.response.user.UserProfileResponse;
 import ru.itis.mainservice.dto.response.user.UserSettingsResponse;
-import ru.itis.mainservice.service.AuthService;
 import ru.itis.mainservice.service.UserService;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final AuthService authService;
 
-    @GetMapping("/{id}/settings")
-    public String getUserSettings(@PathVariable Long id, Model model) {
-        UserSettingsResponse settings = userService.getUserSettingsInfo(id);
+    @GetMapping("/settings")
+    public String getUserSettings(Model model) {
+        UserSettingsResponse settings = userService.getUserSettingsInfo();
         model.addAttribute("settings", settings);
-        model.addAttribute("userId", id);
         return "user/settings";
     }
 
-    @PutMapping("/{id}/settings")
-    public String updateUserSettings(@PathVariable Long id, UserSettingsRequest request) {
-        userService.updateUserSettingsInfo(id, request);
-        return "redirect:/users/" + id;
+    @PutMapping("/settings")
+    public String updateUserSettings(UserSettingsRequest request) {
+        userService.updateUserSettingsInfo(request);
+        return "redirect:/user";
     }
 
-    @DeleteMapping("/{id}/settings")
-    public String deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @DeleteMapping("/settings")
+    public String deleteUser() {
+        userService.deleteUser();
         return "redirect:/articles";
     }
 
-    @GetMapping("/{id}/groups")
+    @GetMapping("/groups")
     public String getUserGroups(
-            @PathVariable Long id,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer amountPerPage,
             Model model) {
-        List<UserGroupResponse> groups = userService.getUserGroups(id, page, amountPerPage);
+        List<UserGroupResponse> groups = userService.getUserGroups(page, amountPerPage);
         model.addAttribute("groups", groups);
-        model.addAttribute("userId", id);
         return "user/groups";
     }
 
-    @GetMapping("/{id}/applications")
+    @GetMapping("/applications")
     public String getUserApplications(
-            @PathVariable Long id,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer amountPerPage,
             Model model) {
-        List<ApplicationToGroupResponse> applications = userService.getUserApplicationsToGroup(id, page, amountPerPage);
+        List<ApplicationToGroupResponse> applications = userService.getUserApplicationsToGroup(page, amountPerPage);
         model.addAttribute("applications", applications);
-        model.addAttribute("userId", id);
         return "user/applications";
     }
 
-    @DeleteMapping("/{id}/applications")
+    @DeleteMapping("/applications")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUserApplication(@PathVariable Long id, @RequestParam Long applicationId) {
-        userService.deleteUserApplicationToGroup(id, applicationId);
+    public void deleteUserApplication(@RequestParam Long applicationId) {
+        userService.deleteUserApplicationToGroup(applicationId);
     }
 
-    @GetMapping("/{id}/changePassword")
-    public String getChangePasswordPage(@PathVariable Long id, Model model) {
-        model.addAttribute("userId", id);
+    @GetMapping("/changePassword")
+    public String getChangePasswordPage(Model model) {
         return "user/changePassword";
     }
 
-    @PatchMapping("/{id}/changePassword")
-    public String changeUserPassword(@PathVariable Long id, UserPasswordChangeRequest request) {
-        userService.changeUserPassword(id, request);
-        return "redirect:/users/" + id + "/changePassword";
+    @PatchMapping("/changePassword")
+    public String changeUserPassword(UserPasswordChangeRequest request) {
+        userService.changeUserPassword(request);
+        return "redirect:/user/changePassword";
     }
 
-    @GetMapping("/{id}/changeAvatar")
-    public String getUserAvatarUrl(@PathVariable Long id, Model model) {
-        model.addAttribute("urlPhoto", userService.getUserAvatarUrl(id));
-        model.addAttribute("userId", id);
+    @GetMapping("/changeAvatar")
+    public String getUserAvatarUrl(Model model) {
+        model.addAttribute("urlPhoto", userService.getUserAvatarUrl());
         return "user/changeAvatar";
     }
 
-    @PatchMapping("/{id}/changeAvatar")
-    public String changeUserAvatar(@PathVariable Long id, @RequestParam MultipartFile avatarImage) {
-        userService.changeUserAvatarUrl(id, avatarImage);
-        return "redirect:/users/" + id;
+    @PatchMapping("/changeAvatar")
+    public String changeUserAvatar(@RequestParam MultipartFile avatarImage) {
+        userService.changeUserAvatarUrl(avatarImage);
+        return "redirect:/user/changeAvatar";
     }
 
-    @DeleteMapping("/{id}/changeAvatar")
-    public String deleteUserAvatar(@PathVariable Long id) {
-        userService.deleteUserAvatar(id);
-        return "redirect:/users/" + id;
+    @DeleteMapping("/changeAvatar")
+    public String deleteUserAvatar() {
+        userService.deleteUserAvatar();
+        return "redirect:/user";
     }
 
-    @GetMapping("/{id}")
-    public String getUserProfile(@PathVariable Long id, @RequestParam(required = false) String period, Model model) {
-        UserProfileResponse profile = userService.getUserProfileInfo(id, period);
+    @GetMapping
+    public String getUserProfile(@RequestParam(required = false) String period, Model model) {
+        UserProfileResponse profile = userService.getUserProfileInfo(period);
         model.addAttribute("profile", profile);
-        model.addAttribute("currentSessionUserId", authService.getAuthenticatedUserId());
+        model.addAttribute("currentSessionUserId", profile.id()); // profile.id() будет равен id текущего аутентифицированного пользователя
         return "user/profile";
     }
 } 

@@ -16,73 +16,56 @@ import java.util.List;
 @RequestMapping("/api/user")
 public interface UserApi {
 
-    @GetMapping("/{id}/settings")
+    @GetMapping("/settings")
     @ResponseStatus(HttpStatus.OK)
-    UserSettingsResponse getUserSettingsInfo(
-            @PathVariable("id") Long id
-    );
+    UserSettingsResponse getUserSettingsInfo();
 
-    @PutMapping("/{id}/settings")
+    @PutMapping("/settings")
     @ResponseStatus(HttpStatus.OK)
     void updateUserSettingsInfo(
-            @PathVariable("id") Long id,
             @RequestBody UserSettingsRequest request
     );
 
-    @DeleteMapping("/{id}/settings")
+    @DeleteMapping("/settings")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteUser(
-            @PathVariable("id") Long id
-    );
+    void deleteUser();
 
-    @GetMapping("/{id}/groups")
-    List<UserGroupResponse> getUserGroups(
-            @PathVariable("id") Long id
-    );
+    @GetMapping("/groups")
+    List<UserGroupResponse> getUserGroups();
 
-    @GetMapping("/{id}/applications")
+    @GetMapping("/applications")
     @ResponseStatus(HttpStatus.OK)
-    List<ApplicationToGroupResponse> getUserApplicationsToGroup(
-            @PathVariable("id") Long id
-    );
+    List<ApplicationToGroupResponse> getUserApplicationsToGroup();
 
-    @DeleteMapping("/{id}/applications")
+    @DeleteMapping("/applications")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteUserApplicationToGroup(
-            @PathVariable("id") Long id,
             @RequestParam Long applicationId
     );
 
-    @PutMapping("/{id}/changePassword")
+    @PutMapping("/changePassword")
     @ResponseStatus(HttpStatus.OK)
     void changeUserPassword(
-            @PathVariable("id") Long id,
             @RequestBody UserPasswordChangeRequest request
     );
 
-    @GetMapping("/{id}/changeAvatar")
+    @GetMapping("/changeAvatar")
     @ResponseStatus(HttpStatus.OK)
-    AvatarResponse getUserAvatarUrl(
-            @PathVariable("id") Long id
-    );
+    AvatarResponse getUserAvatarUrl();
 
-    @PutMapping("/{id}/changeAvatar")
+    @PutMapping("/changeAvatar")
     @ResponseStatus(HttpStatus.OK)
     void changeUserAvatarUrl(
-            @PathVariable("id") Long id,
             @RequestBody MultipartFile avatarImage
     );
 
-    @DeleteMapping("/{id}/changeAvatar")
+    @DeleteMapping("/changeAvatar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteUserAvatar(
-            @PathVariable("id") Long id
-    );
+    void deleteUserAvatar();
 
-    @GetMapping("/{id}")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     UserProfileResponse getUserProfileInfo(
-            @PathVariable("id") Long id,
             @RequestParam(value = "period", required = false, defaultValue = "allTime") String period
     );
 }

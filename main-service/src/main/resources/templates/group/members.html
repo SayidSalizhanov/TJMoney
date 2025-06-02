@@ -17,6 +17,9 @@
                     <p><strong>Пользователь:</strong> <span th:text="${member.username}"/></p>
                     <p><strong>Дата присоединения:</strong> <span th:text="${member.joinedAt}"/></p>
                     <p><strong>Роль:</strong> <span th:text="${member.role}"/></p>
+                    <form th:action="@{/users/{id}(id=${member.userId})}" method="GET" class="user-viewing-form">
+                        <button type="submit" class="nav-button">Посмотреть</button>
+                    </form>
                 </div>
             </div>
         </div>

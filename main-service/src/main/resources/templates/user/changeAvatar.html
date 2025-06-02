@@ -15,7 +15,7 @@
             <img th:src="${urlPhoto}" alt="Avatar" class="rounded-circle" width="250" height="250">
         </div>
 
-        <form th:action="@{/users/{id}/changeAvatar(id=${userId})}" method="post" enctype="multipart/form-data" class="avatar-form mb-4">
+        <form th:action="@{/user/changeAvatar}" method="post" enctype="multipart/form-data" class="avatar-form mb-4">
             <input type="hidden" name="_method" value="patch">
 
             <div class="form-group">
@@ -25,7 +25,7 @@
             <button type="submit" class="btn-success">Загрузить аватар</button>
         </form>
 
-        <form th:action="@{/users/{id}/changeAvatar(id=${userId})}" method="post">
+        <form th:action="@{/user/changeAvatar}" method="post">
             <input type="hidden" name="_method" value="delete">
 
             <button type="submit" class="btn-success delete-button">Удалить аватар</button>

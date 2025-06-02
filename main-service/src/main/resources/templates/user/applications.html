@@ -20,7 +20,7 @@
                 <p>Дата подачи: <span th:text="${applicationOne.sendAt}"></span></p>
                 <p>Статус: <span th:text="${applicationOne.status}"></span></p>
             </div>
-            <form th:action="@{/users/{id}/applications(id=${userId})}" method="POST" class="delete-form">
+            <form th:action="@{/user/applications}" method="POST" class="delete-form">
                 <input type="hidden" name="_method" value="delete">
                 <input type="hidden" name="applicationId" th:value="${applicationOne.applicationId}">
 

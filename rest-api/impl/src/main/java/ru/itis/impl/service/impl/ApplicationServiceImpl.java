@@ -61,7 +61,9 @@ public class ApplicationServiceImpl implements ApplicationService {
         applicationRepository.deleteById(applicationId);
     }
 
-    private Application requireById(Long id) {
+    @Override
+    @Transactional(readOnly = true)
+    public Application requireById(Long id) {
         return applicationRepository.findById(id).orElseThrow(() -> new ApplicationNotFoundException("Заявка с таким id не найдена"));
     }
 

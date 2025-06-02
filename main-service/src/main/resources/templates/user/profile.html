@@ -27,11 +27,11 @@
         <div class="actions-container" th:if="${profile.id == currentSessionUserId}">
 
             <div class="button-group">
-                <form th:action="@{/users/{id}/settings(id=${profile.id})}" method="GET">
+                <form th:action="@{/user/settings}" method="GET">
                     <button type="submit" class="nav-button">Настройки</button>
                 </form>
 
-                <form th:action="@{/users/{id}/groups(id=${profile.id})}" method="GET">
+                <form th:action="@{/user/groups}" method="GET">
                     <button type="submit" class="nav-button">Группы</button>
                 </form>
 
@@ -42,7 +42,7 @@
 
             <hr>
 
-            <form th:action="@{/users/{id}(id=${profile.id})}" method="GET" class="filter-form">
+            <form th:action="@{/user}" method="GET" class="filter-form">
                 <label for="incomePeriod">Выбрать период:</label>
                 <select id="incomePeriod" name="period">
                     <option value="all">Все время</option>

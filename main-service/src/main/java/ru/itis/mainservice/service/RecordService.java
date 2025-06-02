@@ -26,10 +26,10 @@ public class RecordService {
 
     @Value("${api.base-url}")
     private String apiBaseUrl;
-    private final String BASE_URL = apiBaseUrl + "/api/records";
+    private static final String BASE_URL = "/api/records";
 
     public RecordSettingsResponse getRecord(Long id) {
-        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
+        String url = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -50,7 +50,7 @@ public class RecordService {
     }
 
     public void updateRecordInfo(Long id, RecordSettingsRequest request) {
-        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
+        String url = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -63,7 +63,7 @@ public class RecordService {
     }
 
     public void deleteRecord(Long id) {
-        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
+        String url = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -79,7 +79,7 @@ public class RecordService {
             Integer page,
             Integer amountPerPage
     ) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL)
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL)
                 .queryParam("page", page)
                 .queryParam("amount_per_page", amountPerPage);
 
@@ -104,7 +104,7 @@ public class RecordService {
     }
 
     public Long createRecord(Long groupId, RecordCreateRequest request) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/new");
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/new");
 
         if (groupId != null) {
             builder.queryParam("groupId", groupId);

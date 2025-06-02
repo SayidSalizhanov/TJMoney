@@ -23,57 +23,57 @@ public class UserController implements UserApi {
     private final UserService userService;
 
     @Override
-    public UserSettingsResponse getUserSettingsInfo(Long id) {
-        return userService.getInfo(id);
+    public UserSettingsResponse getUserSettingsInfo() {
+        return userService.getInfo();
     }
 
     @Override
-    public void updateUserSettingsInfo(Long id, UserSettingsRequest request) {
-        userService.updateInfo(id, request);
+    public void updateUserSettingsInfo(UserSettingsRequest request) {
+        userService.updateInfo(request);
     }
 
     @Override
-    public void deleteUser(Long id) {
-        userService.delete(id);
+    public void deleteUser() {
+        userService.delete();
     }
 
     @Override
-    public List<UserGroupResponse> getUserGroups(Long id) {
-        return userService.getGroups(id);
+    public List<UserGroupResponse> getUserGroups() {
+        return userService.getGroups();
     }
 
     @Override
-    public List<ApplicationToGroupResponse> getUserApplicationsToGroup(Long id) {
-        return userService.getApplications(id);
+    public List<ApplicationToGroupResponse> getUserApplicationsToGroup() {
+        return userService.getApplications();
     }
 
     @Override
-    public void deleteUserApplicationToGroup(Long id, Long applicationId) {
-        userService.deleteApplication(id, applicationId);
+    public void deleteUserApplicationToGroup(Long applicationId) {
+        userService.deleteApplication(applicationId);
     }
 
     @Override
-    public void changeUserPassword(Long id, UserPasswordChangeRequest request) {
-        userService.changePassword(id, request);
+    public void changeUserPassword(UserPasswordChangeRequest request) {
+        userService.changePassword(request);
     }
 
     @Override
-    public AvatarResponse getUserAvatarUrl(Long id) {
-        return userService.getAvatarUrl(id);
+    public AvatarResponse getUserAvatarUrl() {
+        return userService.getAvatarUrl();
     }
 
     @Override
-    public void changeUserAvatarUrl(Long id, MultipartFile avatarImage) {
-        userService.changeAvatar(id, avatarImage);
+    public void changeUserAvatarUrl(MultipartFile avatarImage) {
+        userService.changeAvatar(avatarImage);
     }
 
     @Override
-    public void deleteUserAvatar(Long id) {
-        userService.deleteAvatar(id);
+    public void deleteUserAvatar() {
+        userService.deleteAvatar();
     }
 
     @Override
-    public UserProfileResponse getUserProfileInfo(Long id, String period) {
-        return userService.getProfileInfo(id, period);
+    public UserProfileResponse getUserProfileInfo(String period) {
+        return userService.getProfileInfo(period);
     }
 }

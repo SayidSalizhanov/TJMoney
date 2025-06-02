@@ -30,8 +30,8 @@ public class UserService {
     @Value("${api.base-url}")
     private String apiBaseUrl;
 
-    public UserSettingsResponse getUserSettingsInfo(Long id) {
-        String url = apiBaseUrl + "/api/user/{id}/settings";
+    public UserSettingsResponse getUserSettingsInfo() {
+        String url = apiBaseUrl + "/api/user/settings";
 
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -42,15 +42,14 @@ public class UserService {
                 url,
                 HttpMethod.GET,
                 entity,
-                UserSettingsResponse.class,
-                id
+                UserSettingsResponse.class
         );
 
         return response.getBody();
     }
 
-    public void updateUserSettingsInfo(Long id, UserSettingsRequest request) {
-        String url = apiBaseUrl + "/api/user/{id}/settings";
+    public void updateUserSettingsInfo(UserSettingsRequest request) {
+        String url = apiBaseUrl + "/api/user/settings";
 
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -62,13 +61,12 @@ public class UserService {
                 url,
                 HttpMethod.PUT,
                 entity,
-                Void.class,
-                id
+                Void.class
         );
     }
 
-    public void deleteUser(Long id) {
-        String url = apiBaseUrl + "/api/user/{id}/settings";
+    public void deleteUser() {
+        String url = apiBaseUrl + "/api/user/settings";
 
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -79,13 +77,12 @@ public class UserService {
                 url,
                 HttpMethod.DELETE,
                 entity,
-                Void.class,
-                id
+                Void.class
         );
     }
 
-    public List<UserGroupResponse> getUserGroups(Long id, Integer page, Integer amountPerPage) {
-        String url = apiBaseUrl + "/api/user/{id}/groups?page={page}&amount_per_page={amountPerPage}";
+    public List<UserGroupResponse> getUserGroups(Integer page, Integer amountPerPage) {
+        String url = apiBaseUrl + "/api/user/groups?page={page}&amount_per_page={amountPerPage}";
 
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -97,7 +94,7 @@ public class UserService {
                 HttpMethod.GET,
                 entity,
                 UserGroupResponse[].class,
-                id, page, amountPerPage
+                page, amountPerPage
         );
 
         return Optional.ofNullable(response.getBody())
@@ -105,8 +102,8 @@ public class UserService {
                 .orElse(Collections.emptyList());
     }
 
-    public List<ApplicationToGroupResponse> getUserApplicationsToGroup(Long id, Integer page, Integer amountPerPage) {
-        String url = apiBaseUrl + "/api/user/{id}/applications?page={page}&amount_per_page={amountPerPage}";
+    public List<ApplicationToGroupResponse> getUserApplicationsToGroup(Integer page, Integer amountPerPage) {
+        String url = apiBaseUrl + "/api/user/applications?page={page}&amount_per_page={amountPerPage}";
 
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -118,7 +115,7 @@ public class UserService {
                 HttpMethod.GET,
                 entity,
                 ApplicationToGroupResponse[].class,
-                id, page, amountPerPage
+                page, amountPerPage
         );
 
         return Optional.ofNullable(response.getBody())
@@ -126,8 +123,8 @@ public class UserService {
                 .orElse(Collections.emptyList());
     }
 
-    public void deleteUserApplicationToGroup(Long id, Long applicationId) {
-        String url = apiBaseUrl + "/api/user/{id}/applications?applicationId={applicationId}";
+    public void deleteUserApplicationToGroup(Long applicationId) {
+        String url = apiBaseUrl + "/api/user/applications?applicationId={applicationId}";
 
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -140,12 +137,12 @@ public class UserService {
                 HttpMethod.DELETE,
                 entity,
                 Void.class,
-                id, applicationId
+                applicationId
         );
     }
 
-    public void changeUserPassword(Long id, UserPasswordChangeRequest request) {
-        String url = apiBaseUrl + "/api/user/{id}/changePassword";
+    public void changeUserPassword(UserPasswordChangeRequest request) {
+        String url = apiBaseUrl + "/api/user/changePassword";
 
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -157,13 +154,12 @@ public class UserService {
                 url,
                 HttpMethod.PUT,
                 entity,
-                Void.class,
-                id
+                Void.class
         );
     }
 
-    public String getUserAvatarUrl(Long id) {
-        String url = apiBaseUrl + "/api/user/{id}/changeAvatar";
+    public String getUserAvatarUrl() {
+        String url = apiBaseUrl + "/api/user/changeAvatar";
 
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -174,8 +170,7 @@ public class UserService {
                 url,
                 HttpMethod.GET,
                 entity,
-                AvatarResponse.class,
-                id
+                AvatarResponse.class
         );
 
         return Optional.ofNullable(response.getBody())
@@ -183,7 +178,7 @@ public class UserService {
                 .orElse(null);
     }
 
-    public void changeUserAvatarUrl(Long id, MultipartFile avatarImage) {
+    public void changeUserAvatarUrl(MultipartFile avatarImage) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -193,14 +188,13 @@ public class UserService {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         restTemplate.put(
-            apiBaseUrl + "/api/user/{id}/changeAvatar",
-            requestEntity,
-            id
+            apiBaseUrl + "/api/user/changeAvatar",
+            requestEntity
         );
     }
 
-    public void deleteUserAvatar(Long id) {
-        String url = apiBaseUrl + "/api/user/{id}/changeAvatar";
+    public void deleteUserAvatar() {
+        String url = apiBaseUrl + "/api/user/changeAvatar";
 
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -212,13 +206,31 @@ public class UserService {
                 url,
                 HttpMethod.DELETE,
                 entity,
-                Void.class,
-                id
+                Void.class
         );
     }
 
-    public UserProfileResponse getUserProfileInfo(Long id, String period) {
-        String url = apiBaseUrl + "/api/user/{id}?period={period}";
+    public UserProfileResponse getUserProfileInfo(String period) {
+        String url = apiBaseUrl + "/api/user?period={period}";
+
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<UserProfileResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                UserProfileResponse.class,
+                period
+        );
+
+        return response.getBody();
+    }
+
+    public UserProfileResponse getStrangerUserProfileInfo(Long id, String period) {
+        String url = apiBaseUrl + "/api/users/{id}?period={period}";
 
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -235,4 +247,4 @@ public class UserService {
 
         return response.getBody();
     }
-} 
+}

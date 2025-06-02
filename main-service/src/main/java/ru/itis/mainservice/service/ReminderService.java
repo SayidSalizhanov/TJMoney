@@ -25,10 +25,10 @@ public class ReminderService {
 
     @Value("${api.base-url}")
     private String apiBaseUrl;
-    private final String BASE_URL = apiBaseUrl + "/api/reminders";
+    private static final String BASE_URL = "/api/reminders";
 
     public ReminderSettingsResponse getReminder(Long id) {
-        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
+        String url = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -49,7 +49,7 @@ public class ReminderService {
     }
 
     public void updateReminderInfo(Long id, ReminderSettingsRequest request) {
-        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
+        String url = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -62,7 +62,7 @@ public class ReminderService {
     }
 
     public void deleteReminder(Long id) {
-        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
+        String url = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -78,7 +78,7 @@ public class ReminderService {
             Integer page,
             Integer amountPerPage
     ) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL)
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL)
                 .queryParam("page", page)
                 .queryParam("amount_per_page", amountPerPage);
 
@@ -103,7 +103,7 @@ public class ReminderService {
     }
 
     public Long createReminder(Long groupId, ReminderCreateRequest request) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/new");
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/new");
 
         if (groupId != null) {
             builder.queryParam("groupId", groupId);

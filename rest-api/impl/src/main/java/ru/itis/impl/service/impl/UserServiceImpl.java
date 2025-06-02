@@ -53,22 +53,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserSettingsResponse getInfo(Long id) {
-        User user = requireUserById(id);
-        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
-
-        checkUserHasAccessGranted(user, currentSessionUser);
+    public UserSettingsResponse getInfo() {
+        User user = requireUserById(authService.getAuthenticatedUserId());
 
         return userMapper.toUserSettingsResponse(user);
     }
 
     @Override
     @Transactional
-    public void updateInfo(Long id, UserSettingsRequest request) {
-        User user = requireUserById(id);
-        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
-
-        checkUserHasAccessGranted(user, currentSessionUser);
+    public void updateInfo(UserSettingsRequest request) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
 
         user.setUsername(request.username());
         user.setTelegramId(request.telegramId());
@@ -79,22 +73,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        User user = requireUserById(id);
-        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
-
-        checkUserHasAccessGranted(user, currentSessionUser);
+    public void delete() {
+        User user = requireUserById(authService.getAuthenticatedUserId());
 
         userRepository.delete(user);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserGroupResponse> getGroups(Long id) {
-        User user = requireUserById(id);
-        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
-
-        checkUserHasAccessGranted(user, currentSessionUser);
+    public List<UserGroupResponse> getGroups() {
+        User user = requireUserById(authService.getAuthenticatedUserId());
 
         List<GroupMember> groupMembers = user.getGroupMembers();
         List<UserGroupResponse> responses = new ArrayList<>();
@@ -115,11 +103,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ApplicationToGroupResponse> getApplications(Long id) {
-        User user = requireUserById(id);
-        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
-
-        checkUserHasAccessGranted(user, currentSessionUser);
+    public List<ApplicationToGroupResponse> getApplications() {
+        User user = requireUserById(authService.getAuthenticatedUserId());
 
         List<Application> applications = user.getApplications();
         return applications.stream()
@@ -134,22 +119,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteApplication(Long id, Long applicationId) {
-        User user = requireUserById(id);
-        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
-
-        checkUserHasAccessGranted(user, currentSessionUser);
-
+    public void deleteApplication(Long applicationId) {
+        Application application = applicationService.requireById(applicationId);
+        if (!application.getUser().getId().equals(authService.getAuthenticatedUserId())) {
+            throw new AccessDeniedException("Вы не можете удалить эту заявку");
+        }
         applicationService.delete(applicationId);
     }
 
     @Override
     @Transactional
-    public void changePassword(Long id, UserPasswordChangeRequest request) {
-        User user = requireUserById(id);
-        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
-
-        checkUserHasAccessGranted(user, currentSessionUser);
+    public void changePassword(UserPasswordChangeRequest request) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
 
         String currentPassword = user.getPassword();
         String encodeNewPassword = passwordEncoder.encode(request.newPassword());
@@ -165,18 +146,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public AvatarResponse getAvatarUrl(Long id) {
-        User user = requireUserById(id);
+    public AvatarResponse getAvatarUrl() {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         return AvatarResponse.builder().url(user.getAvatar().getUrl()).build();
     }
 
     @Override
     @Transactional
-    public void changeAvatar(Long id, MultipartFile avatarImage) {
-        User user = requireUserById(id);
-        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
-
-        checkUserHasAccessGranted(user, currentSessionUser);
+    public void changeAvatar(MultipartFile avatarImage) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
 
         if (avatarImage != null && avatarImage.getSize() > 0) {
             try {
@@ -204,26 +182,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteAvatar(Long id) {
-        User user = requireUserById(id);
-        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
-
-        checkUserHasAccessGranted(user, currentSessionUser);
+    public void deleteAvatar() {
+        User user = requireUserById(authService.getAuthenticatedUserId());
 
         avatarRepository.update("/defaultAvatar.png", user);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public UserProfileResponse getProfileInfo(Long id, String period) {
-        User user = requireUserById(id);
-        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
-
-        if (!id.equals(currentSessionUser.getId())) return userMapper.toUserProfileResponse(user, null);
+    public UserProfileResponse getProfileInfo(String period) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
 
         List<Map<String, Integer>> transactionsGenerals;
-        if (period == null || period.isEmpty()) transactionsGenerals = transactionService.getUserTransactionsGenerals(id, "all");
-        else transactionsGenerals = transactionService.getUserTransactionsGenerals(id, period);
+        if (period == null || period.isEmpty()) transactionsGenerals = transactionService.getUserTransactionsGenerals(user.getId(), "all");
+        else transactionsGenerals = transactionService.getUserTransactionsGenerals(user.getId(), period);
+
+        return userMapper.toUserProfileResponse(user, transactionsGenerals);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserProfileResponse getStrangerProfileInfo(Long id, String period) {
+        User user = requireUserById(id);
+
+        if (!authService.getAuthenticatedUserId().equals(user.getId())) return userMapper.toUserProfileResponse(user, null);
+
+        List<Map<String, Integer>> transactionsGenerals;
+        if (period == null || period.isEmpty()) transactionsGenerals = transactionService.getUserTransactionsGenerals(user.getId(), "all");
+        else transactionsGenerals = transactionService.getUserTransactionsGenerals(user.getId(), period);
 
         return userMapper.toUserProfileResponse(user, transactionsGenerals);
     }

@@ -11,4 +11,5 @@ public interface ApplicationService {
     List<Application> getGroupApplicationsByGroupIdAndByStatus(Long groupId, String status, Pageable pageable);
     void updateStatus(Long applicationId, String status);
     void delete(Long applicationId);
+    Application requireById(Long id);
 }

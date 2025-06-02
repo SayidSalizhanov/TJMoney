@@ -14,7 +14,7 @@
 
         <div class="settings-section">
             <h3>Основная информация</h3>
-            <form th:action="@{/users/{id}/settings(id=${userId})}" method="POST" class="settings-form">
+            <form th:action="@{/user/settings}" method="POST" class="settings-form">
                 <input type="hidden" name="_method" value="put">
 
                 <div class="form-group">
@@ -48,15 +48,15 @@
         </div>
 
         <div class="button-group">
-            <form th:action="@{/users/{id}/changePassword(id=${userId})}" method="GET" class="settings-form-inline">
+            <form th:action="@{/user/changePassword}" method="GET" class="settings-form-inline">
                 <button type="submit" class="small-button">Сменить пароль</button>
             </form>
 
-            <form th:action="@{/users/{id}/changeAvatar(id=${userId})}" method="GET" class="settings-form-inline">
+            <form th:action="@{/user/changeAvatar}" method="GET" class="settings-form-inline">
                 <button type="submit" class="small-button photo-button">Сменить аватар</button>
             </form>
 
-            <form th:action="@{/users/{id}/settings(id=${userId})}" method="POST" class="settings-form-inline">
+            <form th:action="@{/user/settings}" method="POST" class="settings-form-inline">
                 <input type="hidden" name="_method" value="delete">
 
                 <button type="submit" class="small-button delete-button">Удалить пользователя</button>

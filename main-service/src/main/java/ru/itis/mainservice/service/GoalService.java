@@ -24,10 +24,10 @@ public class GoalService {
 
     @Value("${api.base-url}")
     private String apiBaseUrl;
-    private final String BASE_URL = apiBaseUrl + "/api/goals";
+    private static final String BASE_URL = "/api/goals";
 
     public GoalSettingsResponse getGoal(Long id) {
-        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
+        String url = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -47,7 +47,7 @@ public class GoalService {
     }
 
     public void updateGoalInfo(Long id, GoalSettingsRequest request) {
-        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
+        String url = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -65,7 +65,7 @@ public class GoalService {
     }
 
     public void deleteGoal(Long id) {
-        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
+        String url = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -81,7 +81,7 @@ public class GoalService {
             Integer page,
             Integer amountPerPage
     ) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL)
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL)
                 .queryParam("page", page)
                 .queryParam("amount_per_page", amountPerPage);
 
@@ -105,7 +105,7 @@ public class GoalService {
     }
 
     public Long createGoal(Long groupId, GoalCreateRequest request) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/new");
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/new");
 
         if (groupId != null) {
             builder.queryParam("groupId", groupId);
