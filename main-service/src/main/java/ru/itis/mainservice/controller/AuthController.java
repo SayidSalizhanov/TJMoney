@@ -16,7 +16,7 @@ import ru.itis.mainservice.service.AuthService;
 public class AuthController {
 
     private final RestTemplate restTemplate;
-    private final String apiUrl = "http://localhost:8080"; // URL of your rest-api service
+    private final String apiUrl = "http://localhost:8080";
     private final AuthService authService;
 
     @GetMapping("/login")
@@ -51,5 +51,11 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("error", "Registration failed: " + e.getMessage());
             return "redirect:/register";
         }
+    }
+
+    @PostMapping("/logout")
+    public String logout() {
+        authService.logout();
+        return "redirect:/articles";
     }
 } 

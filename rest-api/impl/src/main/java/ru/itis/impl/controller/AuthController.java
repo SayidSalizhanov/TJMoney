@@ -31,8 +31,8 @@ public class AuthController implements AuthApi {
         authService.logout();
     }
 
-    @GetMapping("/user")
-    public User getUser() {
-        return authService.getAuthenticatedUser();
+    @GetMapping("/userId")
+    public Long getUser() {
+        return authService.getAuthenticatedUserId();
     }
 }

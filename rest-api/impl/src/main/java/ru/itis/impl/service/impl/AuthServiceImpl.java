@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +27,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
+    private final UserDetailsService userDetailsService;
 
     @Override
     public ResponseEntity<?> login(UserLoginRequest request) {
@@ -38,6 +39,8 @@ public class AuthServiceImpl implements AuthService {
                         request.password()
                 )
         );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtTokenUtil.generateToken(userDetails);
@@ -51,12 +54,21 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public User getAuthenticatedUser() {
+    public Long getAuthenticatedUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UserDetailsImpl details)) {
+        System.out.println(auth);
+
+        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() == null) {
             throw new AuthServiceException("Пользователь не аутентифицирован", HttpStatus.UNAUTHORIZED);
         }
-        return userRepository.findById(details.getUser().getId())
-                .orElseThrow(() -> new AuthServiceException("Пользователь не найден", HttpStatus.NOT_FOUND));
+
+        if (auth.getPrincipal() instanceof UserDetailsImpl details) {
+            return details.getUser().getId();
+        } else if (auth.getPrincipal() instanceof String username) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            return ((UserDetailsImpl) userDetails).getUser().getId();
+        }
+
+        throw new AuthServiceException("Неподдерживаемый тип аутентификации", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

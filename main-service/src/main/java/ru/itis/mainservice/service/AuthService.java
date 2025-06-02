@@ -69,4 +69,14 @@ public class AuthService {
         }
         return headers;
     }
-} 
+
+    public Long getAuthenticatedUserId() {
+        HttpEntity<?> entity = new HttpEntity<>(getAuthHeaders());
+        return restTemplate.exchange(
+                apiBaseUrl + "/api/auth/userId",
+                org.springframework.http.HttpMethod.GET,
+                entity,
+                Long.class
+        ).getBody();
+    }
+}
