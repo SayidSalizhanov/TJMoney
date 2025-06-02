@@ -13,7 +13,6 @@
         <h2>Создание цели</h2>
 
         <form th:action="@{/goals/new}" method="POST" class="create-form">
-            <input type="hidden" name="userId" th:value="${userId}">
             <input type="hidden" name="groupId" th:value="${groupId}">
 
             <div class="form-group">

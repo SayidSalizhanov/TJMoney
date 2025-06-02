@@ -22,6 +22,7 @@ import ru.itis.impl.model.User;
 import ru.itis.impl.repository.GoalRepository;
 import ru.itis.impl.repository.GroupRepository;
 import ru.itis.impl.repository.UserRepository;
+import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.GoalService;
 import ru.itis.impl.service.GroupService;
 
@@ -39,11 +40,12 @@ public class GoalServiceImpl implements GoalService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final GroupService groupService;
+    private final AuthService authService;
 
     @Override
     @Transactional(readOnly = true)
-    public List<GoalListResponse> getAll(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage) {
-        User user = requireUserById(userId);
+    public List<GoalListResponse> getAll(@MayBeNull Long groupId, Integer page, Integer amountPerPage) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = groupId == null ? null : requireGroupById(groupId);
 
         List<Goal> goals;
@@ -63,8 +65,8 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     @Transactional(readOnly = true)
-    public GoalSettingsResponse getById(Long goalId, Long userId) {
-        User user = requireUserById(userId);
+    public GoalSettingsResponse getById(Long goalId) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Goal goal = requireById(goalId);
 
         checkAccessToGoalGranted(goal, user);
@@ -74,8 +76,8 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     @Transactional
-    public Long create(Long userId, @MayBeNull Long groupId, GoalCreateRequest request) {
-        User user = requireUserById(userId);
+    public Long create(@MayBeNull Long groupId, GoalCreateRequest request) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = groupId == null ? null : requireGroupById(groupId);
 
         Goal goal = Goal.builder()
@@ -91,8 +93,8 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     @Transactional
-    public void delete(Long id, Long userId) {
-        User user = requireUserById(userId);
+    public void delete(Long id) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Goal goal = requireById(id);
 
         checkAccessToGoalGranted(goal, user);
@@ -102,8 +104,8 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     @Transactional
-    public void updateInfo(Long goalId, Long userId, GoalSettingsRequest request) {
-        User user = requireUserById(userId);
+    public void updateInfo(Long goalId, GoalSettingsRequest request) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Goal goal = requireById(goalId);
 
         checkAccessToGoalGranted(goal, user);

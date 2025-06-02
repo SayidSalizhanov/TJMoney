@@ -15,38 +15,33 @@ public interface GoalApi {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     GoalSettingsResponse getGoal(
-            @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId // todo get from authentication
+            @PathVariable("id") Long id
     );
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     void updateGoalInfo(
             @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestBody GoalSettingsRequest request
     );
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteGoal(
-            @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId // todo get from authentication
+            @PathVariable("id") Long id
     );
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     List<GoalListResponse> getGoals(
-            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage
     );
 
-    @PostMapping
+    @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
     Long createGoal(
-            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestBody GoalCreateRequest request
     );

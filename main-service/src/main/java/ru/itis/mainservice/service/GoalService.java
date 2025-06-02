@@ -22,9 +22,8 @@ public class GoalService {
     private final AuthService authService;
     private final String BASE_URL = "http://localhost:8080/api/goals";
 
-    public GoalSettingsResponse getGoal(Long id, Long userId) {
+    public GoalSettingsResponse getGoal(Long id) {
         String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
-                .queryParam("userId", userId)
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -43,9 +42,8 @@ public class GoalService {
         return response.getBody();
     }
 
-    public void updateGoalInfo(Long id, Long userId, GoalSettingsRequest request) {
+    public void updateGoalInfo(Long id, GoalSettingsRequest request) {
         String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
-                .queryParam("userId", userId)
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -62,9 +60,8 @@ public class GoalService {
         );
     }
 
-    public void deleteGoal(Long id, Long userId) {
+    public void deleteGoal(Long id) {
         String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
-                .queryParam("userId", userId)
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -76,13 +73,11 @@ public class GoalService {
     }
 
     public List<GoalListResponse> getGoals(
-            Long userId,
             Long groupId,
             Integer page,
             Integer amountPerPage
     ) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL)
-                .queryParam("userId", userId)
                 .queryParam("page", page)
                 .queryParam("amount_per_page", amountPerPage);
 
@@ -105,9 +100,8 @@ public class GoalService {
         return response.getBody();
     }
 
-    public Long createGoal(Long userId, Long groupId, GoalCreateRequest request) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL)
-                .queryParam("userId", userId);
+    public Long createGoal(Long groupId, GoalCreateRequest request) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/new");
 
         if (groupId != null) {
             builder.queryParam("groupId", groupId);

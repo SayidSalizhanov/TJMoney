@@ -11,7 +11,6 @@
 <div class="content">
     <div class="actions">
         <form th:action="@{/goals/new}" method="GET" class="create-goal-form">
-            <input type="hidden" name="userId" th:value="${userId}">
             <input type="hidden" name="groupId" th:value="${groupId}">
             <button type="submit" class="create-button">Создать цель</button>
         </form>
@@ -20,7 +19,6 @@
     <div class="goals-list">
         <form th:each="goal : ${goals}" th:action="@{/goals/{id}(id=${goal.id})}" method="get" class="goal-form">
             <div class="goal">
-                <input type="hidden" name="userId" th:value="${userId}">
                 <input type="hidden" name="groupId" th:value="${groupId}">
                 <button type="submit" class="goal-button">
                     <div class="goal-details">
