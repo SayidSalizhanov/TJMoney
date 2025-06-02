@@ -23,6 +23,7 @@ import ru.itis.impl.model.User;
 import ru.itis.impl.repository.GroupRepository;
 import ru.itis.impl.repository.ReminderRepository;
 import ru.itis.impl.repository.UserRepository;
+import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.GroupService;
 import ru.itis.impl.service.ReminderService;
 
@@ -40,11 +41,12 @@ public class ReminderServiceImpl implements ReminderService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final GroupService groupService;
+    private final AuthService authService;
 
     @Override
     @Transactional(readOnly = true)
-    public ReminderSettingsResponse getById(Long id, Long userId) {
-        User user = requireUserById(userId);
+    public ReminderSettingsResponse getById(Long id) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Reminder reminder = requireById(id);
 
         checkAccessToReminderGranted(reminder, user);
@@ -54,8 +56,8 @@ public class ReminderServiceImpl implements ReminderService {
 
     @Override
     @Transactional
-    public void updateInfo(Long id, Long userId, ReminderSettingsRequest request) {
-        User user = requireUserById(userId);
+    public void updateInfo(Long id, ReminderSettingsRequest request) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Reminder reminder = requireById(id);
 
         checkAccessToReminderGranted(reminder, user);
@@ -68,8 +70,8 @@ public class ReminderServiceImpl implements ReminderService {
 
     @Override
     @Transactional
-    public void delete(Long id, Long userId) {
-        User user = requireUserById(userId);
+    public void delete(Long id) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Reminder reminder = requireById(id);
 
         checkAccessToReminderGranted(reminder, user);
@@ -79,8 +81,8 @@ public class ReminderServiceImpl implements ReminderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReminderListResponse> getAll(Long userId, @MayBeNull Long groupId, Integer page, Integer amountPerPage) {
-        User user = requireUserById(userId);
+    public List<ReminderListResponse> getAll(@MayBeNull Long groupId, Integer page, Integer amountPerPage) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = groupId == null ? null : requireGroupById(groupId);
 
         List<Reminder> reminders;
@@ -100,10 +102,10 @@ public class ReminderServiceImpl implements ReminderService {
 
     @Override
     @Transactional
-    public Long create(Long userId, @MayBeNull Long groupId, ReminderCreateRequest request) {
+    public Long create(@MayBeNull Long groupId, ReminderCreateRequest request) {
         if (request.sendAt().isBefore(LocalDateTime.now())) throw new DateTimeOperationException("Дата и время напоминания не могут быть в прошлом");
 
-        User user = requireUserById(userId);
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = groupId == null ? null : requireGroupById(groupId);
 
         Reminder reminder = Reminder.builder()

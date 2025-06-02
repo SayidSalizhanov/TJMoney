@@ -24,18 +24,14 @@ public class ReminderController {
 
     @GetMapping
     public String getRemindersPage(
-            @RequestParam("userId") Long userId,
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             Model model) {
 
-        List<ReminderListResponse> reminders = reminderService.getReminders(
-                userId, groupId, page, size
-        );
+        List<ReminderListResponse> reminders = reminderService.getReminders(groupId, page, size);
 
         model.addAttribute("reminders", reminders);
-        model.addAttribute("userId", userId);
         model.addAttribute("groupId", groupId);
         model.addAttribute("currentDateTime", LocalDateTime.now().format(formatter));
         return "reminders/reminders";
@@ -43,11 +39,9 @@ public class ReminderController {
 
     @GetMapping("/new")
     public String getCreateReminderPage(
-            @RequestParam("userId") Long userId,
             @RequestParam(value = "groupId", required = false) Long groupId,
             Model model) {
 
-        model.addAttribute("userId", userId);
         model.addAttribute("groupId", groupId);
         model.addAttribute("currentDateTime", LocalDateTime.now().format(formatter));
         return "reminders/new";
@@ -55,24 +49,21 @@ public class ReminderController {
 
     @PostMapping("/new")
     public String createReminder(
-            @RequestParam("userId") Long userId,
             @RequestParam(value = "groupId", required = false) Long groupId,
             ReminderCreateRequest request) {
 
-        reminderService.createReminder(userId, groupId, request);
-        return "redirect:/reminders?userId=" + userId + (groupId != null ? "&groupId=" + groupId : "");
+        reminderService.createReminder(groupId, request);
+        return "redirect:/reminders" + (groupId != null ? "?groupId=" + groupId : "");
     }
 
     @GetMapping("/{id}")
     public String getReminderPage(
             @PathVariable Long id,
-            @RequestParam("userId") Long userId,
             Model model) {
 
-        ReminderSettingsResponse reminder = reminderService.getReminder(id, userId);
+        ReminderSettingsResponse reminder = reminderService.getReminder(id);
         model.addAttribute("reminder", reminder);
         model.addAttribute("reminderId", id);
-        model.addAttribute("userId", userId);
         model.addAttribute("formattedSendAt", reminder.sendAt());
         return "reminders/reminder";
     }
@@ -80,19 +71,16 @@ public class ReminderController {
     @PutMapping("/{id}")
     public String updateReminder(
             @PathVariable Long id,
-            @RequestParam("userId") Long userId,
             ReminderSettingsRequest request) {
 
-        reminderService.updateReminderInfo(id, userId, request);
-        return "redirect:/reminders/" + id + "?userId=" + userId;
+        reminderService.updateReminderInfo(id, request);
+        return "redirect:/reminders/" + id;
     }
 
     @DeleteMapping("/{id}")
-    public String deleteReminder(
-            @PathVariable Long id,
-            @RequestParam("userId") Long userId) {
+    public String deleteReminder(@PathVariable Long id) {
 
-        reminderService.deleteReminder(id, userId);
-        return "redirect:/reminders?userId=" + userId;
+        reminderService.deleteReminder(id);
+        return "redirect:/reminders";
     }
 }

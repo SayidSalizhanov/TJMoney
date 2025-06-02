@@ -18,27 +18,27 @@ public class ReminderController implements ReminderApi {
     private final ReminderService reminderService;
 
     @Override
-    public ReminderSettingsResponse getReminder(Long id, Long userId) {
-        return reminderService.getById(id, userId);
+    public ReminderSettingsResponse getReminder(Long id) {
+        return reminderService.getById(id);
     }
 
     @Override
-    public void updateReminderInfo(Long id, Long userId, ReminderSettingsRequest request) {
-        reminderService.updateInfo(id, userId, request);
+    public void updateReminderInfo(Long id, ReminderSettingsRequest request) {
+        reminderService.updateInfo(id, request);
     }
 
     @Override
-    public void deleteReminder(Long id, Long userId) {
-        reminderService.delete(id, userId);
+    public void deleteReminder(Long id) {
+        reminderService.delete(id);
     }
 
     @Override
-    public List<ReminderListResponse> getReminders(Long userId, Long groupId, Integer page, Integer amountPerPage) {
-        return reminderService.getAll(userId, groupId, page, amountPerPage);
+    public List<ReminderListResponse> getReminders(Long groupId, Integer page, Integer amountPerPage) {
+        return reminderService.getAll(groupId, page, amountPerPage);
     }
 
     @Override
-    public Long createReminder(Long userId, Long groupId, ReminderCreateRequest request) {
-        return reminderService.create(userId, groupId, request);
+    public Long createReminder(Long groupId, ReminderCreateRequest request) {
+        return reminderService.create(groupId, request);
     }
 }

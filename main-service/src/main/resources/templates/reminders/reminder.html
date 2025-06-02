@@ -23,8 +23,6 @@
             <form th:action="@{/reminders/{id}(id=${reminderId})}" method="POST" class="reminder-form">
                 <input type="hidden" name="_method" value="put">
 
-                <input type="hidden" name="userId" th:value="${userId}">
-                
                 <div class="form-group">
                     <label for="title">Название:</label>
                     <input type="text" id="title" name="title" th:value="${reminder.title}" required>
@@ -45,8 +43,6 @@
 
             <form th:action="@{/reminders/{id}(id=${reminderId})}" method="POST" class="delete-form">
                 <input type="hidden" name="_method" value="delete">
-
-                <input type="hidden" name="userId" th:value="${userId}">
                 <button type="submit" class="delete-button">Удалить напоминание</button>
             </form>
         </div>

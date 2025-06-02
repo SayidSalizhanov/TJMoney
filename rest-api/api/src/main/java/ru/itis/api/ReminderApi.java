@@ -15,29 +15,25 @@ public interface ReminderApi {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     ReminderSettingsResponse getReminder(
-            @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId // todo get from authentication
+            @PathVariable("id") Long id
     );
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     void updateReminderInfo(
             @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestBody ReminderSettingsRequest request
     );
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteReminder(
-            @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId // todo get from authentication
+            @PathVariable("id") Long id
     );
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     List<ReminderListResponse> getReminders(
-            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage
@@ -46,7 +42,6 @@ public interface ReminderApi {
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
     Long createReminder(
-            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestBody ReminderCreateRequest request
     );

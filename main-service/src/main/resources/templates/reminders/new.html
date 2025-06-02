@@ -12,7 +12,6 @@
     <h2>Создание нового напоминания</h2>
     
     <form th:action="@{/reminders/new}" method="POST" class="reminder-form">
-        <input type="hidden" name="userId" th:value="${userId}">
         <input type="hidden" name="groupId" th:value="${groupId}">
         
         <div class="form-group">

@@ -11,7 +11,6 @@
 <div class="content">
     <div class="actions">
         <form th:action="@{/reminders/new}" method="GET" class="create-reminder-form">
-            <input type="hidden" name="userId" th:value="${userId}">
             <input type="hidden" name="groupId" th:value="${groupId}">
             <button type="submit" class="create-button">Создать напоминание</button>
         </form>
@@ -20,7 +19,6 @@
     <div class="reminders-list">
         <form th:each="reminder : ${reminders}" th:action="@{/reminders/{id}(id=${reminder.id})}" method="get" class="reminder-form">
             <div class="reminder">
-                <input type="hidden" name="userId" th:value="${userId}">
                 <button type="submit" class="reminder-button">
                     <div class="reminder-details">
                         <div class="left-column">

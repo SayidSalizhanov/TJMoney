@@ -23,9 +23,8 @@ public class ReminderService {
     private final AuthService authService;
     private final String BASE_URL = "http://localhost:8080/api/reminders";
 
-    public ReminderSettingsResponse getReminder(Long id, Long userId) {
+    public ReminderSettingsResponse getReminder(Long id) {
         String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
-                .queryParam("userId", userId)
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -45,9 +44,8 @@ public class ReminderService {
         return response.getBody();
     }
 
-    public void updateReminderInfo(Long id, Long userId, ReminderSettingsRequest request) {
+    public void updateReminderInfo(Long id, ReminderSettingsRequest request) {
         String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
-                .queryParam("userId", userId)
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -59,9 +57,8 @@ public class ReminderService {
         restTemplate.exchange(url, HttpMethod.PUT, entity, Void.class);
     }
 
-    public void deleteReminder(Long id, Long userId) {
+    public void deleteReminder(Long id) {
         String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
-                .queryParam("userId", userId)
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -73,13 +70,11 @@ public class ReminderService {
     }
 
     public List<ReminderListResponse> getReminders(
-            Long userId,
             Long groupId,
             Integer page,
             Integer amountPerPage
     ) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL)
-                .queryParam("userId", userId)
                 .queryParam("page", page)
                 .queryParam("amount_per_page", amountPerPage);
 
@@ -103,9 +98,8 @@ public class ReminderService {
                 .orElse(Collections.emptyList());
     }
 
-    public Long createReminder(Long userId, Long groupId, ReminderCreateRequest request) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/new")
-                .queryParam("userId", userId);
+    public Long createReminder(Long groupId, ReminderCreateRequest request) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/new");
 
         if (groupId != null) {
             builder.queryParam("groupId", groupId);
