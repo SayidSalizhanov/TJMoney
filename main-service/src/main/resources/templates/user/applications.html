@@ -23,7 +23,6 @@
             <form th:action="@{/users/{id}/applications(id=${userId})}" method="POST" class="delete-form">
                 <input type="hidden" name="_method" value="delete">
                 <input type="hidden" name="applicationId" th:value="${applicationOne.applicationId}">
-                <input type="hidden" name="userId" th:value="${currentSessionUserId}">
 
                 <button type="submit" class="delete-button" th:id="|delete-button-${applicationOne.applicationId}|">
                     <i class="bi bi-trash"></i>

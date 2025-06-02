@@ -12,15 +12,15 @@ import ru.itis.dto.response.user.UserSettingsResponse;
 import java.util.List;
 
 public interface UserService {
-    UserSettingsResponse getInfo(Long id, Long userId);
-    void updateInfo(Long id, Long userId, UserSettingsRequest request);
-    void delete(Long id, Long userId);
-    List<UserGroupResponse> getGroups(Long id, Long userId);
-    List<ApplicationToGroupResponse> getApplications(Long id, Long userId);
-    void deleteApplication(Long id, Long userId, Long applicationId);
-    void changePassword(Long id, Long userId, UserPasswordChangeRequest request);
-    AvatarResponse getAvatarUrl(Long id, Long userId);
-    void changeAvatar(Long id, Long userId, MultipartFile avatarImage);
-    void deleteAvatar(Long id, Long userId);
-    UserProfileResponse getProfileInfo(Long id, Long userId, String period);
+    UserSettingsResponse getInfo(Long id);
+    void updateInfo(Long id, UserSettingsRequest request);
+    void delete(Long id);
+    List<UserGroupResponse> getGroups(Long id);
+    List<ApplicationToGroupResponse> getApplications(Long id);
+    void deleteApplication(Long id, Long applicationId);
+    void changePassword(Long id, UserPasswordChangeRequest request);
+    AvatarResponse getAvatarUrl(Long id);
+    void changeAvatar(Long id, MultipartFile avatarImage);
+    void deleteAvatar(Long id);
+    UserProfileResponse getProfileInfo(Long id, String period);
 }

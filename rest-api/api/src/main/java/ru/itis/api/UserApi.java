@@ -19,43 +19,37 @@ public interface UserApi {
     @GetMapping("/{id}/settings")
     @ResponseStatus(HttpStatus.OK)
     UserSettingsResponse getUserSettingsInfo(
-            @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId // todo get from authentication
+            @PathVariable("id") Long id
     );
 
     @PutMapping("/{id}/settings")
     @ResponseStatus(HttpStatus.OK)
     void updateUserSettingsInfo(
             @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestBody UserSettingsRequest request
     );
 
     @DeleteMapping("/{id}/settings")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteUser(
-            @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId // todo get from authentication
+            @PathVariable("id") Long id
     );
 
     @GetMapping("/{id}/groups")
     List<UserGroupResponse> getUserGroups(
-            @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId // todo get from authentication
+            @PathVariable("id") Long id
     );
 
     @GetMapping("/{id}/applications")
     @ResponseStatus(HttpStatus.OK)
     List<ApplicationToGroupResponse> getUserApplicationsToGroup(
-            @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId // todo get from authentication
+            @PathVariable("id") Long id
     );
 
     @DeleteMapping("/{id}/applications")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteUserApplicationToGroup(
             @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam Long applicationId
     );
 
@@ -63,37 +57,32 @@ public interface UserApi {
     @ResponseStatus(HttpStatus.OK)
     void changeUserPassword(
             @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestBody UserPasswordChangeRequest request
     );
 
     @GetMapping("/{id}/changeAvatar")
     @ResponseStatus(HttpStatus.OK)
     AvatarResponse getUserAvatarUrl(
-            @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId // todo get from authentication
+            @PathVariable("id") Long id
     );
 
     @PutMapping("/{id}/changeAvatar")
     @ResponseStatus(HttpStatus.OK)
     void changeUserAvatarUrl(
             @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestBody MultipartFile avatarImage
     );
 
     @DeleteMapping("/{id}/changeAvatar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteUserAvatar(
-            @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId // todo get from authentication
+            @PathVariable("id") Long id
     );
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     UserProfileResponse getUserProfileInfo(
             @PathVariable("id") Long id,
-            @RequestParam("userId") Long userId, // todo get from authentication
             @RequestParam(value = "period", required = false, defaultValue = "allTime") String period
     );
 }

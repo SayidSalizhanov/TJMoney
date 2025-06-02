@@ -25,10 +25,7 @@ import ru.itis.impl.model.*;
 import ru.itis.impl.repository.AvatarRepository;
 import ru.itis.impl.repository.GroupRepository;
 import ru.itis.impl.repository.UserRepository;
-import ru.itis.impl.service.ApplicationService;
-import ru.itis.impl.service.GroupMemberService;
-import ru.itis.impl.service.TransactionService;
-import ru.itis.impl.service.UserService;
+import ru.itis.impl.service.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,12 +49,13 @@ public class UserServiceImpl implements UserService {
     private final AvatarRepository avatarRepository;
     private final TransactionService transactionService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
     @Override
     @Transactional(readOnly = true)
-    public UserSettingsResponse getInfo(Long id, Long userId) {
+    public UserSettingsResponse getInfo(Long id) {
         User user = requireUserById(id);
-        User currentSessionUser = requireUserById(userId);
+        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
 
         checkUserHasAccessGranted(user, currentSessionUser);
 
@@ -66,9 +64,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateInfo(Long id, Long userId, UserSettingsRequest request) {
+    public void updateInfo(Long id, UserSettingsRequest request) {
         User user = requireUserById(id);
-        User currentSessionUser = requireUserById(userId);
+        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
 
         checkUserHasAccessGranted(user, currentSessionUser);
 
@@ -81,9 +79,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void delete(Long id, Long userId) {
+    public void delete(Long id) {
         User user = requireUserById(id);
-        User currentSessionUser = requireUserById(userId);
+        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
 
         checkUserHasAccessGranted(user, currentSessionUser);
 
@@ -92,9 +90,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserGroupResponse> getGroups(Long id, Long userId) {
+    public List<UserGroupResponse> getGroups(Long id) {
         User user = requireUserById(id);
-        User currentSessionUser = requireUserById(userId);
+        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
 
         checkUserHasAccessGranted(user, currentSessionUser);
 
@@ -117,9 +115,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ApplicationToGroupResponse> getApplications(Long id, Long userId) {
+    public List<ApplicationToGroupResponse> getApplications(Long id) {
         User user = requireUserById(id);
-        User currentSessionUser = requireUserById(userId);
+        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
 
         checkUserHasAccessGranted(user, currentSessionUser);
 
@@ -136,9 +134,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteApplication(Long id, Long userId, Long applicationId) {
+    public void deleteApplication(Long id, Long applicationId) {
         User user = requireUserById(id);
-        User currentSessionUser = requireUserById(userId);
+        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
 
         checkUserHasAccessGranted(user, currentSessionUser);
 
@@ -147,9 +145,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changePassword(Long id, Long userId, UserPasswordChangeRequest request) {
+    public void changePassword(Long id, UserPasswordChangeRequest request) {
         User user = requireUserById(id);
-        User currentSessionUser = requireUserById(userId);
+        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
 
         checkUserHasAccessGranted(user, currentSessionUser);
 
@@ -167,16 +165,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public AvatarResponse getAvatarUrl(Long id, Long userId) {
-        User user = requireUserById(id); // здесь не нужно проверки на доступ (userId бесполезен)
+    public AvatarResponse getAvatarUrl(Long id) {
+        User user = requireUserById(id);
         return AvatarResponse.builder().url(user.getAvatar().getUrl()).build();
     }
 
     @Override
     @Transactional
-    public void changeAvatar(Long id, Long userId, MultipartFile avatarImage) {
+    public void changeAvatar(Long id, MultipartFile avatarImage) {
         User user = requireUserById(id);
-        User currentSessionUser = requireUserById(userId);
+        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
 
         checkUserHasAccessGranted(user, currentSessionUser);
 
@@ -206,9 +204,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteAvatar(Long id, Long userId) {
+    public void deleteAvatar(Long id) {
         User user = requireUserById(id);
-        User currentSessionUser = requireUserById(userId);
+        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
 
         checkUserHasAccessGranted(user, currentSessionUser);
 
@@ -217,15 +215,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserProfileResponse getProfileInfo(Long id, Long userId, String period) {
+    public UserProfileResponse getProfileInfo(Long id, String period) {
         User user = requireUserById(id);
-        User currentSessionUser = requireUserById(userId);
+        User currentSessionUser = requireUserById(authService.getAuthenticatedUserId());
 
-        if (!user.getId().equals(currentSessionUser.getId())) return userMapper.toUserProfileResponse(user, null);
+        if (!id.equals(currentSessionUser.getId())) return userMapper.toUserProfileResponse(user, null);
 
         List<Map<String, Integer>> transactionsGenerals;
-        if (period == null || period.isEmpty()) transactionsGenerals = transactionService.getUserTransactionsGenerals(userId, "all");
-        else transactionsGenerals = transactionService.getUserTransactionsGenerals(userId, period);
+        if (period == null || period.isEmpty()) transactionsGenerals = transactionService.getUserTransactionsGenerals(id, "all");
+        else transactionsGenerals = transactionService.getUserTransactionsGenerals(id, period);
 
         return userMapper.toUserProfileResponse(user, transactionsGenerals);
     }

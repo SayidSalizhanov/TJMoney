@@ -23,57 +23,57 @@ public class UserController implements UserApi {
     private final UserService userService;
 
     @Override
-    public UserSettingsResponse getUserSettingsInfo(Long id, Long userId) {
-        return userService.getInfo(id, userId);
+    public UserSettingsResponse getUserSettingsInfo(Long id) {
+        return userService.getInfo(id);
     }
 
     @Override
-    public void updateUserSettingsInfo(Long id, Long userId, UserSettingsRequest request) {
-        userService.updateInfo(id, userId, request);
+    public void updateUserSettingsInfo(Long id, UserSettingsRequest request) {
+        userService.updateInfo(id, request);
     }
 
     @Override
-    public void deleteUser(Long id, Long userId) {
-        userService.delete(id, userId);
+    public void deleteUser(Long id) {
+        userService.delete(id);
     }
 
     @Override
-    public List<UserGroupResponse> getUserGroups(Long id, Long userId) {
-        return userService.getGroups(id, userId);
+    public List<UserGroupResponse> getUserGroups(Long id) {
+        return userService.getGroups(id);
     }
 
     @Override
-    public List<ApplicationToGroupResponse> getUserApplicationsToGroup(Long id, Long userId) {
-        return userService.getApplications(id, userId);
+    public List<ApplicationToGroupResponse> getUserApplicationsToGroup(Long id) {
+        return userService.getApplications(id);
     }
 
     @Override
-    public void deleteUserApplicationToGroup(Long id, Long userId, Long applicationId) {
-        userService.deleteApplication(id, userId, applicationId);
+    public void deleteUserApplicationToGroup(Long id, Long applicationId) {
+        userService.deleteApplication(id, applicationId);
     }
 
     @Override
-    public void changeUserPassword(Long id, Long userId, UserPasswordChangeRequest request) {
-        userService.changePassword(id, userId, request);
+    public void changeUserPassword(Long id, UserPasswordChangeRequest request) {
+        userService.changePassword(id, request);
     }
 
     @Override
-    public AvatarResponse getUserAvatarUrl(Long id, Long userId) {
-        return userService.getAvatarUrl(id, userId);
+    public AvatarResponse getUserAvatarUrl(Long id) {
+        return userService.getAvatarUrl(id);
     }
 
     @Override
-    public void changeUserAvatarUrl(Long id, Long userId, MultipartFile avatarImage) {
-        userService.changeAvatar(id, userId, avatarImage);
+    public void changeUserAvatarUrl(Long id, MultipartFile avatarImage) {
+        userService.changeAvatar(id, avatarImage);
     }
 
     @Override
-    public void deleteUserAvatar(Long id, Long userId) {
-        userService.deleteAvatar(id, userId);
+    public void deleteUserAvatar(Long id) {
+        userService.deleteAvatar(id);
     }
 
     @Override
-    public UserProfileResponse getUserProfileInfo(Long id, Long userId, String period) {
-        return userService.getProfileInfo(id, userId, period);
+    public UserProfileResponse getUserProfileInfo(Long id, String period) {
+        return userService.getProfileInfo(id, period);
     }
 }

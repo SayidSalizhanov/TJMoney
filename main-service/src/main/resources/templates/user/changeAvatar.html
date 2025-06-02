@@ -17,7 +17,6 @@
 
         <form th:action="@{/users/{id}/changeAvatar(id=${userId})}" method="post" enctype="multipart/form-data" class="avatar-form mb-4">
             <input type="hidden" name="_method" value="patch">
-            <input type="hidden" name="userId" th:value="${currentSessionUserId}">
 
             <div class="form-group">
                 <label for="avatarImage">Сменить аватар</label>
@@ -28,7 +27,6 @@
 
         <form th:action="@{/users/{id}/changeAvatar(id=${userId})}" method="post">
             <input type="hidden" name="_method" value="delete">
-            <input type="hidden" name="userId" th:value="${currentSessionUserId}">
 
             <button type="submit" class="btn-success delete-button">Удалить аватар</button>
         </form>

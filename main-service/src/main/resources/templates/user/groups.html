@@ -11,17 +11,14 @@
 <div class="content">
     <div class="button-group">
         <form th:action="@{/users/{id}/applications(id=${userId})}" method="GET" class="applications-form">
-            <input type="hidden" name="userId" th:value="${currentSessionUserId}">
             <button type="submit" class="action-button">Мои заявки</button>
         </form>
 
         <form th:action="@{/groups/new}" method="GET" class="create-group-form">
-            <input type="hidden" name="userId" th:value="${currentSessionUserId}">
             <button type="submit" class="action-button">Создать группу</button>
         </form>
 
         <form th:action="@{/groups}" method="GET" class="find-group-form">
-            <input type="hidden" name="userId" th:value="${currentSessionUserId}">
             <button type="submit" class="action-button">Найти группу</button>
         </form>
     </div>
@@ -32,7 +29,6 @@
         <div th:each="group : ${groups}">
             <form th:action="@{/groups/{id}(id=${group.groupId})}" method="get" class="group-form">
                 <div class="group">
-                    <input type="hidden" name="userId" th:value="${currentSessionUserId}">
                     <button type="submit" class="group-button">
                         <div class="group-details">
                             <div class="left-column">

@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const formData = new FormData(this);
             const applicationId = formData.get("applicationId");
-            const userId = formData.get("userId");
             const button = document.querySelector(`#delete-button-${applicationId}`);
             const applicationDiv = button.closest('.application');
 
@@ -17,8 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     "Content-Type": "application/x-www-form-urlencoded"
                 },
                 body: new URLSearchParams({
-                    applicationId: applicationId,
-                    userId: userId
+                    applicationId: applicationId
                 })
             }).then(response => {
                 if (response.ok) {
