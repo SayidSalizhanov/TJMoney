@@ -23,7 +23,6 @@
 
         <div class="actions">
             <form th:action="@{/transactions/{id}(id=${id})}" method="POST" class="transaction-form">
-                <input type="hidden" name="userId" th:value="${userId}">
                 <input type="hidden" name="_method" value="put">
                 
                 <div class="form-group">
@@ -48,7 +47,6 @@
             </form>
 
             <form th:action="@{/transactions/{id}(id=${id})}" method="POST" class="delete-form">
-                <input type="hidden" name="userId" th:value="${userId}">
                 <input type="hidden" name="_method" value="delete">
                 <button type="submit" class="delete-button">Удалить</button>
             </form>

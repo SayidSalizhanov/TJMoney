@@ -30,60 +30,58 @@ public class TransactionService {
 
     private static final String BASE_URL = "/api/transactions";
 
-    public TransactionSettingsResponse getTransaction(Long id, Long userId) {
+    public TransactionSettingsResponse getTransaction(Long id) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<TransactionSettingsResponse> response = restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/{id}?userId={userId}",
+                apiBaseUrl + BASE_URL + "/{id}",
                 HttpMethod.GET,
                 entity,
                 TransactionSettingsResponse.class,
-                id, userId
+                id
         );
 
         return response.getBody();
     }
 
-    public void updateTransactionInfo(Long id, Long userId, TransactionSettingsRequest request) {
+    public void updateTransactionInfo(Long id, TransactionSettingsRequest request) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<TransactionSettingsRequest> entity = new HttpEntity<>(request, headers);
 
         restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/{id}?userId={userId}",
+                apiBaseUrl + BASE_URL + "/{id}",
                 HttpMethod.PUT,
                 entity,
                 Void.class,
-                id, userId
+                id
         );
     }
 
-    public void deleteTransaction(Long id, Long userId) {
+    public void deleteTransaction(Long id) {
         HttpHeaders headers = authService.getAuthHeaders();
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/{id}?userId={userId}",
+                apiBaseUrl + BASE_URL + "/{id}",
                 HttpMethod.DELETE,
                 entity,
                 Void.class,
-                id, userId
+                id
         );
     }
 
     public List<TransactionListResponse> getTransactions(
-            Long userId,
             Long groupId,
             Integer page,
             Integer amountPerPage
     ) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL)
-                .queryParam("userId", userId)
                 .queryParam("groupId", groupId)
                 .queryParam("page", page)
                 .queryParam("amount_per_page", amountPerPage);
@@ -104,24 +102,24 @@ public class TransactionService {
                 .orElse(Collections.emptyList());
     }
 
-    public Long createTransaction(Long userId, Long groupId, TransactionCreateRequest request) {
+    public Long createTransaction(Long groupId, TransactionCreateRequest request) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<TransactionCreateRequest> entity = new HttpEntity<>(request, headers);
 
         ResponseEntity<Long> response = restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/new?userId={userId}&groupId={groupId}",
+                apiBaseUrl + BASE_URL + "/new?groupId={groupId}",
                 HttpMethod.POST,
                 entity,
                 Long.class,
-                userId, groupId
+                groupId
         );
 
         return response.getBody();
     }
 
-    public List<Long> uploadCsvTransactions(Long userId, Long groupId, MultipartFile csvFile) {
+    public List<Long> uploadCsvTransactions(Long groupId, MultipartFile csvFile) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -131,11 +129,11 @@ public class TransactionService {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         return restTemplate.exchange(
-            apiBaseUrl + BASE_URL + "/new/uploadTransactions?userId={userId}&groupId={groupId}",
+            apiBaseUrl + BASE_URL + "/new/uploadTransactions&groupId={groupId}",
             HttpMethod.POST,
             requestEntity,
             new ParameterizedTypeReference<List<Long>>() {},
-            userId, groupId
+            groupId
         ).getBody();
     }
 } 

@@ -5,5 +5,5 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface CsvParsingService {
-    List<Long> parseCsv(Long userId, Long groupId, MultipartFile file);
+    List<Long> parseCsv(Long groupId, MultipartFile file);
 }

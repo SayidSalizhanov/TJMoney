@@ -21,32 +21,32 @@ public class TransactionController implements TransactionApi {
     private final CsvParsingService csvParsingService;
 
     @Override
-    public TransactionSettingsResponse getTransaction(Long id, Long userId) {
-        return transactionService.getById(id, userId);
+    public TransactionSettingsResponse getTransaction(Long id) {
+        return transactionService.getById(id);
     }
 
     @Override
-    public void updateTransactionInfo(Long id, Long userId, TransactionSettingsRequest request) {
-        transactionService.updateInfo(id, userId, request);
+    public void updateTransactionInfo(Long id, TransactionSettingsRequest request) {
+        transactionService.updateInfo(id, request);
     }
 
     @Override
-    public void deleteTransaction(Long id, Long userId) {
-        transactionService.delete(id, userId);
+    public void deleteTransaction(Long id) {
+        transactionService.delete(id);
     }
 
     @Override
-    public List<TransactionListResponse> getTransactions(Long userId, Long groupId, Integer page, Integer amountPerPage) {
-        return transactionService.getAll(userId, groupId, page, amountPerPage);
+    public List<TransactionListResponse> getTransactions(Long groupId, Integer page, Integer amountPerPage) {
+        return transactionService.getAll(groupId, page, amountPerPage);
     }
 
     @Override
-    public Long createTransaction(Long userId, Long groupId, TransactionCreateRequest request) {
-        return transactionService.create(userId, groupId, request);
+    public Long createTransaction(Long groupId, TransactionCreateRequest request) {
+        return transactionService.create(groupId, request);
     }
 
     @Override
-    public List<Long> uploadCsvTransactions(Long userId, Long groupId, MultipartFile csvFile) {
-        return csvParsingService.parseCsv(userId, groupId, csvFile);
+    public List<Long> uploadCsvTransactions(Long groupId, MultipartFile csvFile) {
+        return csvParsingService.parseCsv(groupId, csvFile);
     }
 }

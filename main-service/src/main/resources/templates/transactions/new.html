@@ -14,7 +14,6 @@
         <h2>Создание транзакции</h2>
 
         <form th:action="@{/transactions/new}" method="POST" class="transaction-form">
-            <input type="hidden" name="userId" th:value="${userId}">
             <input type="hidden" name="groupId" th:value="${groupId}">
 
             <div class="form">
@@ -43,7 +42,6 @@
 
     <div class="upload-xls">
         <form th:action="@{/transactions/new/upload}" method="get">
-            <input type="hidden" name="userId" th:value="${userId}">
             <input type="hidden" name="groupId" th:value="${groupId}">
 
             <button type="submit" class="upload-button">Загрузить csv файл</button>

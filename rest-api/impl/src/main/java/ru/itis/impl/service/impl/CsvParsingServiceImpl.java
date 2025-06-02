@@ -17,6 +17,7 @@ import ru.itis.impl.model.User;
 import ru.itis.impl.repository.GroupRepository;
 import ru.itis.impl.repository.TransactionRepository;
 import ru.itis.impl.repository.UserRepository;
+import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.CsvParsingService;
 import ru.itis.impl.service.GroupService;
 
@@ -36,14 +37,15 @@ public class CsvParsingServiceImpl implements CsvParsingService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final GroupService groupService;
+    private final AuthService authService;
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     @Transactional
-    public List<Long> parseCsv(Long userId, @MayBeNull Long groupId, MultipartFile file) {
+    public List<Long> parseCsv(@MayBeNull Long groupId, MultipartFile file) {
 
-        User user = requireUserById(userId);
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = groupId == null ? null : requireGroupById(groupId);
 
         if (group != null) {

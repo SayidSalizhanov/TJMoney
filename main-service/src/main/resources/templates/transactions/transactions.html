@@ -11,7 +11,6 @@
 <div class="content">
     <div class="actions">
         <form th:action="@{/transactions/new}" method="GET" class="create-transaction-form">
-            <input type="hidden" name="userId" th:value="${userId}">
             <input type="hidden" name="groupId" th:value="${groupId}">
             <button type="submit" class="create-button">Создать транзакцию</button>
         </form>
@@ -20,7 +19,6 @@
     <div class="transactions-list">
         <form th:each="transaction : ${transactions}" th:action="@{/transactions/{id}(id=${transaction.id})}" method="get" class="transaction-form">
             <div class="transaction">
-                <input type="hidden" name="userId" th:value="${userId}">
                 <button type="submit" class="transaction-button">
                     <div class="transaction-details">
                         <div class="left-column">
