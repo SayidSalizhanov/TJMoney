@@ -4,6 +4,7 @@ import com.cloudinary.Cloudinary;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.control.MappingControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +51,7 @@ public class UserServiceImpl implements UserService {
     private final Cloudinary cloudinary;
     private final AvatarRepository avatarRepository;
     private final TransactionService transactionService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
@@ -152,12 +154,13 @@ public class UserServiceImpl implements UserService {
         checkUserHasAccessGranted(user, currentSessionUser);
 
         String currentPassword = user.getPassword();
+        String encodeNewPassword = passwordEncoder.encode(request.newPassword());
 
-        // todo проверка что заэкрипченный пароль из request будет соотвествовать currentPassword
+        if (!currentPassword.equals(encodeNewPassword)) throw new UpdateException("Неверный старый пароль");
 
         if (!request.newPassword().equals(request.repeatNewPassword())) throw new UpdateException("Новые пароли не совпадают");
 
-        // todo смена пароля на новый заэнкрипченный пароль через сеттер
+        user.setPassword(encodeNewPassword);
 
         userRepository.save(user);
     }
