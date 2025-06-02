@@ -8,9 +8,9 @@ import ru.itis.dto.response.record.RecordSettingsResponse;
 import java.util.List;
 
 public interface RecordService {
-    RecordSettingsResponse getById(Long id, Long userId);
-    void updateInfo(Long id, Long userId, RecordSettingsRequest request);
-    void delete(Long id, Long userId);
-    List<RecordListResponse> getAll(Long userId, Long groupId, Integer page, Integer amountPerPage);
-    Long create(Long userId, Long groupId, RecordCreateRequest request);
+    RecordSettingsResponse getById(Long id);
+    void updateInfo(Long id, RecordSettingsRequest request);
+    void delete(Long id);
+    List<RecordListResponse> getAll(Long groupId, Integer page, Integer amountPerPage);
+    Long create(Long groupId, RecordCreateRequest request);
 }

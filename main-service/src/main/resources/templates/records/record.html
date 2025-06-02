@@ -22,8 +22,6 @@
         <form th:action="@{/records/{id}(id=${recordId})}" method="POST" class="record-form">
             <input type="hidden" name="_method" value="put">
 
-            <input type="hidden" name="userId" th:value="${userId}">
-
             <div class="form-group">
                 <label for="title">Название:</label>
                 <input type="text" id="title" name="title" th:value="${record.title}" required>
@@ -39,8 +37,6 @@
 
         <form th:action="@{/records/{id}(id=${recordId})}" method="POST" class="delete-form">
             <input type="hidden" name="_method" value="delete">
-
-            <input type="hidden" name="userId" th:value="${userId}">
 
             <button type="submit" class="delete-button">Удалить</button>
         </form>

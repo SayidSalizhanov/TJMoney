@@ -18,27 +18,27 @@ public class RecordController implements RecordApi {
     private final RecordService recordService;
 
     @Override
-    public RecordSettingsResponse getRecord(Long id, Long userId) {
-        return recordService.getById(id, userId);
+    public RecordSettingsResponse getRecord(Long id) {
+        return recordService.getById(id);
     }
 
     @Override
-    public void updateRecordInfo(Long id, Long userId, RecordSettingsRequest request) {
-        recordService.updateInfo(id, userId, request);
+    public void updateRecordInfo(Long id, RecordSettingsRequest request) {
+        recordService.updateInfo(id, request);
     }
 
     @Override
-    public void deleteRecord(Long id, Long userId) {
-        recordService.delete(id, userId);
+    public void deleteRecord(Long id) {
+        recordService.delete(id);
     }
 
     @Override
-    public List<RecordListResponse> getRecords(Long userId, Long groupId, Integer page, Integer amountPerPage) {
-        return recordService.getAll(userId, groupId, page, amountPerPage);
+    public List<RecordListResponse> getRecords(Long groupId, Integer page, Integer amountPerPage) {
+        return recordService.getAll(groupId, page, amountPerPage);
     }
 
     @Override
-    public Long createRecord(Long userId, Long groupId, RecordCreateRequest request) {
-        return recordService.create(userId, groupId, request);
+    public Long createRecord(Long groupId, RecordCreateRequest request) {
+        return recordService.create(groupId, request);
     }
 }

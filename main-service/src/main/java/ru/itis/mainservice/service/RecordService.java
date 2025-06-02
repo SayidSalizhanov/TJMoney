@@ -24,9 +24,8 @@ public class RecordService {
     private final AuthService authService;
     private final String BASE_URL = "http://localhost:8080/api/records";
 
-    public RecordSettingsResponse getRecord(Long id, Long userId) {
+    public RecordSettingsResponse getRecord(Long id) {
         String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
-                .queryParam("userId", userId)
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -46,9 +45,8 @@ public class RecordService {
         return response.getBody();
     }
 
-    public void updateRecordInfo(Long id, Long userId, RecordSettingsRequest request) {
+    public void updateRecordInfo(Long id, RecordSettingsRequest request) {
         String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
-                .queryParam("userId", userId)
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -60,9 +58,8 @@ public class RecordService {
         restTemplate.exchange(url, HttpMethod.PUT, entity, Void.class);
     }
 
-    public void deleteRecord(Long id, Long userId) {
+    public void deleteRecord(Long id) {
         String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
-                .queryParam("userId", userId)
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -74,13 +71,11 @@ public class RecordService {
     }
 
     public List<RecordListResponse> getRecords(
-            Long userId,
             Long groupId,
             Integer page,
             Integer amountPerPage
     ) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL)
-                .queryParam("userId", userId)
                 .queryParam("page", page)
                 .queryParam("amount_per_page", amountPerPage);
 
@@ -104,9 +99,8 @@ public class RecordService {
                 .orElse(Collections.emptyList());
     }
 
-    public Long createRecord(Long userId, Long groupId, RecordCreateRequest request) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/new")
-                .queryParam("userId", userId);
+    public Long createRecord(Long groupId, RecordCreateRequest request) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/new");
 
         if (groupId != null) {
             builder.queryParam("groupId", groupId);
