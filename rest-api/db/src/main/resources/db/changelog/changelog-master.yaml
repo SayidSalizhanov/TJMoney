@@ -38,3 +38,15 @@ databaseChangeLog:
   - include:
       file: changeset/ddl/v1__create_transactions_table.sql
       relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v3__create_roles_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v2__create_users_roles_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/dml/v1__insert_roles.sql
+      relativeToChangelogFile: true
