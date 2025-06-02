@@ -24,3 +24,8 @@ cloudinary:
   api-key:
   api-secret:
   cloud-name:
+
+fxrates:
+  api:
+    api-key:
+    base-url:
