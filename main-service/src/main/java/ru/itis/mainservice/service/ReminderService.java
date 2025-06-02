@@ -11,13 +11,16 @@ import ru.itis.mainservice.dto.request.reminder.ReminderSettingsRequest;
 import ru.itis.mainservice.dto.response.reminder.ReminderListResponse;
 import ru.itis.mainservice.dto.response.reminder.ReminderSettingsResponse;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ReminderService {
 
     private final RestTemplate restTemplate;
+    private final AuthService authService;
     private final String BASE_URL = "http://localhost:8080/api/reminders";
 
     public ReminderSettingsResponse getReminder(Long id, Long userId) {
@@ -26,7 +29,20 @@ public class ReminderService {
                 .buildAndExpand(id)
                 .toUriString();
 
-        return restTemplate.getForObject(url, ReminderSettingsResponse.class);
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<ReminderSettingsResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                ReminderSettingsResponse.class
+        );
+
+        return response.getBody();
     }
 
     public void updateReminderInfo(Long id, Long userId, ReminderSettingsRequest request) {
@@ -35,7 +51,12 @@ public class ReminderService {
                 .buildAndExpand(id)
                 .toUriString();
 
-        restTemplate.put(url, request);
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<ReminderSettingsRequest> entity = new HttpEntity<>(request, headers);
+
+        restTemplate.exchange(url, HttpMethod.PUT, entity, Void.class);
     }
 
     public void deleteReminder(Long id, Long userId) {
@@ -44,7 +65,11 @@ public class ReminderService {
                 .buildAndExpand(id)
                 .toUriString();
 
-        restTemplate.delete(url);
+        HttpHeaders headers = authService.getAuthHeaders();
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
     }
 
     public List<ReminderListResponse> getReminders(
@@ -62,14 +87,20 @@ public class ReminderService {
             builder.queryParam("groupId", groupId);
         }
 
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
         ResponseEntity<List<ReminderListResponse>> response = restTemplate.exchange(
                 builder.toUriString(),
                 HttpMethod.GET,
-                null,
+                entity,
                 new ParameterizedTypeReference<>() {}
         );
 
-        return response.getBody();
+        return Optional.ofNullable(response.getBody())
+                .orElse(Collections.emptyList());
     }
 
     public Long createReminder(Long userId, Long groupId, ReminderCreateRequest request) {
@@ -80,10 +111,18 @@ public class ReminderService {
             builder.queryParam("groupId", groupId);
         }
 
-        return restTemplate.postForObject(
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<ReminderCreateRequest> entity = new HttpEntity<>(request, headers);
+
+        ResponseEntity<Long> response = restTemplate.exchange(
                 builder.toUriString(),
-                request,
+                HttpMethod.POST,
+                entity,
                 Long.class
         );
+
+        return response.getBody();
     }
 }

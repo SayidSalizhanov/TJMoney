@@ -11,7 +11,9 @@ import ru.itis.mainservice.dto.request.record.RecordSettingsRequest;
 import ru.itis.mainservice.dto.response.record.RecordListResponse;
 import ru.itis.mainservice.dto.response.record.RecordSettingsResponse;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -19,6 +21,7 @@ import java.util.List;
 public class RecordService {
 
     private final RestTemplate restTemplate;
+    private final AuthService authService;
     private final String BASE_URL = "http://localhost:8080/api/records";
 
     public RecordSettingsResponse getRecord(Long id, Long userId) {
@@ -27,7 +30,20 @@ public class RecordService {
                 .buildAndExpand(id)
                 .toUriString();
 
-        return restTemplate.getForObject(url, RecordSettingsResponse.class);
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<RecordSettingsResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                RecordSettingsResponse.class
+        );
+
+        return response.getBody();
     }
 
     public void updateRecordInfo(Long id, Long userId, RecordSettingsRequest request) {
@@ -36,7 +52,12 @@ public class RecordService {
                 .buildAndExpand(id)
                 .toUriString();
 
-        restTemplate.put(url, request);
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<RecordSettingsRequest> entity = new HttpEntity<>(request, headers);
+
+        restTemplate.exchange(url, HttpMethod.PUT, entity, Void.class);
     }
 
     public void deleteRecord(Long id, Long userId) {
@@ -45,7 +66,11 @@ public class RecordService {
                 .buildAndExpand(id)
                 .toUriString();
 
-        restTemplate.delete(url);
+        HttpHeaders headers = authService.getAuthHeaders();
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
     }
 
     public List<RecordListResponse> getRecords(
@@ -63,14 +88,20 @@ public class RecordService {
             builder.queryParam("groupId", groupId);
         }
 
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
         ResponseEntity<List<RecordListResponse>> response = restTemplate.exchange(
                 builder.toUriString(),
                 HttpMethod.GET,
-                null,
+                entity,
                 new ParameterizedTypeReference<>() {}
         );
 
-        return response.getBody();
+        return Optional.ofNullable(response.getBody())
+                .orElse(Collections.emptyList());
     }
 
     public Long createRecord(Long userId, Long groupId, RecordCreateRequest request) {
@@ -81,10 +112,16 @@ public class RecordService {
             builder.queryParam("groupId", groupId);
         }
 
-        return restTemplate.postForObject(
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<RecordCreateRequest> entity = new HttpEntity<>(request, headers);
+
+        return restTemplate.exchange(
                 builder.toUriString(),
-                request,
+                HttpMethod.POST,
+                entity,
                 Long.class
-        );
+        ).getBody();
     }
 }
