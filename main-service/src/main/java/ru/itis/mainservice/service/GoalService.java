@@ -1,6 +1,7 @@
 package ru.itis.mainservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,10 @@ public class GoalService {
 
     private final RestTemplate restTemplate;
     private final AuthService authService;
-    private final String BASE_URL = "http://localhost:8080/api/goals";
+
+    @Value("${api.base-url}")
+    private String apiBaseUrl;
+    private final String BASE_URL = apiBaseUrl + "/api/goals";
 
     public GoalSettingsResponse getGoal(Long id) {
         String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}")
