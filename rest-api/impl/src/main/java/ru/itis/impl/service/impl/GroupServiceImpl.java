@@ -1,7 +1,6 @@
 package ru.itis.impl.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,10 +26,7 @@ import ru.itis.impl.repository.ApplicationRepository;
 import ru.itis.impl.repository.GroupMemberRepository;
 import ru.itis.impl.repository.GroupRepository;
 import ru.itis.impl.repository.UserRepository;
-import ru.itis.impl.service.ApplicationService;
-import ru.itis.impl.service.GroupMemberService;
-import ru.itis.impl.service.GroupService;
-import ru.itis.impl.service.TransactionService;
+import ru.itis.impl.service.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -54,12 +50,13 @@ public class GroupServiceImpl implements GroupService {
     private final ApplicationService applicationService;
     private final GroupMemberMapper groupMemberMapper;
     private final ApplicationMapper applicationMapper;
+    private final AuthService authService;
 
     @Override
     @Transactional(readOnly = true)
-    public GroupProfileResponse getById(Long groupId, Long userId, @MayBeNull String period) {
+    public GroupProfileResponse getById(Long groupId, @MayBeNull String period) {
         Group group = requireGroupById(groupId);
-        User user = requireUserById(userId);
+        User user = requireUserById(authService.getAuthenticatedUserId());
 
         checkUserIsGroupMemberVoid(user, group);
 
@@ -73,8 +70,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GroupListResponse> getWhereUserNotJoined(Long userId) {
-        User user = requireUserById(userId);
+    public List<GroupListResponse> getWhereUserNotJoined() {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         List<GroupMember> groupMembers = groupMemberRepository.findAllByUser(user);
         List<Long> userGroups = groupMembers.stream()
                 .map(gm -> gm.getGroup().getId())
@@ -111,8 +108,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public GroupSettingsResponse getSettings(Long id, Long userId) {
-        User user = requireUserById(userId);
+    public GroupSettingsResponse getSettings(Long id) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
@@ -124,8 +121,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public void update(Long id, Long userId, GroupSettingsRequest request) {
-        User user = requireUserById(userId);
+    public void update(Long id, GroupSettingsRequest request) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
@@ -137,8 +134,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public void delete(Long id, Long userId) {
-        User user = requireUserById(userId);
+    public void delete(Long id) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
@@ -148,8 +145,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public GroupViewingResponse getView(Long id, Long userId) {
-        User user = requireUserById(userId);
+    public GroupViewingResponse getView(Long id) {
         Group group = requireGroupById(id);
 
         List<GroupMember> groupMembers = groupMemberService.getGroupMembers(group);
@@ -169,7 +165,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public Long create(Long id, Long userId, GroupCreateRequest request) {
+    public Long create(GroupCreateRequest request) {
         Group newGroup = Group.builder()
                 .name(request.name())
                 .createdAt(LocalDateTime.now())
@@ -177,7 +173,7 @@ public class GroupServiceImpl implements GroupService {
                 .build();
         Group group = groupRepository.save(newGroup);
 
-        User user = requireUserById(userId);
+        User user = requireUserById(authService.getAuthenticatedUserId());
         groupMemberService.save(user, group);
 
         return group.getId();
@@ -185,8 +181,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GroupMemberResponse> getMembers(Long id, Long userId, Integer page, Integer amountPerPage) {
-        User user = requireUserById(userId);
+    public List<GroupMemberResponse> getMembers(Long id, Integer page, Integer amountPerPage) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = requireGroupById(id);
 
         checkUserIsGroupMemberVoid(user, group);
@@ -200,8 +196,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public void deleteGroupMemberFromAdminSide(Long id, Long userId, Long userIdForDelete) {
-        User user = requireUserById(userId);
+    public void deleteGroupMemberFromAdminSide(Long id, Long userIdForDelete) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
@@ -210,8 +206,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ApplicationWithUserInfoResponse> getApplications(Long id, Long userId, Integer page, Integer amountPerPage) {
-        User user = requireUserById(userId);
+    public List<ApplicationWithUserInfoResponse> getApplications(Long id, Integer page, Integer amountPerPage) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
@@ -226,8 +222,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public Long answerApplication(Long id, Long userId, ApplicationAnswerRequest request) {
-        User user = requireUserById(userId);
+    public Long answerApplication(Long id, ApplicationAnswerRequest request) {
+        User user = requireUserById(authService.getAuthenticatedUserId());
         Group group = requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);

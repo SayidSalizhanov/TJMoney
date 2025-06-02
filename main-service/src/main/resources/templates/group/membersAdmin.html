@@ -12,7 +12,6 @@
 <div class="content-wrapper">
     <div class="content">
         <form th:action="@{/groups/{id}/applications(id=${groupId})}" method="GET" class="applications-form">
-            <input type="hidden" name="userId" th:value="${userId}">
             <button type="submit" class="nav-button">Заявки</button>
         </form>
 
@@ -29,7 +28,6 @@
                       th:id="|delete-form-${member.userId}|">
                     <input type="hidden" name="_method" value="delete">
                     <input type="hidden" name="userIdForDelete" th:value="${member.userId}">
-                    <input type="hidden" name="userId" th:value="${userId}">
                     <input type="hidden" name="groupId" th:value="${groupId}">
                     <button type="submit" 
                             class="delete-button" 

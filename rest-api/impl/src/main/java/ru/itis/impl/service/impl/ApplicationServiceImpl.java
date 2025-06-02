@@ -14,6 +14,7 @@ import ru.itis.impl.repository.ApplicationRepository;
 import ru.itis.impl.repository.GroupRepository;
 import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.ApplicationService;
+import ru.itis.impl.service.AuthService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,12 +26,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final AuthService authService;
 
     @Override
     @Transactional
-    public Long createApplications(Long userId, Long groupId) {
+    public Long createApplications(Long groupId) {
         Application application = Application.builder()
-                .user(requireUserById(userId))
+                .user(requireUserById(authService.getAuthenticatedUserId()))
                 .group(requireGroupById(groupId))
                 .sendAt(LocalDateTime.now())
                 .status("В ожидании")

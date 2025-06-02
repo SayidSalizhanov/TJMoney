@@ -18,7 +18,6 @@
             <div class="group-actions">
                 <form th:action="@{/groups/{id}/viewing(id=${group.id})}" method="GET" class="group-form">
                     <div class="group">
-                        <input type="hidden" name="userId" th:value="${userId}">
                         <button type="submit" class="group-button">
                             <div class="group-details">
                                 <div class="left-column">
@@ -30,7 +29,6 @@
                 </form>
 
                 <form th:action="@{/groups}" method="POST" class="apply-form" th:id="|apply-form-${group.id}|">
-                    <input type="hidden" name="userId" th:value="${userId}">
                     <input type="hidden" name="groupId" th:value="${group.id}">
                     <button type="submit" class="apply-button" th:id="|apply-button-${group.id}|">Подать заявку</button>
                 </form>

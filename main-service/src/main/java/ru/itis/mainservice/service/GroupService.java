@@ -25,150 +25,147 @@ public class GroupService {
 
     @Value("${api.base-url}")
     private String apiBaseUrl;
-
     private static final String BASE_URL = "/api/groups";
 
-    public List<GroupListResponse> getGroupsWhereUserNotJoined(Long userId) {
+    public List<GroupListResponse> getGroupsWhereUserNotJoined() {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<List<GroupListResponse>> response = restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "?userId={userId}",
+                apiBaseUrl + BASE_URL,
                 HttpMethod.GET,
                 entity,
-                new ParameterizedTypeReference<List<GroupListResponse>>() {},
-                userId
+                new ParameterizedTypeReference<List<GroupListResponse>>() {}
         );
 
         return Optional.ofNullable(response.getBody())
                 .orElse(Collections.emptyList());
     }
 
-    public Long createApplicationToGroup(Long userId, Long groupId) {
+    public Long createApplicationToGroup(Long groupId) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<Long> response = restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "?userId={userId}&groupId={groupId}",
+                apiBaseUrl + BASE_URL + "?groupId={groupId}",
                 HttpMethod.POST,
                 entity,
                 Long.class,
-                userId, groupId
+                groupId
         );
 
         return response.getBody();
     }
 
-    public GroupProfileResponse getGroup(Long id, Long userId, String period) {
+    public GroupProfileResponse getGroup(Long id, String period) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<GroupProfileResponse> response = restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/{id}?userId={userId}&period={period}",
+                apiBaseUrl + BASE_URL + "/{id}?period={period}",
                 HttpMethod.GET,
                 entity,
                 GroupProfileResponse.class,
-                id, userId, period
+                id, period
         );
 
         return response.getBody();
     }
 
-    public void leaveGroup(Long id, Long userId) {
+    public void leaveGroup(Long id) {
         HttpHeaders headers = authService.getAuthHeaders();
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/{id}?userId={userId}",
+                apiBaseUrl + BASE_URL + "/{id}",
                 HttpMethod.DELETE,
                 entity,
                 Void.class,
-                id, userId
+                id
         );
     }
 
-    public GroupSettingsResponse getGroupSettings(Long id, Long userId) {
+    public GroupSettingsResponse getGroupSettings(Long id) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<GroupSettingsResponse> response = restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/{id}/settings?userId={userId}",
+                apiBaseUrl + BASE_URL + "/{id}/settings",
                 HttpMethod.GET,
                 entity,
                 GroupSettingsResponse.class,
-                id, userId
+                id
         );
 
         return response.getBody();
     }
 
-    public void updateGroupInfo(Long id, Long userId, GroupSettingsRequest request) {
+    public void updateGroupInfo(Long id, GroupSettingsRequest request) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<GroupSettingsRequest> entity = new HttpEntity<>(request, headers);
 
         restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/{id}/settings?userId={userId}",
+                apiBaseUrl + BASE_URL + "/{id}/settings",
                 HttpMethod.PUT,
                 entity,
                 Void.class,
-                id, userId
+                id
         );
     }
 
-    public void deleteGroup(Long id, Long userId) {
+    public void deleteGroup(Long id) {
         HttpHeaders headers = authService.getAuthHeaders();
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/{id}/settings?userId={userId}",
+                apiBaseUrl + BASE_URL + "/{id}/settings",
                 HttpMethod.DELETE,
                 entity,
                 Void.class,
-                id, userId
+                id
         );
     }
 
-    public GroupViewingResponse getGroupView(Long id, Long userId) {
+    public GroupViewingResponse getGroupView(Long id) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<GroupViewingResponse> response = restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/{id}/viewing?userId={userId}",
+                apiBaseUrl + BASE_URL + "/{id}/viewing",
                 HttpMethod.GET,
                 entity,
                 GroupViewingResponse.class,
-                id, userId
+                id
         );
 
         return response.getBody();
     }
 
-    public Long createGroup(Long userId, GroupCreateRequest request) {
+    public Long createGroup(GroupCreateRequest request) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<GroupCreateRequest> entity = new HttpEntity<>(request, headers);
 
         ResponseEntity<Long> response = restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/new?userId={userId}",
+                apiBaseUrl + BASE_URL + "/new",
                 HttpMethod.POST,
                 entity,
-                Long.class,
-                userId
+                Long.class
         );
 
         return response.getBody();
@@ -176,12 +173,10 @@ public class GroupService {
 
     public List<GroupMemberResponse> getGroupMembers(
             Long id,
-            Long userId,
             Integer page,
             Integer amountPerPage
     ) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/{id}/members")
-                .queryParam("userId", userId)
                 .queryParam("page", page)
                 .queryParam("amount_per_page", amountPerPage);
 
@@ -201,28 +196,26 @@ public class GroupService {
                 .orElse(Collections.emptyList());
     }
 
-    public void deleteMemberFromAdminSide(Long id, Long userId, Long userIdForDelete) {
+    public void deleteMemberFromAdminSide(Long id, Long userIdForDelete) {
         HttpHeaders headers = authService.getAuthHeaders();
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/{id}/members?userId={userId}&userIdForDelete={userIdForDelete}",
+                apiBaseUrl + BASE_URL + "/{id}/members?userIdForDelete={userIdForDelete}",
                 HttpMethod.DELETE,
                 entity,
                 Void.class,
-                id, userId, userIdForDelete
+                id, userIdForDelete
         );
     }
 
     public List<ApplicationWithUserInfoResponse> getApplications(
             Long id,
-            Long userId,
             Integer page,
             Integer amountPerPage
     ) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL + "/{id}/applications")
-                .queryParam("userId", userId)
                 .queryParam("page", page)
                 .queryParam("amount_per_page", amountPerPage);
 
@@ -242,18 +235,18 @@ public class GroupService {
                 .orElse(Collections.emptyList());
     }
 
-    public Long answerApplication(Long id, Long userId, ApplicationAnswerRequest request) {
+    public Long answerApplication(Long id, ApplicationAnswerRequest request) {
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<ApplicationAnswerRequest> entity = new HttpEntity<>(request, headers);
 
         ResponseEntity<Long> response = restTemplate.exchange(
-                apiBaseUrl + BASE_URL + "/{id}/applications?userId={userId}",
+                apiBaseUrl + BASE_URL + "/{id}/applications",
                 HttpMethod.POST,
                 entity,
                 Long.class,
-                id, userId
+                id
         );
 
         return response.getBody();

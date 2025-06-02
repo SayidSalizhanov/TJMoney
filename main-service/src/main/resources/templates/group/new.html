@@ -14,8 +14,6 @@
         
         <form th:action="@{/groups/new}" method="POST">
             <div class="form-container">
-                <input type="hidden" name="userId" th:value="${userId}">
-
                 <div class="form-group">
                     <label for="name">Название:</label>
                     <input type="text" id="name" name="name" required>

@@ -21,18 +21,15 @@
         <div class="button-group">
             <div th:if="${group.userRole.toUpperCase() == 'ADMIN'}">
                 <form th:action="@{/groups/{id}/settings(id=${group.id})}" method="GET">
-                    <input type="hidden" name="userId" th:value="${userId}">
                     <button type="submit" class="nav-button">Настройки</button>
                 </form>
             </div>
 
             <form th:action="@{/groups/{id}/members(id=${group.id})}" method="GET">
-                <input type="hidden" name="userId" th:value="${userId}">
                 <button type="submit" class="nav-button">Участники</button>
             </form>
 
             <form action="/transactions" method="GET">
-                <input type="hidden" name="userId" th:value="${userId}">
                 <input type="hidden" name="groupId" th:value="${group.id}">
                 <button type="submit" class="nav-button">Транзакции</button>
             </form>
@@ -41,7 +38,6 @@
         <hr>
 
         <form th:action="@{/groups/{id}(id=${group.id})}" method="GET" class="filter-form">
-            <input type="hidden" name="userId" th:value="${userId}">
 
             <label for="incomePeriod">Выбрать период:</label>
             <select id="incomePeriod" name="period">
@@ -86,19 +82,16 @@
         <div class="button-group-wrapper">
             <div class="button-group">
                 <form action="/goals" method="GET">
-                    <input type="hidden" name="userId" th:value="${userId}">
                     <input type="hidden" name="groupId" th:value="${group.id}">
                     <button type="submit" class="goal-button">Цели</button>
                 </form>
 
                 <form action="/reminders" method="GET">
-                    <input type="hidden" name="userId" th:value="${userId}">
                     <input type="hidden" name="groupId" th:value="${group.id}">
                     <button type="submit" class="reminder-button">Напоминания</button>
                 </form>
 
                 <form action="/records" method="GET">
-                    <input type="hidden" name="userId" th:value="${userId}">
                     <input type="hidden" name="groupId" th:value="${group.id}">
                     <button type="submit" class="record-button">Записи</button>
                 </form>
@@ -107,7 +100,6 @@
             <div th:if="${group.userRole.toUpperCase() == 'MEMBER'}">
                 <form th:action="@{/groups/{id}(id=${group.id})}" method="post">
                     <input type="hidden" name="_method" value="delete">
-                    <input type="hidden" name="userId" th:value="${userId}">
                     <button type="submit" class="logout-button">Покинуть группу</button>
                 </form>
             </div>

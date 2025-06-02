@@ -22,7 +22,6 @@
                     </div>
 
                     <form th:action="@{/groups/{id}/applications(id=${groupId})}" method="POST" class="action-form" th:id="|approve-form-${applicationOne.applicationId}|">
-                        <input type="hidden" name="userId" th:value="${userId}">
                         <input type="hidden" name="userForJoinId" th:value="${applicationOne.userId}">
                         <input type="hidden" name="applicationId" th:value="${applicationOne.applicationId}">
                         <input type="hidden" name="applicationStatus" value="Одобрено">
@@ -30,7 +29,6 @@
                     </form>
 
                     <form th:action="@{/groups/{id}/applications(id=${groupId})}" method="POST" class="action-form" th:id="|reject-form-${applicationOne.applicationId}|">
-                        <input type="hidden" name="userId" th:value="${userId}">
                         <input type="hidden" name="userForJoinId" th:value="${applicationOne.userId}">
                         <input type="hidden" name="applicationId" th:value="${applicationOne.applicationId}">
                         <input type="hidden" name="applicationStatus" value="Отклонено">

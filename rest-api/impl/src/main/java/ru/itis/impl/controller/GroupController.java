@@ -9,6 +9,7 @@ import ru.itis.dto.request.group.GroupSettingsRequest;
 import ru.itis.dto.response.application.ApplicationWithUserInfoResponse;
 import ru.itis.dto.response.group.*;
 import ru.itis.impl.service.ApplicationService;
+import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.GroupService;
 
 import java.util.List;
@@ -18,70 +19,71 @@ import java.util.List;
 public class GroupController implements GroupApi {
 
     private final GroupService groupService;
+    private final AuthService authService;
     private final ApplicationService applicationService;
 
     @Override
-    public List<GroupListResponse> getGroupsWhereUserNotJoined(Long userId) {
-        return groupService.getWhereUserNotJoined(userId);
+    public List<GroupListResponse> getGroupsWhereUserNotJoined() {
+        return groupService.getWhereUserNotJoined();
     }
 
     @Override
-    public Long createApplicationToGroup(Long userId, Long groupId) {
-        return applicationService.createApplications(userId, groupId);
+    public Long createApplicationToGroup(Long groupId) {
+        return applicationService.createApplications(groupId);
     }
 
     @Override
-    public GroupProfileResponse getGroup(Long id, Long userId, String period) {
-        return groupService.getById(id, userId, period);
+    public GroupProfileResponse getGroup(Long id, String period) {
+        return groupService.getById(id, period);
     }
 
     @Override
-    public void leaveGroup(Long id, Long userId) {
-        groupService.deleteGroupMember(id, userId);
+    public void leaveGroup(Long id) {
+        groupService.deleteGroupMember(id, authService.getAuthenticatedUserId());
     }
 
     @Override
-    public GroupSettingsResponse getGroupSettings(Long id, Long userId) {
-        return groupService.getSettings(id, userId);
+    public GroupSettingsResponse getGroupSettings(Long id) {
+        return groupService.getSettings(id);
     }
 
     @Override
-    public void updateGroupInfo(Long id, Long userId, GroupSettingsRequest request) {
-        groupService.update(id, userId, request);
+    public void updateGroupInfo(Long id, GroupSettingsRequest request) {
+        groupService.update(id, request);
     }
 
     @Override
-    public void deleteGroup(Long id, Long userId) {
-        groupService.delete(id, userId);
+    public void deleteGroup(Long id) {
+        groupService.delete(id);
     }
 
     @Override
-    public GroupViewingResponse getGroupView(Long id, Long userId) {
-        return groupService.getView(id, userId);
+    public GroupViewingResponse getGroupView(Long id) {
+        return groupService.getView(id);
     }
 
     @Override
-    public Long createGroup(Long id, Long userId, GroupCreateRequest request) {
-        return groupService.create(id, userId, request);
+    public Long createGroup(GroupCreateRequest request) {
+        return groupService.create(request);
     }
 
     @Override
-    public List<GroupMemberResponse> getGroupMembers(Long id, Long userId, Integer page, Integer amountPerPage) {
-        return groupService.getMembers(id, userId, page, amountPerPage);
+    public List<GroupMemberResponse> getGroupMembers(Long id, Integer page, Integer amountPerPage) {
+        return groupService.getMembers(id, page, amountPerPage);
     }
 
     @Override
-    public void deleteMemberFromAdminSide(Long id, Long userId, Long userIdForDelete) {
-        groupService.deleteGroupMemberFromAdminSide(id, userId, userIdForDelete);
+    public void deleteMemberFromAdminSide(Long id, Long userIdForDelete) {
+        groupService.deleteGroupMemberFromAdminSide(id, userIdForDelete);
     }
 
     @Override
-    public List<ApplicationWithUserInfoResponse> getApplications(Long id, Long userId, Integer page, Integer amountPerPage) {
-        return groupService.getApplications(id, userId, page, amountPerPage);
+    public List<ApplicationWithUserInfoResponse> getApplications(Long id, Integer page, Integer amountPerPage) {
+        return groupService.getApplications(id, page, amountPerPage);
     }
 
     @Override
-    public Long answerApplication(Long id, Long userId, ApplicationAnswerRequest request) {
-        return groupService.answerApplication(id, userId, request);
+    public Long answerApplication(Long id, ApplicationAnswerRequest request) {
+        return groupService.answerApplication(id, request);
     }
 }
