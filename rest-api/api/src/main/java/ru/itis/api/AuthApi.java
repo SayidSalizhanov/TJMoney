@@ -1,18 +1,18 @@
 package ru.itis.api;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.dto.request.user.UserLoginRequest;
 import ru.itis.dto.request.user.UserRegisterRequest;
 
 @RequestMapping("/api/auth")
 public interface AuthApi {
-//
-//    @PostMapping("/login")
-//    @ResponseStatus(HttpStatus.OK)
-//    void login(
-//            @RequestBody UserLoginRequest request
-//    );
+
+    @PostMapping("/login")
+    ResponseEntity<?> login(
+            @RequestBody UserLoginRequest request
+    );
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -20,9 +20,9 @@ public interface AuthApi {
             @RequestBody UserRegisterRequest request
     );
 
-//    @GetMapping("/logout")
-//    @ResponseStatus(HttpStatus.OK)
-//    void logout(
-//            @RequestParam("userId") Long userId // todo get from authentication
-//    );
+    @GetMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    void logout(
+            @RequestParam("userId") Long userId // todo get from authentication
+    );
 }

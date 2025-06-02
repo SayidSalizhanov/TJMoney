@@ -56,7 +56,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Long getAuthenticatedUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(auth);
 
         if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() == null) {
             throw new AuthServiceException("Пользователь не аутентифицирован", HttpStatus.UNAUTHORIZED);
