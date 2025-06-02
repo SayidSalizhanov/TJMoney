@@ -2,9 +2,7 @@ package ru.itis.mainservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -19,82 +17,174 @@ import ru.itis.mainservice.dto.response.user.UserProfileResponse;
 import ru.itis.mainservice.dto.response.user.UserSettingsResponse;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final RestTemplate restTemplate;
+    private final AuthService authService;
 
     @Value("${api.base-url}")
     private String apiBaseUrl;
 
     public UserSettingsResponse getUserSettingsInfo(Long id, Long userId) {
-        return restTemplate.getForObject(
-            apiBaseUrl + "/api/user/{id}/settings?userId={userId}",
-            UserSettingsResponse.class,
-            id, userId
+        String url = apiBaseUrl + "/api/user/{id}/settings?userId={userId}";
+
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<UserSettingsResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                UserSettingsResponse.class,
+                id, userId
         );
+
+        return response.getBody();
     }
 
     public void updateUserSettingsInfo(Long id, Long userId, UserSettingsRequest request) {
-        restTemplate.put(
-            apiBaseUrl + "/api/user/{id}/settings?userId={userId}",
-            request,
-            id, userId
+        String url = apiBaseUrl + "/api/user/{id}/settings?userId={userId}";
+
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<UserSettingsRequest> entity = new HttpEntity<>(request, headers);
+
+        restTemplate.exchange(
+                url,
+                HttpMethod.PUT,
+                entity,
+                Void.class,
+                id, userId
         );
     }
 
     public void deleteUser(Long id, Long userId) {
-        restTemplate.delete(
-            apiBaseUrl + "/api/user/{id}/settings?userId={userId}",
-            id, userId
+        String url = apiBaseUrl + "/api/user/{id}/settings?userId={userId}";
+
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        restTemplate.exchange(
+                url,
+                HttpMethod.DELETE,
+                entity,
+                Void.class,
+                id, userId
         );
     }
 
     public List<UserGroupResponse> getUserGroups(Long id, Long userId, Integer page, Integer amountPerPage) {
-        UserGroupResponse[] groups = restTemplate.getForObject(
-            apiBaseUrl + "/api/user/{id}/groups?userId={userId}&page={page}&amount_per_page={amountPerPage}",
-            UserGroupResponse[].class,
-            id, userId, page, amountPerPage
+        String url = apiBaseUrl + "/api/user/{id}/groups?userId={userId}&page={page}&amount_per_page={amountPerPage}";
+
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<UserGroupResponse[]> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                UserGroupResponse[].class,
+                id, userId, page, amountPerPage
         );
-        return groups != null ? Arrays.asList(groups) : List.of();
+
+        return Optional.ofNullable(response.getBody())
+                .map(Arrays::asList)
+                .orElse(Collections.emptyList());
     }
 
     public List<ApplicationToGroupResponse> getUserApplicationsToGroup(Long id, Long userId, Integer page, Integer amountPerPage) {
-        ApplicationToGroupResponse[] applications = restTemplate.getForObject(
-            apiBaseUrl + "/api/user/{id}/applications?userId={userId}&page={page}&amount_per_page={amountPerPage",
-            ApplicationToGroupResponse[].class,
-            id, userId, page, amountPerPage
+        String url = apiBaseUrl + "/api/user/{id}/applications?userId={userId}&page={page}&amount_per_page={amountPerPage}";
+
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<ApplicationToGroupResponse[]> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                ApplicationToGroupResponse[].class,
+                id, userId, page, amountPerPage
         );
-        return applications != null ? Arrays.asList(applications) : List.of();
+
+        return Optional.ofNullable(response.getBody())
+                .map(Arrays::asList)
+                .orElse(Collections.emptyList());
     }
 
     public void deleteUserApplicationToGroup(Long id, Long userId, Long applicationId) {
-        restTemplate.delete(
-            apiBaseUrl + "/api/user/{id}/applications?userId={userId}&applicationId={applicationId}",
-            id, userId, applicationId
+        String url = apiBaseUrl + "/api/user/{id}/applications?userId={userId}&applicationId={applicationId}";
+
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        restTemplate.exchange(
+                url,
+                HttpMethod.DELETE,
+                entity,
+                Void.class,
+                id, userId, applicationId
         );
     }
 
     public void changeUserPassword(Long id, Long userId, UserPasswordChangeRequest request) {
-        restTemplate.put(
-            apiBaseUrl + "/api/user/{id}/changePassword?userId={userId}",
-            request,
-            id, userId
+        String url = apiBaseUrl + "/api/user/{id}/changePassword?userId={userId}";
+
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<UserPasswordChangeRequest> entity = new HttpEntity<>(request, headers);
+
+        restTemplate.exchange(
+                url,
+                HttpMethod.PUT,
+                entity,
+                Void.class,
+                id, userId
         );
     }
 
     public String getUserAvatarUrl(Long id, Long userId) {
-        return restTemplate.getForObject(
-            apiBaseUrl + "/api/user/{id}/changeAvatar?userId={userId}",
-            AvatarResponse.class,
-            id, userId
-        ).url();
+        String url = apiBaseUrl + "/api/user/{id}/changeAvatar?userId={userId}";
+
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<AvatarResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                AvatarResponse.class,
+                id, userId
+        );
+
+        return Optional.ofNullable(response.getBody())
+                .map(AvatarResponse::url)
+                .orElse(null);
     }
 
     public void changeUserAvatarUrl(Long id, Long userId, MultipartFile avatarImage) {
-        HttpHeaders headers = new HttpHeaders();
+        HttpHeaders headers = authService.getAuthHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -110,17 +200,39 @@ public class UserService {
     }
 
     public void deleteUserAvatar(Long id, Long userId) {
-        restTemplate.delete(
-            apiBaseUrl + "/api/user/{id}/changeAvatar?userId={userId}",
-            id, userId
+        String url = apiBaseUrl + "/api/user/{id}/changeAvatar?userId={userId}";
+
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        restTemplate.exchange(
+                url,
+                HttpMethod.DELETE,
+                entity,
+                Void.class,
+                id, userId
         );
     }
 
     public UserProfileResponse getUserProfileInfo(Long id, Long userId, String period) {
-        return restTemplate.getForObject(
-            apiBaseUrl + "/api/user/{id}?userId={userId}&period={period}",
-            UserProfileResponse.class,
-            id, userId, period
+        String url = apiBaseUrl + "/api/user/{id}?userId={userId}&period={period}";
+
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<UserProfileResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                UserProfileResponse.class,
+                id, userId, period
         );
+
+        return response.getBody();
     }
 } 
