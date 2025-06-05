@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.itis.mainservice.dto.request.user.UserLoginRequest;
 import ru.itis.mainservice.dto.response.security.JwtResponse;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +24,7 @@ public class AuthService {
     private String apiBaseUrl;
 
     private final RestTemplate restTemplate;
-    private String token;
+    private static final String TOKEN_KEY = "auth_token";
 
     public boolean login(UserLoginRequest request) {
         try {
@@ -37,7 +40,8 @@ public class AuthService {
             );
 
             if (response != null && response.token() != null) {
-                this.token = response.token();
+                HttpSession session = getSession();
+                session.setAttribute(TOKEN_KEY, response.token());
                 return true;
             }
             return false;
@@ -49,7 +53,7 @@ public class AuthService {
     public void logout() {
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(token);
+            headers.setBearerAuth(getToken());
             HttpEntity<?> requestEntity = new HttpEntity<>(headers);
             
             restTemplate.postForObject(
@@ -58,12 +62,14 @@ public class AuthService {
                 Void.class
             );
         } finally {
-            token = null;
+            HttpSession session = getSession();
+            session.removeAttribute(TOKEN_KEY);
         }
     }
 
     public HttpHeaders getAuthHeaders() {
         HttpHeaders headers = new HttpHeaders();
+        String token = getToken();
         if (token != null) {
             headers.setBearerAuth(token);
         }
@@ -78,5 +84,18 @@ public class AuthService {
                 entity,
                 Long.class
         ).getBody();
+    }
+
+    private String getToken() {
+        HttpSession session = getSession();
+        return (String) session.getAttribute(TOKEN_KEY);
+    }
+
+    private HttpSession getSession() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            throw new IllegalStateException("No request context found");
+        }
+        return attributes.getRequest().getSession(true);
     }
 }

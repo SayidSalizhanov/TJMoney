@@ -50,3 +50,7 @@ databaseChangeLog:
   - include:
       file: changeset/dml/v1__insert_roles.sql
       relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_chat_messages_table.sql
+      relativeToChangelogFile: true

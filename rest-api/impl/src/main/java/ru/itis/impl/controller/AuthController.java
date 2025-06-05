@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.itis.api.AuthApi;
 import ru.itis.dto.request.user.UserLoginRequest;
 import ru.itis.dto.request.user.UserRegisterRequest;
-import ru.itis.impl.model.User;
 import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.RegistrationService;
 import org.springframework.http.ResponseEntity;
