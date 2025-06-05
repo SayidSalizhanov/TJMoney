@@ -4,6 +4,10 @@ databaseChangeLog:
       relativeToChangelogFile: true
 
   - include:
+      file: changeset/ddl/v1__drop_username_unique_index_users_table.sql
+      relativeToChangelogFile: true
+
+  - include:
       file: changeset/ddl/v1__create_groups_table.sql
       relativeToChangelogFile: true
 
