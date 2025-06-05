@@ -33,7 +33,6 @@ public class SecurityConfig {
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/articles").permitAll()
                     .requestMatchers("/api/currency/**").permitAll()
-                    .requestMatchers("/api/chat/**").permitAll()
                     .requestMatchers("/ws/**").permitAll()
                     .requestMatchers("/topic/**").permitAll()
                     .requestMatchers("/app/**").permitAll()
