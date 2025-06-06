@@ -31,6 +31,8 @@ import ru.itis.impl.service.TransactionService;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static ru.itis.impl.enums.GroupMemberStatusEnum.ADMIN;
+
 @Service
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
@@ -245,7 +247,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     public boolean checkUserIsGroupAdminBoolean(User user, Group group) {
         GroupMember groupMember = checkUserIsGroupMember(user, group);
-        return groupMember.getRole().equalsIgnoreCase("ADMIN");
+        return groupMember.getRole().equalsIgnoreCase(ADMIN.getValue());
     }
 
     private GroupMember checkUserIsGroupMember(User user, Group group) {

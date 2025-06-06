@@ -14,6 +14,9 @@ import ru.itis.impl.service.GroupMemberService;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.itis.impl.enums.GroupMemberStatusEnum.ADMIN;
+import static ru.itis.impl.enums.GroupMemberStatusEnum.MEMBER;
+
 @Service
 @RequiredArgsConstructor
 public class GroupMemberServiceImpl implements GroupMemberService {
@@ -49,7 +52,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
                 .user(user)
                 .group(group)
                 .joinedAt(LocalDateTime.now())
-                .role("ADMIN")
+                .role(ADMIN.getValue())
                 .build();
         return groupMemberRepository.save(groupMember).getId();
     }
@@ -60,7 +63,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
                 .user(joinedUser)
                 .group(group)
                 .joinedAt(LocalDateTime.now())
-                .role("MEMBER")
+                .role(MEMBER.getValue())
                 .build();
         return groupMemberRepository.save(groupMember).getId();
     }

@@ -31,6 +31,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import static ru.itis.impl.enums.ReminderStatusEnum.CREATED;
+
 @Service
 @RequiredArgsConstructor
 public class ReminderServiceImpl implements ReminderService {
@@ -112,7 +114,7 @@ public class ReminderServiceImpl implements ReminderService {
                 .title(request.title())
                 .message(request.message())
                 .sendAt(request.sendAt())
-                .status("Создано")
+                .status(CREATED.getValue())
                 .user(user)
                 .group(group).build();
 

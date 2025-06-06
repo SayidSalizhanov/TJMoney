@@ -34,6 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static ru.itis.impl.enums.ApplicationStatusEnum.*;
+import static ru.itis.impl.enums.GroupMemberStatusEnum.ADMIN;
+
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
@@ -77,7 +80,7 @@ public class GroupServiceImpl implements GroupService {
                 .map(gm -> gm.getGroup().getId())
                 .toList();
         List<Long> nonRejectedUserApplicationsGroupIds = applicationRepository.findByUser(user).stream()
-                .filter(a -> !a.getStatus().equalsIgnoreCase("Отклонено"))
+                .filter(a -> !a.getStatus().equalsIgnoreCase(REJECTED.getValue()))
                 .map(a -> a.getGroup().getId())
                 .toList();
 
@@ -154,7 +157,7 @@ public class GroupServiceImpl implements GroupService {
 
         String adminUsername = "fake-admin";
         for (GroupMember groupMember : groupMembers) {
-            if (groupMember.getRole().equalsIgnoreCase("ADMIN")) {
+            if (groupMember.getRole().equalsIgnoreCase(ADMIN.getValue())) {
                 adminUsername = groupMember.getUser().getUsername();
                 break;
             }
@@ -214,7 +217,7 @@ public class GroupServiceImpl implements GroupService {
 
         Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by("sendAt"));
 
-        List<Application> applications = applicationService.getGroupApplicationsByGroupIdAndByStatus(id, "В ожидании", pageable);
+        List<Application> applications = applicationService.getGroupApplicationsByGroupIdAndByStatus(id, PENDING.getValue(), pageable);
         return applications.stream()
                 .map(applicationMapper::toApplicationWithUserInfoResponse)
                 .toList();
@@ -229,7 +232,7 @@ public class GroupServiceImpl implements GroupService {
         checkUserIsGroupAdmin(user, group);
 
         applicationService.updateStatus(request.applicationId(), request.applicationStatus());
-        if (request.applicationStatus().equalsIgnoreCase("Одобрено")) {
+        if (request.applicationStatus().equalsIgnoreCase(APPROVED.getValue())) {
             User joinedUser = requireUserById(request.userForJoinId());
             groupMemberService.saveNoAdmin(joinedUser, group);
         }
@@ -260,12 +263,12 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void checkUserIsGroupAdmin(User user, Group group) {
         GroupMember groupMember = checkUserIsGroupMember(user, group);
-        if (!groupMember.getRole().equalsIgnoreCase("ADMIN")) throw new AccessDeniedException("Чтобы иметь доступ к настройкам группы, нужно обладать правами админа группы");
+        if (!groupMember.getRole().equalsIgnoreCase(ADMIN.getValue())) throw new AccessDeniedException("Чтобы иметь доступ к настройкам группы, нужно обладать правами админа группы");
     }
 
     @Override
     public boolean checkUserIsGroupAdminBoolean(User user, Group group) {
         GroupMember groupMember = checkUserIsGroupMember(user, group);
-        return groupMember.getRole().equalsIgnoreCase("ADMIN");
+        return groupMember.getRole().equalsIgnoreCase(ADMIN.getValue());
     }
 }

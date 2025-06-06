@@ -19,6 +19,8 @@ import ru.itis.impl.service.AuthService;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.itis.impl.enums.ApplicationStatusEnum.PENDING;
+
 @Service
 @RequiredArgsConstructor
 public class ApplicationServiceImpl implements ApplicationService {
@@ -35,7 +37,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .user(requireUserById(authService.getAuthenticatedUserId()))
                 .group(requireGroupById(groupId))
                 .sendAt(LocalDateTime.now())
-                .status("В ожидании")
+                .status(PENDING.getValue())
                 .build();
 
         return applicationRepository.save(application).getId();
