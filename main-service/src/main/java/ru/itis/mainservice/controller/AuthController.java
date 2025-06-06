@@ -56,6 +56,6 @@ public class AuthController {
     @PostMapping("/logout")
     public String logout() {
         authService.logout();
-        return "redirect:/articles";
+        return "redirect:/login";
     }
 } 

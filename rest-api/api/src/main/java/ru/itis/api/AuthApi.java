@@ -20,9 +20,7 @@ public interface AuthApi {
             @RequestBody UserRegisterRequest request
     );
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
-    void logout(
-            @RequestParam("userId") Long userId // todo get from authentication
-    );
+    void logout();
 }

@@ -26,7 +26,7 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    public void logout(Long userId) {
+    public void logout() {
         authService.logout();
     }
 
