@@ -169,6 +169,9 @@ public class TransactionServiceImpl implements TransactionService {
             }
         }
 
+        mapOfIncomeTransactions.put("Доход", mapOfIncomeTransactions.values().stream().mapToInt(i -> i).sum());
+        mapOfExpenseTransactions.put("Расход", mapOfExpenseTransactions.values().stream().mapToInt(i -> i).sum());
+
         List<Map<String, Integer>> maps = new ArrayList<>();
         maps.add(mapOfIncomeTransactions);
         maps.add(mapOfExpenseTransactions);

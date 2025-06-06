@@ -129,7 +129,7 @@ public class TransactionService {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         return restTemplate.exchange(
-            apiBaseUrl + BASE_URL + "/new/uploadTransactions&groupId={groupId}",
+            apiBaseUrl + BASE_URL + "/new/uploadTransactions?groupId={groupId}",
             HttpMethod.POST,
             requestEntity,
             new ParameterizedTypeReference<List<Long>>() {},
