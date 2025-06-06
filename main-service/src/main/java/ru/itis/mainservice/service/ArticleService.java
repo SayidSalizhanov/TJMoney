@@ -16,7 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ArticleService {
     private final RestTemplate restTemplate;
-    private final AuthService authService;
 
     @Value("${api.base-url}")
     private String apiBaseUrl;
@@ -25,7 +24,7 @@ public class ArticleService {
         String url = String.format("%s/api/articles?page=%d&amount_per_page=%d",
                 apiBaseUrl, page, amountPerPage);
 
-        HttpHeaders headers = authService.getAuthHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<String> entity = new HttpEntity<>(headers);

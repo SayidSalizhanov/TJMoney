@@ -120,6 +120,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public final ExceptionMessage onAllExceptions(Exception exception) {
         exception.printStackTrace();
+        System.out.println(exception.getMessage());
         return ExceptionMessage.builder()
                 .message(exception.getMessage())
                 .exceptionName(exception.getClass().getSimpleName())

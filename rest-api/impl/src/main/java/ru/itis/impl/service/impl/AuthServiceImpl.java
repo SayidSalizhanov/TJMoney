@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.itis.dto.request.user.UserLoginRequest;
 import ru.itis.dto.request.user.UserRegisterRequest;
 import ru.itis.dto.response.security.JwtResponse;
+import ru.itis.dto.response.user.CheckAdminStatusResponse;
 import ru.itis.impl.exception.AuthServiceException;
 import ru.itis.impl.model.User;
 import ru.itis.impl.repository.UserRepository;
@@ -69,5 +70,15 @@ public class AuthServiceImpl implements AuthService {
         }
 
         throw new AuthServiceException("Неподдерживаемый тип аутентификации", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public CheckAdminStatusResponse authSercheckAdminRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return CheckAdminStatusResponse.builder().status(
+                authentication != null &&
+                authentication.getAuthorities().stream()
+                        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN")))
+                .build();
     }
 }

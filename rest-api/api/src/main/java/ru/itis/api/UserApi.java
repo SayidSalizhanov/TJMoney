@@ -7,6 +7,7 @@ import ru.itis.dto.request.user.UserPasswordChangeRequest;
 import ru.itis.dto.request.user.UserSettingsRequest;
 import ru.itis.dto.response.application.ApplicationToGroupResponse;
 import ru.itis.dto.response.avatar.AvatarResponse;
+import ru.itis.dto.response.user.CheckAdminStatusResponse;
 import ru.itis.dto.response.user.UserGroupResponse;
 import ru.itis.dto.response.user.UserProfileResponse;
 import ru.itis.dto.response.user.UserSettingsResponse;
@@ -68,4 +69,8 @@ public interface UserApi {
     UserProfileResponse getUserProfileInfo(
             @RequestParam(value = "period", required = false, defaultValue = "allTime") String period
     );
+
+    @GetMapping("/role/admin")
+    @ResponseStatus(HttpStatus.OK)
+    CheckAdminStatusResponse checkAdminRole();
 }

@@ -2,9 +2,7 @@ package ru.itis.mainservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.itis.mainservice.dto.request.user.UserLoginRequest;
@@ -12,9 +10,9 @@ import ru.itis.mainservice.dto.response.security.JwtResponse;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import jakarta.servlet.http.HttpSession;
+import ru.itis.mainservice.dto.response.user.CheckAdminStatusResponse;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -69,10 +67,7 @@ public class AuthService {
 
     public HttpHeaders getAuthHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        String token = getToken();
-        if (token != null) {
-            headers.setBearerAuth(token);
-        }
+        headers.setBearerAuth(getToken());
         return headers;
     }
 
@@ -97,5 +92,23 @@ public class AuthService {
             throw new IllegalStateException("No request context found");
         }
         return attributes.getRequest().getSession(true);
+    }
+
+    public boolean checkAdminRole() {
+        String url = apiBaseUrl + "/api/user/role/admin";
+
+        HttpHeaders headers = getAuthHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<CheckAdminStatusResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                CheckAdminStatusResponse.class
+        );
+
+        return Boolean.TRUE.equals(response.getBody().status());
     }
 }
