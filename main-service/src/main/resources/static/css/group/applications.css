@@ -2,7 +2,7 @@ html, body {
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
-    background-image: url('/static/background.png');
+    background-image: url('/images/background2.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -12,8 +12,8 @@ html, body {
 }
 
 body {
-    display: flex;
-    flex-direction: column;
+    /*display: flex;*/
+    /*flex-direction: column;*/
 }
 
 .header {
@@ -35,9 +35,9 @@ body {
 .content {
     width: 80%;
     padding: 20px;
-    background-color: #fff;
+    /*background-color: #fff;*/
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
 }
 
 h2 {
@@ -58,6 +58,7 @@ h2 {
     border-radius: 5px;
     padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
 }
 
 .application p {

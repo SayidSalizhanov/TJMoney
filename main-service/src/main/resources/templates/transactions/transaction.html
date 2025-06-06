@@ -10,9 +10,9 @@
 
 <div class="content">
     <div class="transaction-details">
-        <h2>Детали транзакции</h2>
+        <h2 style="color: white">Детали транзакции</h2>
         
-        <div class="info-block">
+        <div class="info-block" style="color: white;">
             <p>Сумма: <span th:text="${transaction.amount}"></span></p>
             <p>Тип: <span th:text="${transaction.type}"></span></p>
             <p>Категория: <span th:text="${transaction.category}"></span></p>
@@ -26,7 +26,7 @@
                 <input type="hidden" name="_method" value="put">
                 
                 <div class="form-group">
-                    <label for="amount">Сумма:</label>
+                    <label for="amount" style="color: white">Сумма:</label>
                     <input type="number" id="amount" name="amount" min="0" max="1000000" th:value="${transaction.amount}" required>
                 </div>
 
@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Описание:</label>
+                    <label for="description" style="color: white">Описание:</label>
                     <textarea id="description" name="description" th:text="${transaction.description}"></textarea>
                 </div>
 

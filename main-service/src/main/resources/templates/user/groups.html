@@ -24,7 +24,7 @@
     </div>
 
     <div class="groups-list">
-        <h2>Мои группы</h2>
+        <h2 style="color: white">Мои группы</h2>
 
         <div th:each="group : ${groups}">
             <form th:action="@{/groups/{id}(id=${group.groupId})}" method="get" class="group-form">

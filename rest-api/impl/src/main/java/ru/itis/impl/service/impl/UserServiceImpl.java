@@ -185,7 +185,7 @@ public class UserServiceImpl implements UserService {
     public void deleteAvatar() {
         User user = requireUserById(authService.getAuthenticatedUserId());
 
-        avatarRepository.update("/defaultAvatar.png", user);
+        avatarRepository.update("/images/defaultAvatar.png", user);
     }
 
     @Override

@@ -9,23 +9,23 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="content">
-    <h2>Создание нового напоминания</h2>
+    <h2 style="color: white">Создание нового напоминания</h2>
     
     <form th:action="@{/reminders/new}" method="POST" class="reminder-form">
         <input type="hidden" name="groupId" th:value="${groupId}">
         
         <div class="form-group">
-            <label for="title">Название:</label>
+            <label for="title" style="color: white">Название:</label>
             <input type="text" id="title" name="title" required>
         </div>
 
         <div class="form-group">
-            <label for="sendAt">Дата и время отправки:</label>
+            <label for="sendAt" style="color: white">Дата и время отправки:</label>
             <input type="datetime-local" id="sendAt" name="sendAt" th:min="${currentDateTime}" required>
         </div>
 
         <div class="form-group">
-            <label for="message">Сообщение:</label>
+            <label for="message" style="color: white">Сообщение:</label>
             <textarea id="message" name="message" required></textarea>
         </div>
 

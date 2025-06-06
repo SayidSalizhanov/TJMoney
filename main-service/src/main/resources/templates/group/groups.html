@@ -12,7 +12,7 @@
 <div class="content">
 
     <div class="groups-list">
-        <h2>Доступные группы</h2>
+        <h2 style="color: white">Доступные группы</h2>
         
         <div th:each="group : ${groups}" class="group-wrapper">
             <div class="group-actions">
@@ -21,7 +21,7 @@
                         <button type="submit" class="group-button">
                             <div class="group-details">
                                 <div class="left-column">
-                                    <p>Название: <span th:text="${group.name}"></span></p>
+                                    <p><span th:text="${group.name}"></span></p>
                                 </div>
                             </div>
                         </button>

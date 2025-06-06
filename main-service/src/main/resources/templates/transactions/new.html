@@ -11,29 +11,39 @@
 
 <div class="content">
     <div class="create-transaction">
-        <h2>Создание транзакции</h2>
+        <h2 style="color: white">Создание транзакции</h2>
 
         <form th:action="@{/transactions/new}" method="POST" class="transaction-form">
             <input type="hidden" name="groupId" th:value="${groupId}">
 
             <div class="form">
-                <label for="amount">Стоимость:</label><br>
-                <input type="number" id="amount" name="amount" min="0" max="1000000" required><br><br>
+                <div class="form-item">
+                    <label for="amount" style="color: white">Стоимость:</label><br>
+                    <input type="number" id="amount" name="amount" min="0" max="1000000" required><br><br>
+                </div>
 
-                <label for="type">Тип:</label><br>
-                <select id="type" name="type" required>
-                    <option value="Доход">Доход</option>
-                    <option value="Расход">Расход</option>
-                </select><br><br>
+                <div class="form-item">
+                    <label for="type" style="color: white">Тип:</label><br>
+                    <select id="type" name="type" required>
+                        <option value="Доход">Доход</option>
+                        <option value="Расход">Расход</option>
+                    </select><br><br>
+                </div>
 
-                <label for="category">Категория:</label><br>
-                <select id="category" name="category" required></select><br><br>
+                <div class="form-item">
+                    <label for="category" style="color: white">Категория:</label><br>
+                    <select id="category" name="category" required></select><br><br>
+                </div>
 
-                <label for="dateTime">Дата и время:</label><br>
-                <input type="datetime-local" id="dateTime" name="dateTime" th:max="${currentDateTime}" required><br><br>
+                <div class="form-item">
+                    <label for="dateTime" style="color: white">Дата и время:</label><br>
+                    <input type="datetime-local" id="dateTime" name="dateTime" th:max="${currentDateTime}" required><br><br>
+                </div>
 
-                <label for="description">Описание:</label><br>
-                <textarea id="description" name="description" required></textarea><br><br>
+                <div class="form-item">
+                    <label for="description" style="color: white">Описание:</label><br>
+                    <textarea id="description" name="description" required></textarea><br><br>
+                </div>
 
                 <button type="submit" class="save-button">Сохранить</button>
             </div>

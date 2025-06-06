@@ -11,7 +11,7 @@
 
 <div class="content-wrapper">
     <div class="content">
-        <h2>Заявки на вступление в группу</h2>
+        <h2 style="color: white">Заявки на вступление в группу</h2>
 
         <div class="applications-list">
             <div class="applications">
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="empty-list" th:if="${#lists.isEmpty(applications)}">
+            <div style="color: white" class="empty-list" th:if="${#lists.isEmpty(applications)}">
                 <p>Нет активных заявок на вступление</p>
             </div>
         </div>

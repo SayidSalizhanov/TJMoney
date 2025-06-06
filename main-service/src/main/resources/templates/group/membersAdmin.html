@@ -15,7 +15,7 @@
             <button type="submit" class="nav-button">Заявки</button>
         </form>
 
-        <h2>Участники группы</h2>
+        <h2 style="color: white">Участники группы</h2>
         <div class="members-list">
             <div th:each="member : ${members}" class="member">
                 <p><strong>Пользователь:</strong> <span th:text="${member.username}"></span></p>

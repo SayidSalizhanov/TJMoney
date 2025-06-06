@@ -15,6 +15,7 @@
 
         body {
             background-color: #f5f5f5;
+            background-image: url('/images/background2.png');
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -207,6 +208,8 @@
     </style>
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}"></div>
+
     <div class="chat-container">
         <div class="chat-header">
             <h1>Group Chat</h1>

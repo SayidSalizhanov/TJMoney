@@ -2,7 +2,7 @@ html, body {
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
-    background-image: url('/static/background.png');
+    background-image: url('/images/background2.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -11,12 +11,29 @@ html, body {
     font-size: 16px;
 }
 
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-height: 90vh;
+}
+
 .content {
     width: 80%;
+    /* margin: 0 auto; */
+    /* padding: 20px; */
+    /* background-color: #fff; */
+    /* border-radius: 5px; */
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+}
+
+.group-details {
+    border-radius: 5px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
+    background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 

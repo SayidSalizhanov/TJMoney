@@ -2,7 +2,7 @@ html, body {
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
-    background-image: url('/static/background.png');
+    background-image: url('/images/background2.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -53,7 +53,7 @@ body {
 
 .text p {
     font-size: 30px;
-    color: #333;
+    color: white;
     max-width: 800px;
     margin: 0 auto;
     line-height: 1.5;

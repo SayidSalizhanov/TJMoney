@@ -1,14 +1,14 @@
 html, body {
-    background-image: url('/static/background.png'); /* Указываем путь к изображению */
-    background-size: cover; /* Изображение будет покрывать всю страницу */
-    background-repeat: no-repeat; /* Изображение не будет повторяться */
-    background-attachment: fixed; /* Фон фиксируется при прокрутке */
+    background-image: url('/images/background2.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     background-position: center;
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    font-size: 16px; /* Увеличение текста */
+    font-size: 16px;
 }
 
 .content {
@@ -36,7 +36,7 @@ html, body {
 }
 
 .goals-list {
-    background-color: #f4f4f4;
+    /*background-color: #f4f4f4;*/
     /*padding: 20px;*/
     border-radius: 5px;
     /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/

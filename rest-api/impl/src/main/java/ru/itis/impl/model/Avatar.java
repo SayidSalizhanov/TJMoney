@@ -18,7 +18,7 @@ public class Avatar {
 
     @Column
     @Builder.Default
-    private String url = "/static/defaultAvatar.png";
+    private String url = "/images/defaultAvatar.png";
 
     //----------
 

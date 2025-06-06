@@ -13,7 +13,7 @@
         <p><a href="/mainPage">Вернуться на главную страницу</a></p>
     </div>
     <div class="image-container">
-        <img src="/static/errorImage.png" alt="Картинка ошибки" class="error-image">
+        <img src="/static/images/errorImage.png" alt="Картинка ошибки" class="error-image">
     </div>
 </div>
 

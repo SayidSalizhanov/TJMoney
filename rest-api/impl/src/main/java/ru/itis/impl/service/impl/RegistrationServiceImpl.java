@@ -50,7 +50,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         User savedUser = userRepository.save(user);
 
         avatarRepository.save(Avatar.builder()
-                .url("/defaultAvatar.png")
+                .url("/images/defaultAvatar.png")
                 .user(user)
                 .build());
 
