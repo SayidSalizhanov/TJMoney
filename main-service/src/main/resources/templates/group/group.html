@@ -33,6 +33,10 @@
                 <input type="hidden" name="groupId" th:value="${group.id}">
                 <button type="submit" class="nav-button">Транзакции</button>
             </form>
+
+            <form th:action="@{/groups/{id}/chat(id=${group.id})}" method="GET">
+                <button type="submit" class="nav-button">Чат группы</button>
+            </form>
         </div>
 
         <hr>
