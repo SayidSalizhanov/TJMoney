@@ -75,7 +75,7 @@ public class TransactionController {
     @PostMapping("/new")
     public String createTransaction(
             @RequestParam(required = false) Long groupId,
-            @ModelAttribute TransactionCreateRequest request
+            TransactionCreateRequest request
     ) {
         Long transactionId = transactionService.createTransaction(groupId, request);
         return "redirect:/transactions/" + transactionId;
