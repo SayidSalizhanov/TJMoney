@@ -2,7 +2,7 @@ spring:
   application:
     name: main-service
 server:
-  port: 8081
+  port: 3000
 
 api:
   base-url: http://localhost:8080
