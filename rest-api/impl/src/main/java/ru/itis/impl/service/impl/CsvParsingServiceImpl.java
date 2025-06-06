@@ -20,6 +20,7 @@ import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.CsvParsingService;
 import ru.itis.impl.service.GroupService;
+import ru.itis.impl.service.UserGroupRequireService;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,10 +35,10 @@ import java.util.List;
 public class CsvParsingServiceImpl implements CsvParsingService {
 
     private final TransactionRepository transactionRepository;
-    private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
     private final GroupService groupService;
     private final AuthService authService;
+
+    private final UserGroupRequireService userGroupRequireService;
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -45,8 +46,8 @@ public class CsvParsingServiceImpl implements CsvParsingService {
     @Transactional
     public List<Long> parseCsv(@MayBeNull Long groupId, MultipartFile file) {
 
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = groupId == null ? null : requireGroupById(groupId);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = groupId == null ? null : userGroupRequireService.requireGroupById(groupId);
 
         if (group != null) {
             groupService.checkUserIsGroupMemberVoid(user, group);
@@ -105,13 +106,5 @@ public class CsvParsingServiceImpl implements CsvParsingService {
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Некорректное значение amount: " + value);
         }
-    }
-
-    private User requireUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
-    }
-
-    private Group requireGroupById(Long groupId) {
-        return groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
     }
 }

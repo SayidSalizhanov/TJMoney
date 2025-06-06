@@ -26,6 +26,7 @@ import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.GroupService;
 import ru.itis.impl.service.ReminderService;
+import ru.itis.impl.service.UserGroupRequireService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,15 +41,15 @@ public class ReminderServiceImpl implements ReminderService {
     private final ReminderRepository reminderRepository;
     private final ReminderMapper reminderMapper;
 
-    private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
     private final GroupService groupService;
     private final AuthService authService;
+
+    private final UserGroupRequireService userGroupRequireService;
 
     @Override
     @Transactional(readOnly = true)
     public ReminderSettingsResponse getById(Long id) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Reminder reminder = requireById(id);
 
         checkAccessToReminderGranted(reminder, user);
@@ -59,7 +60,7 @@ public class ReminderServiceImpl implements ReminderService {
     @Override
     @Transactional
     public void updateInfo(Long id, ReminderSettingsRequest request) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Reminder reminder = requireById(id);
 
         checkAccessToReminderGranted(reminder, user);
@@ -73,7 +74,7 @@ public class ReminderServiceImpl implements ReminderService {
     @Override
     @Transactional
     public void delete(Long id) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Reminder reminder = requireById(id);
 
         checkAccessToReminderGranted(reminder, user);
@@ -84,8 +85,8 @@ public class ReminderServiceImpl implements ReminderService {
     @Override
     @Transactional(readOnly = true)
     public List<ReminderListResponse> getAll(@MayBeNull Long groupId, Integer page, Integer amountPerPage) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = groupId == null ? null : requireGroupById(groupId);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = groupId == null ? null : userGroupRequireService.requireGroupById(groupId);
 
         List<Reminder> reminders;
 
@@ -107,8 +108,8 @@ public class ReminderServiceImpl implements ReminderService {
     public Long create(@MayBeNull Long groupId, ReminderCreateRequest request) {
         if (request.sendAt().isBefore(LocalDateTime.now())) throw new DateTimeOperationException("Дата и время напоминания не могут быть в прошлом");
 
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = groupId == null ? null : requireGroupById(groupId);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = groupId == null ? null : userGroupRequireService.requireGroupById(groupId);
 
         Reminder reminder = Reminder.builder()
                 .title(request.title())
@@ -123,14 +124,6 @@ public class ReminderServiceImpl implements ReminderService {
 
     private Reminder requireById(Long id) {
         return reminderRepository.findById(id).orElseThrow(() -> new ReminderNotFoundException("Напоминание с таким id не найдено"));
-    }
-
-    private User requireUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
-    }
-
-    private Group requireGroupById(Long groupId) {
-        return groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
     }
 
     private void checkUserIsReminderOwner(Reminder reminder, User user) {

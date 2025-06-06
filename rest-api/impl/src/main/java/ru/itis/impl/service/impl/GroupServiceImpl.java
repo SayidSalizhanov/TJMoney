@@ -45,7 +45,6 @@ public class GroupServiceImpl implements GroupService {
     private final GroupMapper groupMapper;
 
     private final GroupMemberRepository groupMemberRepository;
-    private final UserRepository userRepository;
     private final ApplicationRepository applicationRepository;
 
     private final TransactionService transactionService;
@@ -55,11 +54,13 @@ public class GroupServiceImpl implements GroupService {
     private final ApplicationMapper applicationMapper;
     private final AuthService authService;
 
+    private final UserGroupRequireService userGroupRequireService;
+
     @Override
     @Transactional(readOnly = true)
     public GroupProfileResponse getById(Long groupId, @MayBeNull String period) {
-        Group group = requireGroupById(groupId);
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        Group group = userGroupRequireService.requireGroupById(groupId);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
 
         checkUserIsGroupMemberVoid(user, group);
 
@@ -74,7 +75,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional(readOnly = true)
     public List<GroupListResponse> getWhereUserNotJoined() {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         List<GroupMember> groupMembers = groupMemberRepository.findAllByUser(user);
         List<Long> userGroups = groupMembers.stream()
                 .map(gm -> gm.getGroup().getId())
@@ -100,8 +101,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public void deleteGroupMember(Long id, Long userId) {
-        Group group = requireGroupById(id);
-        User user = requireUserById(userId);
+        Group group = userGroupRequireService.requireGroupById(id);
+        User user = userGroupRequireService.requireUserById(userId);
 
         checkUserIsGroupMemberVoid(user, group);
 
@@ -112,8 +113,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional(readOnly = true)
     public GroupSettingsResponse getSettings(Long id) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = requireGroupById(id);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = userGroupRequireService.requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
 
@@ -125,8 +126,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public void update(Long id, GroupSettingsRequest request) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = requireGroupById(id);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = userGroupRequireService.requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
 
@@ -138,8 +139,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public void delete(Long id) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = requireGroupById(id);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = userGroupRequireService.requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
 
@@ -149,7 +150,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional(readOnly = true)
     public GroupViewingResponse getView(Long id) {
-        Group group = requireGroupById(id);
+        Group group = userGroupRequireService.requireGroupById(id);
 
         List<GroupMember> groupMembers = groupMemberService.getGroupMembers(group);
 
@@ -176,7 +177,7 @@ public class GroupServiceImpl implements GroupService {
                 .build();
         Group group = groupRepository.save(newGroup);
 
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         groupMemberService.save(user, group);
 
         return group.getId();
@@ -185,8 +186,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional(readOnly = true)
     public List<GroupMemberResponse> getMembers(Long id, Integer page, Integer amountPerPage) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = requireGroupById(id);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = userGroupRequireService.requireGroupById(id);
 
         checkUserIsGroupMemberVoid(user, group);
 
@@ -200,8 +201,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public void deleteGroupMemberFromAdminSide(Long id, Long userIdForDelete) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = requireGroupById(id);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = userGroupRequireService.requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
         deleteGroupMember(id, userIdForDelete);
@@ -210,8 +211,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional(readOnly = true)
     public List<ApplicationWithUserInfoResponse> getApplications(Long id, Integer page, Integer amountPerPage) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = requireGroupById(id);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = userGroupRequireService.requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
 
@@ -226,26 +227,18 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public Long answerApplication(Long id, ApplicationAnswerRequest request) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = requireGroupById(id);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = userGroupRequireService.requireGroupById(id);
 
         checkUserIsGroupAdmin(user, group);
 
         applicationService.updateStatus(request.applicationId(), request.applicationStatus());
         if (request.applicationStatus().equalsIgnoreCase(APPROVED.getValue())) {
-            User joinedUser = requireUserById(request.userForJoinId());
+            User joinedUser = userGroupRequireService.requireUserById(request.userForJoinId());
             groupMemberService.saveNoAdmin(joinedUser, group);
         }
 
         return request.applicationId();
-    }
-
-    private User requireUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
-    }
-
-    private Group requireGroupById(Long groupId) {
-        return groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
     }
 
     @Override

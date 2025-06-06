@@ -10,17 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.dto.socket.ChatMessage;
-import ru.itis.impl.exception.not_found.GroupNotFoundException;
-import ru.itis.impl.exception.not_found.UserNotFoundException;
 import ru.itis.impl.mapper.ChatMessageMapper;
 import ru.itis.impl.model.ChatMessageEntity;
-import ru.itis.impl.model.Group;
-import ru.itis.impl.model.User;
 import ru.itis.impl.repository.ChatMessagesRepository;
-import ru.itis.impl.repository.GroupRepository;
-import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.ChatMessageService;
+import ru.itis.impl.service.UserGroupRequireService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,8 +28,8 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final ChatMessagesRepository chatMessagesRepository;
     private final ChatMessageMapper chatMessageMapper;
     private final AuthService authService;
-    private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
+
+    private final UserGroupRequireService userGroupRequireService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -48,8 +43,8 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .content(chatMessage.getContent())
                 .type(chatMessage.getType())
                 .datetime(LocalDateTime.now())
-                .user(requireUserById(userId))
-                .group(requireGroupById(Long.valueOf(chatMessage.getGroupId())))
+                .user(userGroupRequireService.requireUserById(userId))
+                .group(userGroupRequireService.requireGroupById(Long.valueOf(chatMessage.getGroupId())))
                 .build();
 
         return chatMessagesRepository.save(entity).getId();
@@ -73,13 +68,5 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .getResultList().stream()
                 .map(chatMessageMapper::toChatMessage)
                 .toList();
-    }
-
-    private User requireUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
-    }
-
-    private Group requireGroupById(Long groupId) {
-        return groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
     }
 }

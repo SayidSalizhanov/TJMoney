@@ -44,17 +44,18 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final ApplicationService applicationService;
-    private final GroupRepository groupRepository;
     private final Cloudinary cloudinary;
     private final AvatarRepository avatarRepository;
     private final TransactionService transactionService;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
 
+    private final UserGroupRequireService userGroupRequireService;
+
     @Override
     @Transactional(readOnly = true)
     public UserSettingsResponse getInfo() {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
 
         return userMapper.toUserSettingsResponse(user);
     }
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateInfo(UserSettingsRequest request) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
 
         user.setUsername(request.username());
         user.setTelegramId(request.telegramId());
@@ -73,7 +74,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete() {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
 
         userRepository.delete(user);
     }
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserGroupResponse> getGroups() {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
 
         List<GroupMember> groupMembers = user.getGroupMembers();
         List<UserGroupResponse> responses = new ArrayList<>();
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<ApplicationToGroupResponse> getApplications() {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
 
         List<Application> applications = user.getApplications();
         return applications.stream()
@@ -129,7 +130,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void changePassword(UserPasswordChangeRequest request) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
 
         String currentPassword = user.getPassword();
         String encodeNewPassword = passwordEncoder.encode(request.newPassword());
@@ -146,14 +147,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public AvatarResponse getAvatarUrl() {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         return AvatarResponse.builder().url(user.getAvatar().getUrl()).build();
     }
 
     @Override
     @Transactional
     public void changeAvatar(MultipartFile avatarImage) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
 
         if (avatarImage != null && avatarImage.getSize() > 0) {
             try {
@@ -182,7 +183,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteAvatar() {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
 
         avatarRepository.update("/images/defaultAvatar.png", user);
     }
@@ -190,7 +191,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserProfileResponse getProfileInfo(String period) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
 
         List<Map<String, Integer>> transactionsGenerals;
         if (period == null || period.isEmpty()) transactionsGenerals = transactionService.getUserTransactionsGenerals(user.getId(), "all");
@@ -202,7 +203,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserProfileResponse getStrangerProfileInfo(Long id, String period) {
-        User user = requireUserById(id);
+        User user = userGroupRequireService.requireUserById(id);
 
         if (!authService.getAuthenticatedUserId().equals(user.getId())) return userMapper.toUserProfileResponse(user, null);
 
@@ -211,17 +212,5 @@ public class UserServiceImpl implements UserService {
         else transactionsGenerals = transactionService.getUserTransactionsGenerals(user.getId(), period);
 
         return userMapper.toUserProfileResponse(user, transactionsGenerals);
-    }
-
-    private User requireUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
-    }
-
-    private Group requireGroupById(Long groupId) {
-        return groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
-    }
-
-    private void checkUserHasAccessGranted(User user, User currentSessionUser) {
-        if (!user.getId().equals(currentSessionUser.getId())) throw new AccessDeniedException("Доступ к этой странице запрещен");
     }
 }

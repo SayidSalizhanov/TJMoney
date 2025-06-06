@@ -15,6 +15,7 @@ import ru.itis.impl.repository.GroupRepository;
 import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.ApplicationService;
 import ru.itis.impl.service.AuthService;
+import ru.itis.impl.service.UserGroupRequireService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,16 +27,16 @@ import static ru.itis.impl.enums.ApplicationStatusEnum.PENDING;
 public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationRepository applicationRepository;
-    private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
     private final AuthService authService;
+
+    private final UserGroupRequireService userGroupRequireService;
 
     @Override
     @Transactional
     public Long createApplications(Long groupId) {
         Application application = Application.builder()
-                .user(requireUserById(authService.getAuthenticatedUserId()))
-                .group(requireGroupById(groupId))
+                .user(userGroupRequireService.requireUserById(authService.getAuthenticatedUserId()))
+                .group(userGroupRequireService.requireGroupById(groupId))
                 .sendAt(LocalDateTime.now())
                 .status(PENDING.getValue())
                 .build();
@@ -46,7 +47,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     @Transactional(readOnly = true)
     public List<Application> getGroupApplicationsByGroupIdAndByStatus(Long groupId, String status, Pageable pageable) {
-        return applicationRepository.findAllByGroupAndStatus(requireGroupById(groupId), status, pageable).getContent();
+        return applicationRepository.findAllByGroupAndStatus(userGroupRequireService.requireGroupById(groupId), status, pageable).getContent();
     }
 
     @Override
@@ -67,13 +68,5 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Transactional(readOnly = true)
     public Application requireById(Long id) {
         return applicationRepository.findById(id).orElseThrow(() -> new ApplicationNotFoundException("Заявка с таким id не найдена"));
-    }
-
-    private User requireUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
-    }
-
-    private Group requireGroupById(Long groupId) {
-        return groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
     }
 }

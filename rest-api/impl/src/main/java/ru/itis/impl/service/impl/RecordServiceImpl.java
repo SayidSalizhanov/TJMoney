@@ -25,6 +25,7 @@ import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.GroupService;
 import ru.itis.impl.service.RecordService;
+import ru.itis.impl.service.UserGroupRequireService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,15 +38,15 @@ public class RecordServiceImpl implements RecordService {
     private final RecordRepository recordRepository;
     private final RecordMapper recordMapper;
 
-    private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
     private final GroupService groupService;
     private final AuthService authService;
+
+    private final UserGroupRequireService userGroupRequireService;
 
     @Override
     @Transactional(readOnly = true)
     public RecordSettingsResponse getById(Long id) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Record record = requireById(id);
 
         checkAccessToRecordGranted(record, user);
@@ -56,7 +57,7 @@ public class RecordServiceImpl implements RecordService {
     @Override
     @Transactional
     public void updateInfo(Long id, RecordSettingsRequest request) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Record record = requireById(id);
 
         checkAccessToRecordGranted(record, user);
@@ -70,7 +71,7 @@ public class RecordServiceImpl implements RecordService {
     @Override
     @Transactional
     public void delete(Long id) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Record record = requireById(id);
 
         checkAccessToRecordGranted(record, user);
@@ -81,8 +82,8 @@ public class RecordServiceImpl implements RecordService {
     @Override
     @Transactional(readOnly = true)
     public List<RecordListResponse> getAll(@MayBeNull Long groupId, Integer page, Integer amountPerPage) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = groupId == null ? null : requireGroupById(groupId);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = groupId == null ? null : userGroupRequireService.requireGroupById(groupId);
 
         List<Record> records;
 
@@ -102,8 +103,8 @@ public class RecordServiceImpl implements RecordService {
     @Override
     @Transactional
     public Long create(@MayBeNull Long groupId, RecordCreateRequest request) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = groupId == null ? null : requireGroupById(groupId);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = groupId == null ? null : userGroupRequireService.requireGroupById(groupId);
 
         Record record = Record.builder()
                 .title(request.title())
@@ -119,14 +120,6 @@ public class RecordServiceImpl implements RecordService {
 
     private Record requireById(Long id) {
         return recordRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Запись с таким id не найдена"));
-    }
-
-    private User requireUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
-    }
-
-    private Group requireGroupById(Long groupId) {
-        return groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
     }
 
     private void checkUserIsRecordOwner(Record record, User user) {

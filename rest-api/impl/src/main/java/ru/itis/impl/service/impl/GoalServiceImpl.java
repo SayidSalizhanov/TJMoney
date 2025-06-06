@@ -25,6 +25,7 @@ import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.GoalService;
 import ru.itis.impl.service.GroupService;
+import ru.itis.impl.service.UserGroupRequireService;
 
 import java.util.List;
 import java.util.Objects;
@@ -37,16 +38,16 @@ public class GoalServiceImpl implements GoalService {
     private final GoalRepository goalRepository;
     private final GoalMapper goalMapper;
 
-    private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
     private final GroupService groupService;
     private final AuthService authService;
+
+    private final UserGroupRequireService userGroupRequireService;
 
     @Override
     @Transactional(readOnly = true)
     public List<GoalListResponse> getAll(@MayBeNull Long groupId, Integer page, Integer amountPerPage) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = groupId == null ? null : requireGroupById(groupId);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = groupId == null ? null : userGroupRequireService.requireGroupById(groupId);
 
         List<Goal> goals;
 
@@ -66,7 +67,7 @@ public class GoalServiceImpl implements GoalService {
     @Override
     @Transactional(readOnly = true)
     public GoalSettingsResponse getById(Long goalId) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Goal goal = requireById(goalId);
 
         checkAccessToGoalGranted(goal, user);
@@ -77,8 +78,8 @@ public class GoalServiceImpl implements GoalService {
     @Override
     @Transactional
     public Long create(@MayBeNull Long groupId, GoalCreateRequest request) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = groupId == null ? null : requireGroupById(groupId);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = groupId == null ? null : userGroupRequireService.requireGroupById(groupId);
 
         Goal goal = Goal.builder()
                 .title(request.title())
@@ -94,7 +95,7 @@ public class GoalServiceImpl implements GoalService {
     @Override
     @Transactional
     public void delete(Long id) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Goal goal = requireById(id);
 
         checkAccessToGoalGranted(goal, user);
@@ -105,7 +106,7 @@ public class GoalServiceImpl implements GoalService {
     @Override
     @Transactional
     public void updateInfo(Long goalId, GoalSettingsRequest request) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Goal goal = requireById(goalId);
 
         checkAccessToGoalGranted(goal, user);
@@ -120,14 +121,6 @@ public class GoalServiceImpl implements GoalService {
         Optional<Goal> optionalGoal = goalRepository.findById(goalId);
         if (optionalGoal.isEmpty()) throw new GoalNotFoundException("Цель с таким id не найдена");
         return optionalGoal.get();
-    }
-
-    private User requireUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
-    }
-
-    private Group requireGroupById(Long groupId) {
-        return groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
     }
 
     private void checkUserIsGoalOwner(Goal goal, User user) {

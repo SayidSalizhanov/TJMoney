@@ -27,6 +27,7 @@ import ru.itis.impl.repository.TransactionRepository;
 import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.TransactionService;
+import ru.itis.impl.service.UserGroupRequireService;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -40,12 +41,10 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;
 
-    private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
-
     private final AuthService authService;
-
     private final GroupMemberRepository groupMemberRepository;
+
+    private final UserGroupRequireService userGroupRequireService;
 
     @Override
     @Transactional
@@ -64,7 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional(readOnly = true)
     public TransactionSettingsResponse getById(Long id) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Transaction transaction = requireById(id);
 
         checkAccessToTransactionGranted(transaction, user);
@@ -75,7 +74,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public void updateInfo(Long id, TransactionSettingsRequest request) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Transaction transaction = requireById(id);
 
         checkAccessToTransactionGranted(transaction, user);
@@ -90,7 +89,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public void delete(Long id) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         Transaction transaction = requireById(id);
 
         checkAccessToTransactionGranted(transaction, user);
@@ -101,8 +100,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional(readOnly = true)
     public List<TransactionListResponse> getAll(@MayBeNull Long groupId, Integer page, Integer amountPerPage) {
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = groupId == null ? null : requireGroupById(groupId);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = groupId == null ? null : userGroupRequireService.requireGroupById(groupId);
 
         List<Transaction> transactions;
 
@@ -124,8 +123,8 @@ public class TransactionServiceImpl implements TransactionService {
     public Long create(@MayBeNull Long groupId, TransactionCreateRequest request) {
         if (request.dateTime().isAfter(LocalDateTime.now())) throw new DateTimeOperationException("Транзакция не может быть совершена в будущем");
 
-        User user = requireUserById(authService.getAuthenticatedUserId());
-        Group group = groupId == null ? null : requireGroupById(groupId);
+        User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
+        Group group = groupId == null ? null : userGroupRequireService.requireGroupById(groupId);
 
         Transaction transaction = Transaction.builder()
                 .amount(request.amount())
@@ -184,7 +183,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     protected List<Transaction> getGroupTransactions(Long groupId, String period) {
         List<Transaction> transactions;
-        Group group = requireGroupById(groupId);
+        Group group = userGroupRequireService.requireGroupById(groupId);
 
         transactions = switch (period) {
             case "day" -> transactionRepository.findByGroupWithPeriod(group, LocalDateTime.now().minusDays(1));
@@ -199,7 +198,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     protected List<Transaction> getUserTransactions(Long userId, String period) {
         List<Transaction> transactions;
-        User user = requireUserById(userId);
+        User user = userGroupRequireService.requireUserById(userId);
 
         transactions = switch (period) {
             case "day" -> transactionRepository.findByUserWithPeriod(user, LocalDateTime.now().minusDays(1));
@@ -213,14 +212,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     private Transaction requireById(Long id) {
         return transactionRepository.findById(id).orElseThrow(() -> new TransactionNotFoundException("Транзакция с таким id не найдена"));
-    }
-
-    private User requireUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с таким id не найден"));
-    }
-
-    private Group requireGroupById(Long groupId) {
-        return groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException("Группа с таким id не найдена"));
     }
 
     private void checkUserIsTransactionOwner(Transaction transaction, User user) {
