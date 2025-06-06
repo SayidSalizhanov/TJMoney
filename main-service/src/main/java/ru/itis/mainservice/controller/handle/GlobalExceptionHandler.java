@@ -8,9 +8,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.view.RedirectView;
 import ru.itis.mainservice.dto.response.exception.ExceptionMessage;
 
 import java.util.ArrayList;
@@ -22,6 +24,15 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     private static final String FILE_SIZE_EXCEEDED = "Размер файла превышает допустимый предел в 5MB";
+
+    @ExceptionHandler(HttpClientErrorException.class)
+    public RedirectView handleHttpClientErrorException(HttpClientErrorException exception) {
+        if (exception.getStatusCode() == HttpStatus.UNAUTHORIZED || 
+            exception.getStatusCode() == HttpStatus.FORBIDDEN) {
+            return new RedirectView("/login");
+        }
+        return null;
+    }
 
     // обработчик для исключений, когда не можем преобразовать значение аргумента метода контроллера в ожидаемый тип
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

@@ -4,6 +4,8 @@ import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.method.ParameterValidationResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,7 +15,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import ru.itis.dto.response.exception.ExceptionMessage;
-import ru.itis.impl.exception.ServiceException;
+import ru.itis.impl.exception.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +26,18 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     private static final String FILE_SIZE_EXCEEDED = "Размер файла превышает допустимый предел в 5MB";
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public void handleAuthenticationException(AuthenticationException exception) {
+        // Просто возвращаем 401 статус
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public void handleAccessDeniedException(AccessDeniedException exception) {
+        // Просто возвращаем 403 статус
+    }
 
     @ExceptionHandler(ServiceException.class)
     public final ResponseEntity<ExceptionMessage> handleServiceException(ServiceException exception) {
