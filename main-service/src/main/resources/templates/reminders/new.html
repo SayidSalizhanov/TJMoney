@@ -9,8 +9,10 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="content">
-    <h2 style="color: white">Создание нового напоминания</h2>
-    
+    <h2 style="color: white">Создание напоминания</h2>
+
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
     <form th:action="@{/reminders/new}" method="POST" class="reminder-form">
         <input type="hidden" name="groupId" th:value="${groupId}">
         

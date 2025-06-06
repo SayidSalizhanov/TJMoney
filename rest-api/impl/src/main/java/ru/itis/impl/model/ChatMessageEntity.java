@@ -1,10 +1,7 @@
 package ru.itis.impl.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.itis.dto.socket.MessageType;
 
 import java.time.LocalDateTime;
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "chat_messages")
+@ToString(exclude = {"user", "group"})
 public class ChatMessageEntity {
 
     @Id

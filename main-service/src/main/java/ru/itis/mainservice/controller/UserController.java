@@ -1,19 +1,24 @@
 package ru.itis.mainservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.itis.mainservice.dto.request.user.UserPasswordChangeRequest;
 import ru.itis.mainservice.dto.request.user.UserSettingsRequest;
 import ru.itis.mainservice.dto.response.application.ApplicationToGroupResponse;
+import ru.itis.mainservice.dto.response.exception.ExceptionMessage;
 import ru.itis.mainservice.dto.response.user.UserGroupResponse;
 import ru.itis.mainservice.dto.response.user.UserProfileResponse;
 import ru.itis.mainservice.dto.response.user.UserSettingsResponse;
 import ru.itis.mainservice.service.UserService;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Controller
@@ -30,7 +35,18 @@ public class UserController {
     }
 
     @PutMapping("/settings")
-    public String updateUserSettings(UserSettingsRequest request) {
+    public String updateUserSettings(@Valid UserSettingsRequest request, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+
+            UserSettingsResponse settings = userService.getUserSettingsInfo();
+            model.addAttribute("settings", settings);
+            model.addAttribute("error", errorMessage);
+            return "user/settings";
+        }
         userService.updateUserSettingsInfo(request);
         return "redirect:/user";
     }
@@ -73,10 +89,30 @@ public class UserController {
     }
 
     @PatchMapping("/changePassword")
-    public String changeUserPassword(UserPasswordChangeRequest request) {
-        userService.changeUserPassword(request);
-        return "redirect:/user/changePassword";
+    public String changeUserPassword(@Valid UserPasswordChangeRequest request, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+            model.addAttribute("error", errorMessage);
+            return "user/changePassword";
+        }
+
+        ResponseEntity<?> response = userService.changeUserPassword(request);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return "redirect:/user/settings";
+        }
+
+        Object responseBody = response.getBody();
+        if (responseBody instanceof LinkedHashMap hashMap) {
+            model.addAttribute("error", hashMap.get("message"));
+        } else {
+            model.addAttribute("error", "Произошла ошибка при смене пароля");
+        }
+        return "user/changePassword";
     }
+
 
     @GetMapping("/changeAvatar")
     public String getUserAvatarUrl(Model model) {

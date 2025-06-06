@@ -11,6 +11,8 @@
     <h1>Добро пожаловать!</h1>
     <h2>Вход</h2>
 
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
     <form action="/login" method="post">
         <label for="email">Почта:</label>
         <input type="text" id="email" name="email" required><br><br>

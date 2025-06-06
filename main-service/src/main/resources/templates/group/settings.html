@@ -11,6 +11,9 @@
 <div class="content-wrapper">
     <div class="content">
         <h2>Настройки группы</h2>
+
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
         <form th:action="@{/groups/{id}/settings(id=${settings.id})}" method="post" class="settings-form">
             <input type="hidden" name="_method" value="PUT">
 

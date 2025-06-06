@@ -13,6 +13,8 @@
         <div class="settings">
             <h2>Настройки профиля</h2>
 
+            <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
             <div class="settings-section">
                 <h3>Основная информация</h3>
                 <form th:action="@{/user/settings}" method="POST" class="settings-form">

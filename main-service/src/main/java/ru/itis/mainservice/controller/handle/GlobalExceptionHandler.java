@@ -91,20 +91,6 @@ public class GlobalExceptionHandler {
         return modelAndView;
     }
 
-    // обработчик для исключений, когда не проходит валидация объекта DTO
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ModelAndView handleValidationException(MethodArgumentNotValidException exception) {
-        Map<String, List<String>> errors = new HashMap<>();
-        exception.getBindingResult().getFieldErrors().forEach(error -> {
-            errors.computeIfAbsent(error.getField(), k -> new ArrayList<>())
-                    .add(error.getDefaultMessage());
-        });
-        ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("message", "Ошибка валидации: " + errors);
-        return modelAndView;
-    }
-
     // обработчик для всех остальных исключений, которых не должно было быть
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

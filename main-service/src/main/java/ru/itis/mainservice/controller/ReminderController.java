@@ -1,8 +1,10 @@
 package ru.itis.mainservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.mainservice.dto.request.reminder.ReminderCreateRequest;
 import ru.itis.mainservice.dto.request.reminder.ReminderSettingsRequest;
@@ -49,8 +51,21 @@ public class ReminderController {
 
     @PostMapping("/new")
     public String createReminder(
-            @RequestParam(value = "groupId", required = false) Long groupId,
-            ReminderCreateRequest request) {
+            @RequestParam(required = false) Long groupId,
+            @Valid ReminderCreateRequest request,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+            model.addAttribute("error", errorMessage);
+            model.addAttribute("groupId", groupId);
+            model.addAttribute("currentDateTime", LocalDateTime.now().format(formatter));
+            return "reminders/new";
+        }
 
         reminderService.createReminder(groupId, request);
         return "redirect:/reminders" + (groupId != null ? "?groupId=" + groupId : "");
@@ -64,14 +79,32 @@ public class ReminderController {
         ReminderSettingsResponse reminder = reminderService.getReminder(id);
         model.addAttribute("reminder", reminder);
         model.addAttribute("reminderId", id);
-        model.addAttribute("formattedSendAt", reminder.sendAt());
+        
+        LocalDateTime sendAt = LocalDateTime.parse(reminder.sendAt(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        model.addAttribute("formattedSendAt", sendAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
         return "reminders/reminder";
     }
 
     @PutMapping("/{id}")
-    public String updateReminder(
-            @PathVariable Long id,
-            ReminderSettingsRequest request) {
+    public String updateReminder(@PathVariable Long id,
+                               @Valid ReminderSettingsRequest request,
+                               BindingResult bindingResult,
+                               Model model) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+            model.addAttribute("error", errorMessage);
+
+            ReminderSettingsResponse reminder = reminderService.getReminder(id);
+            model.addAttribute("reminder", reminder);
+            model.addAttribute("reminderId", id);
+
+            LocalDateTime sendAt = LocalDateTime.parse(reminder.sendAt(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            model.addAttribute("formattedSendAt", sendAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
+            return "reminders/reminder";
+        }
 
         reminderService.updateReminderInfo(id, request);
         return "redirect:/reminders/" + id;

@@ -1,9 +1,11 @@
 package ru.itis.mainservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.mainservice.dto.request.application.ApplicationAnswerRequest;
 import ru.itis.mainservice.dto.request.group.GroupCreateRequest;
@@ -65,8 +67,22 @@ public class GroupController {
     @PutMapping("/{id}/settings")
     public String updateGroupInfo(
             @PathVariable Long id,
-            GroupSettingsRequest request
+            @Valid GroupSettingsRequest request,
+            BindingResult bindingResult,
+            Model model
     ) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+
+            GroupSettingsResponse settings = groupService.getGroupSettings(id);
+            model.addAttribute("settings", settings);
+            model.addAttribute("error", errorMessage);
+            return "group/settings";
+        }
+
         groupService.updateGroupInfo(id, request);
         return "redirect:/groups/" + id;
     }
@@ -93,7 +109,18 @@ public class GroupController {
     }
 
     @PostMapping("/new")
-    public String createGroup(GroupCreateRequest request) {
+    public String createGroup(@Valid GroupCreateRequest request,
+                            BindingResult bindingResult,
+                            Model model) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+            model.addAttribute("error", errorMessage);
+            return "group/new";
+        }
+
         Long groupId = groupService.createGroup(request);
         return "redirect:/groups/" + groupId;
     }

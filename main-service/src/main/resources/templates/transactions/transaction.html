@@ -21,6 +21,8 @@
             <p>Описание: <span th:text="${transaction.description}"></span></p>
         </div>
 
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
         <div class="actions">
             <form th:action="@{/transactions/{id}(id=${id})}" method="POST" class="transaction-form">
                 <input type="hidden" name="_method" value="put">

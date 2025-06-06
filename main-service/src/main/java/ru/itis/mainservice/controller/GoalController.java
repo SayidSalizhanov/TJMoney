@@ -1,8 +1,10 @@
 package ru.itis.mainservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.mainservice.dto.request.goal.GoalCreateRequest;
 import ru.itis.mainservice.dto.request.goal.GoalSettingsRequest;
@@ -43,8 +45,19 @@ public class GoalController {
 
     @PostMapping("/new")
     public String createGoal(
-            @RequestParam(value = "groupId", required = false) Long groupId,
-            GoalCreateRequest request) {
+            @RequestParam(required = false) Long groupId,
+            @Valid GoalCreateRequest request,
+                           BindingResult bindingResult,
+                           Model model) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+            model.addAttribute("groupId", groupId);
+            model.addAttribute("error", errorMessage);
+            return "goals/new";
+        }
 
         goalService.createGoal(groupId, request);
         return "redirect:/goals" + (groupId != null ? "?groupId=" + groupId : "");
@@ -62,9 +75,22 @@ public class GoalController {
     }
 
     @PutMapping("/{id}")
-    public String updateGoal(
-            @PathVariable Long id,
-            GoalSettingsRequest request) {
+    public String updateGoal(@PathVariable Long id,
+                           @Valid GoalSettingsRequest request,
+                           BindingResult bindingResult,
+                           Model model) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+
+            GoalSettingsResponse goal = goalService.getGoal(id);
+            model.addAttribute("goal", goal);
+            model.addAttribute("goalId", id);
+            model.addAttribute("error", errorMessage);
+            return "goals/goal";
+        }
 
         goalService.updateGoalInfo(id, request);
         return "redirect:/goals/" + id;

@@ -13,6 +13,8 @@
     <div class="create-transaction">
         <h2 style="color: white">Создание транзакции</h2>
 
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
         <form th:action="@{/transactions/new}" method="POST" class="transaction-form">
             <input type="hidden" name="groupId" th:value="${groupId}">
 

@@ -12,15 +12,7 @@
     <div class="upload-transactions">
         <h2 style="color: white">Загрузка транзакций из CSV</h2>
 
-<!--        <div class="info-block">-->
-<!--            <p>Формат CSV файла:</p>-->
-<!--            <ul>-->
-<!--                <li>Первая строка - заголовки</li>-->
-<!--                <li>Колонки: amount,type,category,dateTime,description</li>-->
-<!--                <li>Тип: INCOME или EXPENSE</li>-->
-<!--                <li>Дата и время в формате: yyyy-MM-dd HH:mm:ss</li>-->
-<!--            </ul>-->
-<!--        </div>-->
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
 
         <form th:action="@{/transactions/new/upload}" method="POST" enctype="multipart/form-data" class="upload-form">
             <input type="hidden" name="groupId" th:value="${groupId}">

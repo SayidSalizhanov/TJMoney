@@ -11,6 +11,8 @@
 <div class="content">
     <div class="group-form">
         <h2 style="color: white">Создание новой группы</h2>
+
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
         
         <form th:action="@{/groups/new}" method="POST">
             <div class="form-container">

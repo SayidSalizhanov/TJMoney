@@ -12,6 +12,7 @@ import ru.itis.mainservice.dto.request.user.UserPasswordChangeRequest;
 import ru.itis.mainservice.dto.request.user.UserSettingsRequest;
 import ru.itis.mainservice.dto.response.application.ApplicationToGroupResponse;
 import ru.itis.mainservice.dto.response.avatar.AvatarResponse;
+import ru.itis.mainservice.dto.response.exception.ExceptionMessage;
 import ru.itis.mainservice.dto.response.user.UserGroupResponse;
 import ru.itis.mainservice.dto.response.user.UserProfileResponse;
 import ru.itis.mainservice.dto.response.user.UserSettingsResponse;
@@ -141,7 +142,7 @@ public class UserService {
         );
     }
 
-    public void changeUserPassword(UserPasswordChangeRequest request) {
+    public ResponseEntity<Object> changeUserPassword(UserPasswordChangeRequest request) {
         String url = apiBaseUrl + "/api/user/changePassword";
 
         HttpHeaders headers = authService.getAuthHeaders();
@@ -150,11 +151,11 @@ public class UserService {
 
         HttpEntity<UserPasswordChangeRequest> entity = new HttpEntity<>(request, headers);
 
-        restTemplate.exchange(
+        return restTemplate.exchange(
                 url,
                 HttpMethod.PUT,
                 entity,
-                Void.class
+                Object.class
         );
     }
 

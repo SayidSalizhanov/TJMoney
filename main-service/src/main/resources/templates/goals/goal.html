@@ -18,6 +18,8 @@
             <p>Описание: <span th:text="${goal.description}"></span></p>
         </div>
 
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
         <div class="actions">
             <form th:action="@{/goals/{id}(id=${goalId})}" method="post" class="goal-form">
                 <input type="hidden" name="_method" value="put">

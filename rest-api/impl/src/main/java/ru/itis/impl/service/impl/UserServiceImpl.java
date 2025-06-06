@@ -2,7 +2,6 @@ package ru.itis.impl.service.impl;
 
 import com.cloudinary.Cloudinary;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.control.MappingControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,21 +17,15 @@ import ru.itis.dto.response.user.UserSettingsResponse;
 import ru.itis.impl.exception.AccessDeniedException;
 import ru.itis.impl.exception.FileProcessingException;
 import ru.itis.impl.exception.UpdateException;
-import ru.itis.impl.exception.not_found.GroupNotFoundException;
-import ru.itis.impl.exception.not_found.UserNotFoundException;
 import ru.itis.impl.mapper.UserMapper;
 import ru.itis.impl.model.*;
 import ru.itis.impl.repository.AvatarRepository;
-import ru.itis.impl.repository.GroupRepository;
 import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -133,12 +126,12 @@ public class UserServiceImpl implements UserService {
         User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
 
         String currentPassword = user.getPassword();
+
+        if (!passwordEncoder.matches(request.currentPassword(), currentPassword)) throw new UpdateException("Неверный старый пароль");
+
+        if (!request.newPassword().equals(request.confirmPassword())) throw new UpdateException("Новые пароли не совпадают");
+
         String encodeNewPassword = passwordEncoder.encode(request.newPassword());
-
-        if (!currentPassword.equals(encodeNewPassword)) throw new UpdateException("Неверный старый пароль");
-
-        if (!request.newPassword().equals(request.repeatNewPassword())) throw new UpdateException("Новые пароли не совпадают");
-
         user.setPassword(encodeNewPassword);
 
         userRepository.save(user);

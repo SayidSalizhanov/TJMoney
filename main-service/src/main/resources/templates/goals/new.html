@@ -12,6 +12,8 @@
     <div class="create-goal">
         <h2 style="color: white">Создание цели</h2>
 
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
         <form th:action="@{/goals/new}" method="POST" class="create-form">
             <input type="hidden" name="groupId" th:value="${groupId}">
 

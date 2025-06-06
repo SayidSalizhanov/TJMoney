@@ -19,6 +19,8 @@
             <p>Сообщение: <span th:text="${reminder.message}"></span></p>
         </div>
 
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
         <div class="actions">
             <form th:action="@{/reminders/{id}(id=${reminderId})}" method="POST" class="reminder-form">
                 <input type="hidden" name="_method" value="put">

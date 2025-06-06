@@ -1,8 +1,10 @@
 package ru.itis.mainservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.mainservice.dto.request.record.RecordCreateRequest;
 import ru.itis.mainservice.dto.request.record.RecordSettingsRequest;
@@ -43,8 +45,19 @@ public class RecordController {
 
     @PostMapping("/new")
     public String createRecord(
-            @RequestParam(value = "groupId", required = false) Long groupId,
-            RecordCreateRequest request) {
+            @RequestParam(required = false) Long groupId,
+            @Valid RecordCreateRequest request,
+                             BindingResult bindingResult,
+                             Model model) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+            model.addAttribute("groupId", groupId);
+            model.addAttribute("error", errorMessage);
+            return "records/new";
+        }
 
         recordService.createRecord(groupId, request);
         return "redirect:/records" + (groupId != null ? "?groupId=" + groupId : "");
@@ -62,9 +75,22 @@ public class RecordController {
     }
 
     @PutMapping("/{id}")
-    public String updateRecord(
-            @PathVariable Long id,
-            RecordSettingsRequest request) {
+    public String updateRecord(@PathVariable Long id,
+                             @Valid RecordSettingsRequest request,
+                             BindingResult bindingResult,
+                             Model model) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+
+            RecordSettingsResponse record = recordService.getRecord(id);
+            model.addAttribute("record", record);
+            model.addAttribute("recordId", id);
+            model.addAttribute("error", errorMessage);
+            return "records/record";
+        }
 
         recordService.updateRecordInfo(id, request);
         return "redirect:/records/" + id;

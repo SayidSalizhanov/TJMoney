@@ -11,6 +11,8 @@
 <div class="content">
     <h2 style="color: white">Создание новой записи</h2>
 
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
     <form th:action="@{/records/new}" method="POST" class="record-form">
         <div class="form">
             <input type="hidden" name="groupId" th:value="${groupId}">

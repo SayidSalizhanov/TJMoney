@@ -1,8 +1,10 @@
 package ru.itis.mainservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.itis.mainservice.dto.request.transaction.TransactionCreateRequest;
@@ -36,8 +38,21 @@ public class TransactionController {
     @PutMapping("/{id}")
     public String updateTransactionInfo(
             @PathVariable Long id,
-            TransactionSettingsRequest request
+            @Valid TransactionSettingsRequest request,
+            BindingResult bindingResult,
+            Model model
     ) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+            model.addAttribute("error", errorMessage);
+            TransactionSettingsResponse transaction = transactionService.getTransaction(id);
+            model.addAttribute("transaction", transaction);
+            model.addAttribute("id", id);
+            return "transactions/transaction";
+        }
         transactionService.updateTransactionInfo(id, request);
         return "redirect:/transactions/" + id;
     }
@@ -75,8 +90,21 @@ public class TransactionController {
     @PostMapping("/new")
     public String createTransaction(
             @RequestParam(required = false) Long groupId,
-            TransactionCreateRequest request
+            @Valid TransactionCreateRequest request,
+            BindingResult bindingResult,
+            Model model
     ) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+            model.addAttribute("error", errorMessage);
+            model.addAttribute("groupId", groupId);
+            model.addAttribute("currentDateTime", LocalDateTime.now().format(formatter));
+            return "transactions/new";
+        }
+
         Long transactionId = transactionService.createTransaction(groupId, request);
         return "redirect:/transactions/" + transactionId;
     }
@@ -93,8 +121,19 @@ public class TransactionController {
     @PostMapping("/new/upload")
     public String uploadCsvTransactions(
             @RequestParam(required = false) Long groupId,
-            @RequestParam MultipartFile file
+            @RequestParam MultipartFile file,
+            BindingResult bindingResult,
+            Model model
     ) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Ошибка валидации");
+            model.addAttribute("error", errorMessage);
+            model.addAttribute("groupId", groupId);
+            return "transactions/upload";
+        }
         transactionService.uploadCsvTransactions(groupId, file);
         return "redirect:/transactions" + (groupId != null ? "?groupId=" + groupId : "");
     }
