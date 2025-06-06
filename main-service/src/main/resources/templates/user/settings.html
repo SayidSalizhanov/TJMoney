@@ -30,9 +30,8 @@
 
                     <div class="form-group">
                         <label for="sendingToEmail">Хотите получать напоминания и другую информацию на почту?</label>
-                        <input type="hidden" name="sendingToEmail" value="false">
+                        <input type="hidden" name="_sendingToEmail" value="false">
                         <input type="checkbox" id="sendingToEmail" name="sendingToEmail"
-                               value="true"
                                th:checked="${settings.sendingToEmail}">
                     </div>
 
