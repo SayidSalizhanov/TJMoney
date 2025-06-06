@@ -6,7 +6,6 @@ import lombok.Builder;
 public record UserSettingsRequest (
         String username,
         String telegramId,
-        boolean sendingToTelegram,
         boolean sendingToEmail
 ) {
 }

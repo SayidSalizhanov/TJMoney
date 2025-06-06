@@ -36,9 +36,6 @@ public class User {
     @Column(name = "telegram_id")
     private String telegramId;
 
-    @Column(name = "sending_to_telegram")
-    private Boolean sendingToTelegram;
-
     @Column(name = "sending_to_email")
     private Boolean sendingToEmail;
 

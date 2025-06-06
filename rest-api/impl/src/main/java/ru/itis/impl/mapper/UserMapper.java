@@ -16,7 +16,6 @@ public class UserMapper {
                 .username(user.getUsername())
                 .telegramId(user.getTelegramId())
                 .sendingToEmail(user.getSendingToEmail())
-                .sendingToTelegram(user.getSendingToTelegram())
                 .build();
     }
 

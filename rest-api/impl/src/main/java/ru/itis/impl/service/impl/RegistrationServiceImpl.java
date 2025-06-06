@@ -38,7 +38,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .username(request.username())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .sendingToTelegram(false)
                 .sendingToEmail(false)
                 .build();
 

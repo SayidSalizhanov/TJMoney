@@ -66,7 +66,6 @@ public class UserServiceImpl implements UserService {
 
         user.setUsername(request.username());
         user.setTelegramId(request.telegramId());
-        user.setSendingToTelegram(request.sendingToTelegram());
         user.setSendingToEmail(request.sendingToEmail());
         userRepository.save(user);
     }
