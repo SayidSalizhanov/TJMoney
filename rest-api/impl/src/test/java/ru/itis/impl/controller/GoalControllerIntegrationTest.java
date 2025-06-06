@@ -67,7 +67,7 @@ public class GoalControllerIntegrationTest {
 
         User user = userRepository.findById(userId).orElseThrow();
         Pageable pageable = PageRequest.of(0,10, Sort.by("title"));
-        List<GoalListResponse> expectedResult = goalRepository.findByUser(user, pageable).stream()
+        List<GoalListResponse> expectedResult = goalRepository.findAllByUserAndGroupIsNull(user, pageable).stream()
                 .map(goalMapper::toGoalListResponse)
                 .toList();
 

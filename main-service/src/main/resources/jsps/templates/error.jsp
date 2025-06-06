@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Error</title>
-    <link rel="stylesheet" type="text/css" href="/css/error.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/error.css">
 </head>
 <body>
 
