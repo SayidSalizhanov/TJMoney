@@ -26,6 +26,8 @@ public class ReminderScheduler {
                 now, CREATED.getValue());
 
         for (Reminder reminder : reminders) {
+            if (!reminder.getUser().getSendingToEmail()) continue;
+
             try {
                 emailService.sendReminder(
                         reminder.getUser().getEmail(),

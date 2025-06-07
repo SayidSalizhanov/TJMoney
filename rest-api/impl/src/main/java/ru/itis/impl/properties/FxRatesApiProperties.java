@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "fxrates.api")
+@ConfigurationProperties(prefix = "fxrates")
 public class FxRatesApiProperties {
     private String apiKey;
     private String baseUrl;
