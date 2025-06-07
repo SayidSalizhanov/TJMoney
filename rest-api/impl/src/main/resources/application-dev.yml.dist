@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: impl
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db
+    username:
+    password:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/changelog-master.yaml
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+    mail:
+      username:
+      password:
+      properties:
+        mail:
+          smtp:
+            auth: true
+            starttls:
+              enable: true
+            ssl:
+              enable: true
+
+aspect:
+  enabled: false
+
+cloudinary:
+  api-key:
+  api-secret:
+  cloud-name:
+
+fxrates:
+  api:
+    api-key:
+    base-url:

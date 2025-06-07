@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Настройки группы</title>
+    <link rel="stylesheet" th:href="@{/css/group/settings.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content-wrapper">
+    <div class="content">
+        <h2>Настройки группы</h2>
+
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+        <form th:action="@{/groups/{id}/settings(id=${settings.id})}" method="post" class="settings-form">
+            <input type="hidden" name="_method" value="PUT">
+
+            <div class="form-group">
+                <label for="name">Название группы:</label>
+                <input type="text" id="name" name="name" th:value="${settings.name}">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Описание:</label>
+                <textarea id="description" name="description" th:text="${settings.description}"></textarea>
+            </div>
+
+            <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+
+            <button type="submit" class="save-button">Сохранить изменения</button>
+        </form>
+
+        <div th:if="${settings.userRole.toUpperCase() == 'ADMIN'}">
+            <form th:action="@{/groups/{id}/settings(id=${settings.id})}" method="POST" class="delete-form">
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit" class="delete-button">Удалить группу</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

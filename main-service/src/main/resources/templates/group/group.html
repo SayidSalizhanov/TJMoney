@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Группа</title>
+    <link rel="stylesheet" th:href="@{/css/group/group.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content-wrapper">
+    <div class="content">
+        <div class="info">
+            <h2>Информация о группе</h2>
+            <p>ID: <span th:text="${group.id}"></span></p>
+            <p>Название: <span th:text="${group.name}"></span></p>
+            <p>Создана: <span th:text="${group.createdAt}"></span></p>
+            <p>Описание: <span th:text="${group.description}"></span></p>
+        </div>
+
+        <div class="button-group">
+            <div th:if="${group.userRole.toUpperCase() == 'ADMIN'}">
+                <form th:action="@{/groups/{id}/settings(id=${group.id})}" method="GET">
+                    <button type="submit" class="nav-button">Настройки</button>
+                </form>
+            </div>
+
+            <form th:action="@{/groups/{id}/members(id=${group.id})}" method="GET">
+                <button type="submit" class="nav-button">Участники</button>
+            </form>
+
+            <form action="/transactions" method="GET">
+                <input type="hidden" name="groupId" th:value="${group.id}">
+                <button type="submit" class="nav-button">Транзакции</button>
+            </form>
+
+            <form th:action="@{/groups/{id}/chat(id=${group.id})}" method="GET">
+                <button type="submit" class="nav-button">Чат группы</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <form th:action="@{/groups/{id}(id=${group.id})}" method="GET" class="filter-form">
+
+            <label for="incomePeriod">Выбрать период:</label>
+            <select id="incomePeriod" name="period">
+                <option value="all">Все время</option>
+                <option value="day">День</option>
+                <option value="month">Месяц</option>
+                <option value="year">Год</option>
+            </select>
+            <button type="submit">Применить</button>
+        </form>
+
+        <div class="financial-section" th:if="${group.transactionsGenerals != null}">
+            <div class="financial-info">
+                <h2>Доходы</h2>
+                <p><strong>Общий доход:</strong> <span th:text="${group.transactionsGenerals[0]['Доход']}"/></p>
+                <p><strong>Заработная плата:</strong> <span th:text="${group.transactionsGenerals[0]['Заработная плата']}"/></p>
+                <p><strong>Прибыль от бизнеса:</strong> <span th:text="${group.transactionsGenerals[0]['Прибыль от бизнеса']}"/></p>
+                <p><strong>Дивиденты:</strong> <span th:text="${group.transactionsGenerals[0]['Дивиденты']}"/></p>
+                <p><strong>Аренда:</strong> <span th:text="${group.transactionsGenerals[0]['Аренда']}"/></p>
+                <p><strong>Премии и бонусы:</strong> <span th:text="${group.transactionsGenerals[0]['Премии и бонусы']}"/></p>
+                <p><strong>Интересы:</strong> <span th:text="${group.transactionsGenerals[0]['Интересы']}"/></p>
+                <p><strong>Пенсии и пособия:</strong> <span th:text="${group.transactionsGenerals[0]['Пенсии и пособия']}"/></p>
+                <p><strong>Другое:</strong> <span th:text="${group.transactionsGenerals[0]['Другое']}"/></p>
+            </div>
+
+            <div class="financial-info">
+                <h2>Расходы</h2>
+                <p><strong>Общие расходы:</strong> <span th:text="${group.transactionsGenerals[1]['Расход']}"/></p>
+                <p><strong>Еда и напитки:</strong> <span th:text="${group.transactionsGenerals[1]['Еда и напитки']}"/></p>
+                <p><strong>Транспорт:</strong> <span th:text="${group.transactionsGenerals[1]['Транспорт']}"/></p>
+                <p><strong>Жилье:</strong> <span th:text="${group.transactionsGenerals[1]['Жилье']}"/></p>
+                <p><strong>Развлечения:</strong> <span th:text="${group.transactionsGenerals[1]['Развлечения']}"/></p>
+                <p><strong>Одежда:</strong> <span th:text="${group.transactionsGenerals[1]['Одежда']}"/></p>
+                <p><strong>Здоровье:</strong> <span th:text="${group.transactionsGenerals[1]['Здоровье']}"/></p>
+                <p><strong>Образование:</strong> <span th:text="${group.transactionsGenerals[1]['Образование']}"/></p>
+                <p><strong>Другое:</strong> <span th:text="${group.transactionsGenerals[1]['Другое']}"/></p>
+            </div>
+        </div>
+
+        <hr><br>
+
+        <div class="button-group-wrapper">
+            <div class="button-group">
+                <form action="/goals" method="GET">
+                    <input type="hidden" name="groupId" th:value="${group.id}">
+                    <button type="submit" class="goal-button">Цели</button>
+                </form>
+
+                <form action="/reminders" method="GET">
+                    <input type="hidden" name="groupId" th:value="${group.id}">
+                    <button type="submit" class="reminder-button">Напоминания</button>
+                </form>
+
+                <form action="/records" method="GET">
+                    <input type="hidden" name="groupId" th:value="${group.id}">
+                    <button type="submit" class="record-button">Записи</button>
+                </form>
+            </div>
+
+            <div th:if="${group.userRole.toUpperCase() == 'MEMBER'}">
+                <form th:action="@{/groups/{id}(id=${group.id})}" method="post">
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" class="logout-button">Покинуть группу</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

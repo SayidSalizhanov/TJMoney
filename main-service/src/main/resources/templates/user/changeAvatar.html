@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Смена аватара</title>
+    <link rel="stylesheet" th:href="@{/css/user/changeAvatar.css}">
+</head>
+<body class="content-body">
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content-wrapper">
+    <div class="content">
+        <h2>Смена аватара</h2>
+        <div class="avatar-preview mb-3">
+            <img th:src="${urlPhoto}" alt="Avatar" class="rounded-circle" width="250" height="250">
+        </div>
+
+        <form th:action="@{/user/changeAvatar}" method="post" enctype="multipart/form-data" class="avatar-form mb-4">
+            <input type="hidden" name="_method" value="patch">
+
+            <div class="form-group">
+                <label for="avatarImage">Сменить аватар</label>
+                <input type="file" name="avatarImage" id="avatarImage" class="form-control-file" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn-success">Загрузить аватар</button>
+        </form>
+
+        <form th:action="@{/user/changeAvatar}" method="post">
+            <input type="hidden" name="_method" value="delete">
+
+            <button type="submit" class="btn-success delete-button">Удалить аватар</button>
+        </form>
+    </div>
+</div>
+</body>
+</html> 

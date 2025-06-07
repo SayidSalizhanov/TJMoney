@@ -1,0 +1,47 @@
+plugins {
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+dependencies {
+    implementation project(':api')
+    implementation project(':db')
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'jakarta.mail:jakarta.mail-api:2.1.2'
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.mapstruct:mapstruct:1.6.0'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0'
+
+    implementation 'com.cloudinary:cloudinary-http44:1.39.0'
+    implementation 'com.cloudinary:cloudinary-core:1.39.0'
+
+    implementation 'com.opencsv:opencsv:5.11'
+
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'org.testcontainers:postgresql';
+    testImplementation 'org.testcontainers:junit-jupiter';
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += [
+            '-Amapstruct.suppressGeneratorTimestamp=true',
+            '-Amapstruct.defaultComponentModel=spring'
+    ]
+}

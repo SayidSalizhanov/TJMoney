@@ -1,1 +1,56 @@
-good luck
+version: '3.8'
+
+services:
+  main-service:
+    build:
+      context: ./main-service
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - API_BASE_URL=http://rest-api:8080
+    depends_on:
+      - rest-api
+    networks:
+      - app-network
+
+  rest-api:
+    build:
+      context: ./rest-api
+      dockerfile: impl/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/finance_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - JWT_SECRET=your_jwt_secret_key_here_make_it_long_and_secure_in_production
+      - JWT_EXPIRATION=86400000
+      - FX_RATES_API_KEY=fxr_live_a32c31abe0f8a86a0b443eaf14cb7036146f
+      - FX_RATES_BASE_URL=https://api.fxratesapi.com/latest
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=finance_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

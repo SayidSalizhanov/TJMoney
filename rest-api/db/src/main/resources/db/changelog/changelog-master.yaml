@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - include:
+      file: changeset/ddl/v1__create_users_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__drop_username_unique_index_users_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_groups_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_applications_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_articles_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_avatars_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_goals_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_group_members_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_records_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_reminders_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_transactions_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v3__create_roles_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v2__create_users_roles_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/dml/v1__insert_roles.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__create_chat_messages_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: changeset/ddl/v1__drop_sending_to_telegram_field_users_table.sql
+      relativeToChangelogFile: true

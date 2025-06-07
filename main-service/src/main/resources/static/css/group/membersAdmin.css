@@ -1,0 +1,120 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('/images/background2.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-color: #f4f4f4;
+    font-size: 16px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    width: 100%;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /*justify-content: center;*/
+    flex: 1;
+}
+
+.content {
+    width: 80%;
+    padding: 20px;
+    /*background-color: #fff;*/
+    border-radius: 5px;
+    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.applications-form {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.member {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.member p {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+strong {
+    font-weight: bold;
+}
+
+.nav-button, .delete-button, .view-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.nav-button {
+    background-color: #00819c;
+}
+
+.nav-button:hover {
+    background-color: #0056b3;
+}
+
+.view-button {
+    background-color: #b1b1b1;
+}
+
+.view-button:hover {
+    background-color: #6a6a6a;
+}
+
+.delete-button {
+    background-color: #dc3545;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.delete-button.disabled {
+    background-color: grey; !important;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.button-member-container {
+    display: flex;
+    gap: 10px;
+}

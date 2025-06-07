@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Транзакция</title>
+    <link rel="stylesheet" th:href="@{/css/transactions/transaction.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <div class="transaction-details">
+        <h2 style="color: white">Детали транзакции</h2>
+        
+        <div class="info-block" style="color: white;">
+            <p>Сумма: <span th:text="${transaction.amount}"></span></p>
+            <p>Тип: <span th:text="${transaction.type}"></span></p>
+            <p>Категория: <span th:text="${transaction.category}"></span></p>
+            <p>Дата: <span th:text="${transaction.dateTime}"></span></p>
+            <p>Владелец: <span th:text="${transaction.ownerName}"></span></p>
+            <p>Описание: <span th:text="${transaction.description}"></span></p>
+        </div>
+
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+        <div class="actions">
+            <form th:action="@{/transactions/{id}(id=${id})}" method="POST" class="transaction-form">
+                <input type="hidden" name="_method" value="put">
+                
+                <div class="form-group">
+                    <label for="amount" style="color: white">Сумма:</label>
+                    <input type="number" id="amount" name="amount" min="0" max="1000000" th:value="${transaction.amount}" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="hidden" name="type" th:value="${transaction.type}">
+                </div>
+
+                <div class="form-group">
+                    <input type="hidden" name="category" th:value="${transaction.category}">
+                </div>
+
+                <div class="form-group">
+                    <label for="description" style="color: white">Описание:</label>
+                    <textarea id="description" name="description" th:text="${transaction.description}"></textarea>
+                </div>
+
+                <button type="submit" class="save-button">Сохранить</button>
+            </form>
+
+            <form th:action="@{/transactions/{id}(id=${id})}" method="POST" class="delete-form">
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit" class="delete-button">Удалить</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

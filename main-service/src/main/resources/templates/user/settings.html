@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Настройки пользователя</title>
+    <link rel="stylesheet" th:href="@{/css/user/settings.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content-wrapper">
+    <div class="content">
+        <div class="settings">
+            <h2>Настройки профиля</h2>
+
+            <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+            <div class="settings-section">
+                <h3>Основная информация</h3>
+                <form th:action="@{/user/settings}" method="POST" class="settings-form">
+                    <input type="hidden" name="_method" value="put">
+
+                    <div class="form-group">
+                        <label for="username">Имя пользователя:</label>
+                        <input type="text" id="username" name="username" th:value="${settings.username}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telegramId">Telegram:</label>
+                        <input type="text" id="telegramId" name="telegramId" th:value="${settings.telegramId}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sendingToEmail">Хотите получать напоминания и другую информацию на почту?</label>
+                        <input type="hidden" name="_sendingToEmail" value="false">
+                        <input type="checkbox" id="sendingToEmail" name="sendingToEmail"
+                               th:checked="${settings.sendingToEmail}">
+                    </div>
+
+                    <button type="submit" class="save-button">Сохранить изменения</button>
+                </form>
+            </div>
+
+            <div class="button-group">
+                <form th:action="@{/user/changePassword}" method="GET" class="settings-form-inline">
+                    <button type="submit" class="small-button">Сменить пароль</button>
+                </form>
+
+                <form th:action="@{/user/changeAvatar}" method="GET" class="settings-form-inline">
+                    <button type="submit" class="small-button photo-button">Сменить аватар</button>
+                </form>
+
+                <form th:action="@{/user/settings}" method="POST" class="settings-form-inline">
+                    <input type="hidden" name="_method" value="delete">
+
+                    <button type="submit" class="small-button delete-button">Удалить пользователя</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

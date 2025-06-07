@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Новая цель</title>
+    <link rel="stylesheet" th:href="@{/css/goals/new.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content">
+    <div class="create-goal">
+        <h2 style="color: white">Создание цели</h2>
+
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+        <form th:action="@{/goals/new}" method="POST" class="create-form">
+            <input type="hidden" name="groupId" th:value="${groupId}">
+
+            <div class="form-group">
+                <label for="title" style="color: white">Название:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="progress" style="color: white">Прогресс:</label>
+                <input type="number" id="progress" name="progress" min="0" max="100" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description" style="color: white">Описание:</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+
+            <button type="submit" class="save-button">Создать</button>
+        </form>
+    </div>
+</div>
+</body>
+</html> 
