@@ -24,13 +24,15 @@ public class GoalController {
     @GetMapping
     public String getGoalsPage(
             @RequestParam(value = "groupId", required = false) Long groupId,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "amount_per_page", defaultValue = "10", required = false) int size,
             Model model) {
 
         List<GoalListResponse> goals = goalService.getGoals(groupId, page, size);
         model.addAttribute("goals", goals);
         model.addAttribute("groupId", groupId);
+        model.addAttribute("page", page);
+        model.addAttribute("amountPerPage", size);
         return "goals/goals";
     }
 

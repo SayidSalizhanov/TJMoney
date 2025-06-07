@@ -25,12 +25,14 @@ public class RecordController {
     public String getRecordsPage(
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") int size,
             Model model) {
 
         List<RecordListResponse> records = recordService.getRecords(groupId, page, size);
         model.addAttribute("records", records);
         model.addAttribute("groupId", groupId);
+        model.addAttribute("page", page);
+        model.addAttribute("amountPerPage", size);
         return "records/records";
     }
 

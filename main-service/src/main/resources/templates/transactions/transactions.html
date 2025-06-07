@@ -4,6 +4,39 @@
     <meta charset="UTF-8">
     <title>Транзакции</title>
     <link rel="stylesheet" th:href="@{/css/transactions/transactions.css}">
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 5px;
+        }
+        .pagination a {
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .pagination a:hover {
+            background-color: #f5f5f5;
+        }
+        .pagination .active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .pagination .disabled {
+            color: #999;
+            pointer-events: none;
+        }
+        .page-size {
+            margin-left: 20px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -14,6 +47,28 @@
             <input type="hidden" name="groupId" th:value="${groupId}">
             <button type="submit" class="create-button">Создать транзакцию</button>
         </form>
+    </div>
+
+    <div class="pagination">
+        <a th:href="@{/transactions(page=${page - 1}, amount_per_page=${amountPerPage}, groupId=${groupId})}" 
+           th:classappend="${page == 0} ? 'disabled'">Предыдущая</a>
+        
+        <a th:href="@{/transactions(page=${page - 1}, amount_per_page=${amountPerPage}, groupId=${groupId})}" 
+           th:if="${page > 0}" th:text="${page}"></a>
+        <a th:href="@{/transactions(page=${page}, amount_per_page=${amountPerPage}, groupId=${groupId})}" 
+           class="active" th:text="${page + 1}"></a>
+        <a th:href="@{/transactions(page=${page + 1}, amount_per_page=${amountPerPage}, groupId=${groupId})}" 
+           th:if="${transactions.size() == amountPerPage}" th:text="${page + 2}"></a>
+        
+        <a th:href="@{/transactions(page=${page + 1}, amount_per_page=${amountPerPage}, groupId=${groupId})}" 
+           th:classappend="${transactions.size() < amountPerPage} ? 'disabled'">Следующая</a>
+        
+        <select class="page-size" onchange="changePageSize(this.value)">
+            <option value="5" th:selected="${amountPerPage == 5}">5 на странице</option>
+            <option value="10" th:selected="${amountPerPage == 10}">10 на странице</option>
+            <option value="20" th:selected="${amountPerPage == 20}">20 на странице</option>
+            <option value="50" th:selected="${amountPerPage == 50}">50 на странице</option>
+        </select>
     </div>
 
     <div class="transactions-list">
@@ -40,5 +95,13 @@
         <p>Тут ничего нет...</p>
     </div>
 </div>
+
+<script>
+function changePageSize(size) {
+    const groupId = document.querySelector('input[name="groupId"]').value;
+    window.location.href = `/transactions?page=0&amount_per_page=${size}${groupId ? '&groupId=' + groupId : ''}`;
+}
+</script>
+
 </body>
 </html> 

@@ -6,6 +6,40 @@
     <link rel="stylesheet" th:href="@{/css/user/userApplications.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
     <script th:src="@{/js/user/deleteUserApplications.js}" defer></script>
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 5px;
+        }
+        .pagination a {
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .pagination a:hover {
+            background-color: #f5f5f5;
+        }
+        .pagination .active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .pagination .disabled {
+            color: #999;
+            pointer-events: none;
+        }
+        .page-size {
+            margin-left: 20px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -13,6 +47,28 @@
 <div class="content">
     <div class="applications-list">
         <h2 style="color: white">Мои заявки на вступление в группы</h2>
+
+        <div class="pagination">
+            <a th:href="@{/user/applications(page=${page - 1}, amount_per_page=${amountPerPage})}" 
+               th:classappend="${page == 0} ? 'disabled'">Предыдущая</a>
+            
+            <a th:href="@{/user/applications(page=${page - 1}, amount_per_page=${amountPerPage})}" 
+               th:if="${page > 0}" th:text="${page}"></a>
+            <a th:href="@{/user/applications(page=${page}, amount_per_page=${amountPerPage})}" 
+               class="active" th:text="${page + 1}"></a>
+            <a th:href="@{/user/applications(page=${page + 1}, amount_per_page=${amountPerPage})}" 
+               th:if="${applications.size() == amountPerPage}" th:text="${page + 2}"></a>
+            
+            <a th:href="@{/user/applications(page=${page + 1}, amount_per_page=${amountPerPage})}" 
+               th:classappend="${applications.size() < amountPerPage} ? 'disabled'">Следующая</a>
+            
+            <select class="page-size" onchange="changePageSize(this.value)">
+                <option value="5" th:selected="${amountPerPage == 5}">5 на странице</option>
+                <option value="10" th:selected="${amountPerPage == 10}">10 на странице</option>
+                <option value="20" th:selected="${amountPerPage == 20}">20 на странице</option>
+                <option value="50" th:selected="${amountPerPage == 50}">50 на странице</option>
+            </select>
+        </div>
 
         <div th:each="applicationOne : ${applications}" class="application">
             <div class="application-info">
@@ -35,5 +91,12 @@
         </div>
     </div>
 </div>
+
+<script>
+function changePageSize(size) {
+    window.location.href = `/user/applications?page=0&amount_per_page=${size}`;
+}
+</script>
+
 </body>
 </html> 

@@ -68,12 +68,14 @@ public class TransactionController {
     public String getTransactions(
             @RequestParam(required = false) Long groupId,
             @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "10") Integer amountPerPage,
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
             Model model
     ) {
         List<TransactionListResponse> transactions = transactionService.getTransactions(groupId, page, amountPerPage);
         model.addAttribute("transactions", transactions);
         model.addAttribute("groupId", groupId);
+        model.addAttribute("page", page);
+        model.addAttribute("amountPerPage", amountPerPage);
         return "transactions/transactions";
     }
 

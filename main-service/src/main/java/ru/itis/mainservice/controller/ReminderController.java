@@ -28,7 +28,7 @@ public class ReminderController {
     public String getRemindersPage(
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") int size,
             Model model) {
 
         List<ReminderListResponse> reminders = reminderService.getReminders(groupId, page, size);
@@ -36,6 +36,8 @@ public class ReminderController {
         model.addAttribute("reminders", reminders);
         model.addAttribute("groupId", groupId);
         model.addAttribute("currentDateTime", LocalDateTime.now().format(formatter));
+        model.addAttribute("page", page);
+        model.addAttribute("amountPerPage", size);
         return "reminders/reminders";
     }
 

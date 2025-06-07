@@ -5,6 +5,40 @@
     <title>Администратор участников</title>
     <link rel="stylesheet" th:href="@{/css/group/membersAdmin.css}">
     <script th:src="@{/js/group/deleteMembers.js}" defer></script>
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 5px;
+        }
+        .pagination a {
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .pagination a:hover {
+            background-color: #f5f5f5;
+        }
+        .pagination .active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .pagination .disabled {
+            color: #999;
+            pointer-events: none;
+        }
+        .page-size {
+            margin-left: 20px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -16,31 +50,70 @@
         </form>
 
         <h2 style="color: white">Участники группы</h2>
-        <div class="members-list">
-            <div th:each="member : ${members}" class="member">
-                <p><strong>Пользователь:</strong> <span th:text="${member.username}"></span></p>
-                <p><strong>Дата присоединения:</strong> <span th:text="${member.joinedAt}"></span></p>
-                <p><strong>Роль:</strong> <span th:text="${member.role}"></span></p>
-                <div class="button-member-container">
-                    <form th:action="@{/users/{id}(id=${member.userId})}" method="GET" class="user-viewing-form">
-                        <button type="submit" class="view-button">Посмотреть</button>
-                    </form>
-                    <form th:if="${member.role == 'MEMBER'}"
-                          th:action="@{/groups/{id}/members(id=${groupId})}"
-                          method="post"
-                          class="delete-form"
-                          th:id="|delete-form-${member.userId}|">
-                        <input type="hidden" name="_method" value="delete">
-                        <input type="hidden" name="userIdForDelete" th:value="${member.userId}">
-                        <input type="hidden" name="groupId" th:value="${groupId}">
-                        <button type="submit"
-                                class="delete-button"
-                                th:id="|delete-button-${member.userId}|">Удалить</button>
-                    </form>
+
+        <div class="container">
+            <input type="hidden" name="groupId" th:value="${groupId}">
+            
+            <div class="pagination">
+                <a th:href="@{/groups/{id}/members(id=${groupId}, page=${page - 1}, amount_per_page=${amountPerPage})}" 
+                   th:classappend="${page == 0} ? 'disabled'">Предыдущая</a>
+                
+                <a th:href="@{/groups/{id}/members(id=${groupId}, page=${page - 1}, amount_per_page=${amountPerPage})}"
+                   th:if="${page > 0}" th:text="${page}"></a>
+                <a th:href="@{/groups/{id}/members(id=${groupId}, page=${page}, amount_per_page=${amountPerPage})}" 
+                   class="active" th:text="${page + 1}"></a>
+                <a th:href="@{/groups/{id}/members(id=${groupId}, page=${page + 1}, amount_per_page=${amountPerPage})}" 
+                   th:if="${members.size() == amountPerPage}" th:text="${page + 2}"></a>
+                
+                <a th:href="@{/groups/{id}/members(id=${groupId}, page=${page + 1}, amount_per_page=${amountPerPage})}"
+                   th:classappend="${members.size() < amountPerPage} ? 'disabled'">Следующая</a>
+                
+                <select class="page-size" onchange="changePageSize(this.value)">
+                    <option value="5" th:selected="${amountPerPage == 5}">5 на странице</option>
+                    <option value="10" th:selected="${amountPerPage == 10}">10 на странице</option>
+                    <option value="20" th:selected="${amountPerPage == 20}">20 на странице</option>
+                    <option value="50" th:selected="${amountPerPage == 50}">50 на странице</option>
+                </select>
+            </div>
+
+            <div class="members-list">
+                <div th:each="member : ${members}" class="member">
+                    <p><strong>Пользователь:</strong> <span th:text="${member.username}"></span></p>
+                    <p><strong>Дата присоединения:</strong> <span th:text="${member.joinedAt}"></span></p>
+                    <p><strong>Роль:</strong> <span th:text="${member.role}"></span></p>
+                    <div class="button-member-container">
+                        <form th:action="@{/users/{id}(id=${member.userId})}" method="GET" class="user-viewing-form">
+                            <button type="submit" class="view-button">Посмотреть</button>
+                        </form>
+                        <form th:if="${member.role == 'MEMBER'}"
+                              th:action="@{/groups/{id}/members(id=${groupId})}"
+                              method="post"
+                              class="delete-form"
+                              th:id="|delete-form-${member.userId}|">
+                            <input type="hidden" name="_method" value="delete">
+                            <input type="hidden" name="userIdForDelete" th:value="${member.userId}">
+                            <input type="hidden" name="groupId" th:value="${groupId}">
+                            <button type="submit"
+                                    class="delete-button"
+                                    th:id="|delete-button-${member.userId}|">Удалить</button>
+                        </form>
+                    </div>
                 </div>
+            </div>
+
+            <div class="empty-list" th:if="${#lists.isEmpty(members)}">
+                <p>Нет участников в группе</p>
             </div>
         </div>
     </div>
 </div>
+
+<script th:inline="javascript">
+function changePageSize(size) {
+    const groupId = /*[[${groupId}]]*/ '';
+    window.location.href = `/groups/${groupId}/members?page=0&amount_per_page=${size}`;
+}
+</script>
+
 </body>
 </html> 

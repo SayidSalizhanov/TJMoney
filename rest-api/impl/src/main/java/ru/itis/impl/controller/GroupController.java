@@ -23,8 +23,8 @@ public class GroupController implements GroupApi {
     private final ApplicationService applicationService;
 
     @Override
-    public List<GroupListResponse> getGroupsWhereUserNotJoined() {
-        return groupService.getWhereUserNotJoined();
+    public List<GroupListResponse> getGroupsWhereUserNotJoined(Integer page, Integer amountPerPage) {
+        return groupService.getWhereUserNotJoined(page, amountPerPage);
     }
 
     @Override

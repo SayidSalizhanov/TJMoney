@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface GroupService {
     GroupProfileResponse getById(Long groupId, String period);
-    List<GroupListResponse> getWhereUserNotJoined();
+    List<GroupListResponse> getWhereUserNotJoined(Integer page, Integer amountPerPage);
     void deleteGroupMember(Long id, Long userId);
     GroupSettingsResponse getSettings(Long id);
     void update(Long id, GroupSettingsRequest request);

@@ -20,6 +20,8 @@ public class ArticleController {
             @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
             Model model) {
         model.addAttribute("articles", articleService.getAllArticles(page, amountPerPage));
+        model.addAttribute("page", page);
+        model.addAttribute("amountPerPage", amountPerPage);
         return "mainPage";
     }
 } 

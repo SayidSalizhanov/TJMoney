@@ -59,21 +59,25 @@ public class UserController {
 
     @GetMapping("/groups")
     public String getUserGroups(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer amountPerPage,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
             Model model) {
         List<UserGroupResponse> groups = userService.getUserGroups(page, amountPerPage);
         model.addAttribute("groups", groups);
+        model.addAttribute("page", page);
+        model.addAttribute("amountPerPage", amountPerPage);
         return "user/groups";
     }
 
     @GetMapping("/applications")
-    public String getUserApplications(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer amountPerPage,
+    public String getUserApplicationsToGroup(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
             Model model) {
         List<ApplicationToGroupResponse> applications = userService.getUserApplicationsToGroup(page, amountPerPage);
         model.addAttribute("applications", applications);
+        model.addAttribute("page", page);
+        model.addAttribute("amountPerPage", amountPerPage);
         return "user/applications";
     }
 

@@ -25,9 +25,15 @@ public class GroupController {
     private final AuthService authService;
 
     @GetMapping
-    public String getGroupsWhereUserNotJoined(Model model) {
-        List<GroupListResponse> groups = groupService.getGroupsWhereUserNotJoined();
+    public String getGroupsWhereUserNotJoined(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
+            Model model
+    ) {
+        List<GroupListResponse> groups = groupService.getGroupsWhereUserNotJoined(page, amountPerPage);
         model.addAttribute("groups", groups);
+        model.addAttribute("page", page);
+        model.addAttribute("amountPerPage", amountPerPage);
         return "group/groups";
     }
 
@@ -129,12 +135,14 @@ public class GroupController {
     public String getGroupMembers(
             @PathVariable Long id,
             @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "10") Integer amountPerPage,
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
             Model model
     ) {
         List<GroupMemberResponse> members = groupService.getGroupMembers(id, page, amountPerPage);
         model.addAttribute("members", members);
         model.addAttribute("groupId", id);
+        model.addAttribute("page", page);
+        model.addAttribute("amountPerPage", amountPerPage);
 
         for (GroupMemberResponse member : members) {
             if (member.userId().equals(authService.getAuthenticatedUserId())) {
@@ -158,12 +166,14 @@ public class GroupController {
     public String getApplications(
             @PathVariable Long id,
             @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "10") Integer amountPerPage,
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage,
             Model model
     ) {
         List<ApplicationWithUserInfoResponse> applications = groupService.getApplications(id, page, amountPerPage);
         model.addAttribute("applications", applications);
         model.addAttribute("groupId", id);
+        model.addAttribute("page", page);
+        model.addAttribute("amountPerPage", amountPerPage);
         return "group/applications";
     }
 

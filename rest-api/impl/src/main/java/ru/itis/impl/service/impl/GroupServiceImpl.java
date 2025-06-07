@@ -74,7 +74,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GroupListResponse> getWhereUserNotJoined() {
+    public List<GroupListResponse> getWhereUserNotJoined(Integer page, Integer amountPerPage) {
         User user = userGroupRequireService.requireUserById(authService.getAuthenticatedUserId());
         List<GroupMember> groupMembers = groupMemberRepository.findAllByUser(user);
         List<Long> userGroups = groupMembers.stream()
@@ -89,11 +89,13 @@ public class GroupServiceImpl implements GroupService {
         excludedIds.addAll(userGroups);
         excludedIds.addAll(nonRejectedUserApplicationsGroupIds);
 
-        if (excludedIds.isEmpty()) return groupRepository.findAll().stream()
+        Pageable pageable = PageRequest.of(page, amountPerPage, Sort.by("name"));
+
+        if (excludedIds.isEmpty()) return groupRepository.findAll(pageable).stream()
                 .map(groupMapper::toGroupListResponse)
                 .toList();
 
-        return groupRepository.findByIdNotIn(excludedIds).stream()
+        return groupRepository.findByIdNotIn(excludedIds, pageable).stream()
                 .map(groupMapper::toGroupListResponse)
                 .toList();
     }

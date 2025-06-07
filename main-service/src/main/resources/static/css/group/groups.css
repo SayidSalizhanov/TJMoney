@@ -110,3 +110,35 @@ html, body {
     font-size: 2.5em;
     color: #333;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 5px;
+}
+.pagination a {
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.pagination a:hover {
+    background-color: #f5f5f5;
+}
+.pagination .active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+.pagination .disabled {
+    color: #999;
+    pointer-events: none;
+}
+.page-size {
+    margin-left: 20px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}

@@ -27,14 +27,18 @@ public class GroupService {
     private String apiBaseUrl;
     private static final String BASE_URL = "/api/groups";
 
-    public List<GroupListResponse> getGroupsWhereUserNotJoined() {
+    public List<GroupListResponse> getGroupsWhereUserNotJoined(Integer page, Integer amountPerPage) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiBaseUrl + BASE_URL)
+                .queryParam("page", page)
+                .queryParam("amount_per_page", amountPerPage);
+
         HttpHeaders headers = authService.getAuthHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<List<GroupListResponse>> response = restTemplate.exchange(
-                apiBaseUrl + BASE_URL,
+                builder.toUriString(),
                 HttpMethod.GET,
                 entity,
                 new ParameterizedTypeReference<List<GroupListResponse>>() {}

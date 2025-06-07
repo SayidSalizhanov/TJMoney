@@ -13,6 +13,28 @@
 
     <div class="groups-list">
         <h2 style="color: white">Доступные группы</h2>
+
+        <div class="pagination">
+            <a th:href="@{/groups(page=${page - 1}, amount_per_page=${amountPerPage})}"
+               th:classappend="${page == 0} ? 'disabled'">Предыдущая</a>
+
+            <a th:href="@{/groups(page=${page - 1}, amount_per_page=${amountPerPage})}"
+               th:if="${page > 0}" th:text="${page}"></a>
+            <a th:href="@{/groups(page=${page}, amount_per_page=${amountPerPage})}"
+               class="active" th:text="${page + 1}"></a>
+            <a th:href="@{/groups(page=${page + 1}, amount_per_page=${amountPerPage})}"
+               th:if="${groups.size() == amountPerPage}" th:text="${page + 2}"></a>
+
+            <a th:href="@{/groups(page=${page + 1}, amount_per_page=${amountPerPage})}"
+               th:classappend="${groups.size() < amountPerPage} ? 'disabled'">Следующая</a>
+
+            <select class="page-size" onchange="changePageSize(this.value)">
+                <option value="5" th:selected="${amountPerPage == 5}">5 на странице</option>
+                <option value="10" th:selected="${amountPerPage == 10}">10 на странице</option>
+                <option value="20" th:selected="${amountPerPage == 20}">20 на странице</option>
+                <option value="50" th:selected="${amountPerPage == 50}">50 на странице</option>
+            </select>
+        </div>
         
         <div th:each="group : ${groups}" class="group-wrapper">
             <div class="group-actions">
@@ -40,5 +62,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    function changePageSize(size) {
+        window.location.href = `/groups?page=0&amount_per_page=${size}`;
+    }
+</script>
 </body>
 </html> 

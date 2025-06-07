@@ -15,7 +15,10 @@ public interface GroupApi {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<GroupListResponse> getGroupsWhereUserNotJoined();
+    List<GroupListResponse> getGroupsWhereUserNotJoined(
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "amount_per_page", required = false, defaultValue = "10") Integer amountPerPage
+    );
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

@@ -1,5 +1,7 @@
 package ru.itis.impl.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +17,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     Optional<Group> findByName(String name);
 
-    List<Group> findByIdNotIn(List<Long> excludedIds);
+    Page<Group> findByIdNotIn(List<Long> excludedIds, Pageable pageable);
 
     @Modifying
     @Query("UPDATE Group g SET g.name = :name, g.description = :description WHERE g.id = :id")
