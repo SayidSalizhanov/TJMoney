@@ -1,46 +1,74 @@
+server:
+  port: 8080
+
 spring:
   application:
-    name: impl
+    name: rest-api
   datasource:
-    url: jdbc:postgresql://localhost:5432/db
-    username:
-    password:
+    url: jdbc:postgresql://localhost:5432/tj-money
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: validate
-    show-sql: false
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: ${SPRING_JPA_SHOW_SQL:false}
     properties:
       hibernate:
+        format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/changelog-master.yaml
   servlet:
     multipart:
-      max-file-size: 5MB
-      max-request-size: 5MB
-    mail:
-      username:
-      password:
-      properties:
-        mail:
-          smtp:
-            auth: true
-            starttls:
-              enable: true
-            ssl:
-              enable: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mail:
+    username: tjmoney@mail.ru
+    password: mtF3mq4Bu1xPwbkhUNub
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: true
 
 aspect:
   enabled: false
 
 cloudinary:
-  api-key:
-  api-secret:
-  cloud-name:
+  api-key: 864998561278635
+  api-secret: Vr4fsd2vm2OrybMZKdsjPkDG52U
+  cloud-name: dfmh8zgee
 
 fxrates:
-  api:
-    api-key:
-    base-url:
+#  api-key: ${FX_RATES_API_KEY:fxr_live_a32c31abe0f8a86a0b443eaf14cb7036146f}
+  api-key: fxr_live_a32c31abe0f8a86a0b443eaf14cb7036146f
+#  base-url: ${FX_RATES_BASE_URL:https://api.fxratesapi.com/latest}
+  base-url: https://api.fxratesapi.com/latest
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: true
+    filter: true
+  packages-to-scan: ru.itis.impl.controller
+  paths-to-match: /api/**
+
+logging:
+  level:
+    root: INFO
+    ru.itis.impl: DEBUG
+    org.springframework.security: INFO
+#    org.hibernate.SQL: DEBUG
+
+jwt:
+  secret: ${JWT_SECRET:your_jwt_secret_key_here_make_it_long_and_secure_in_production}
+  expiration: ${JWT_EXPIRATION:86400000}
