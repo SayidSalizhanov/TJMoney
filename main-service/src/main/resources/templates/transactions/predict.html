@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Прогноз трат</title>
+    <link rel="stylesheet" th:href="@{/css/transactions/transactions.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="content">
+    <h2>Прогноз трат на следующий месяц</h2>
+    <div th:if="${prediction != null}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Категория</th>
+                    <th>Сумма</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry : ${prediction.predicted_expenses.entrySet()}">
+                    <td th:text="${entry.key}"></td>
+                    <td th:text="${entry.value}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <p><b>Итого:</b> <span th:text="${prediction.total}"></span></p>
+    </div>
+    <div th:if="${prediction == null}">
+        <p>Нет данных для прогноза.</p>
+    </div>
+    <a href="/transactions" class="create-button">Назад к транзакциям</a>
+</div>
+</body>
+</html> 

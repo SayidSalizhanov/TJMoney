@@ -4,6 +4,7 @@ import ru.itis.dto.request.transaction.TransactionCreateRequest;
 import ru.itis.dto.request.transaction.TransactionSettingsRequest;
 import ru.itis.dto.response.transaction.TransactionListResponse;
 import ru.itis.dto.response.transaction.TransactionSettingsResponse;
+import ru.itis.dto.response.transaction.TransactionPredictResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -16,4 +17,5 @@ public interface TransactionService {
     List<TransactionListResponse> getAll(Long groupId, Integer page, Integer amountPerPage);
     Long create(Long groupId, TransactionCreateRequest request);
     List<Map<String, Integer>> getUserTransactionsGenerals(Long userId, String period);
+    TransactionPredictResponse predictUserExpenses();
 }

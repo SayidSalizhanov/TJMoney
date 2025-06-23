@@ -28,8 +28,16 @@ import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.TransactionService;
 import ru.itis.impl.service.UserGroupRequireService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.client.RestTemplate;
+import ru.itis.dto.request.transaction.TransactionPredictRequest;
+import ru.itis.dto.response.transaction.TransactionPredictResponse;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.*;
 
 import static ru.itis.impl.enums.GroupMemberStatusEnum.ADMIN;
@@ -45,6 +53,9 @@ public class TransactionServiceImpl implements TransactionService {
     private final GroupMemberRepository groupMemberRepository;
 
     private final UserGroupRequireService userGroupRequireService;
+
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     @Transactional
@@ -137,6 +148,43 @@ public class TransactionServiceImpl implements TransactionService {
                 .build();
 
         return transactionRepository.save(transaction).getId();
+    }
+
+    @Override
+    public TransactionPredictResponse predictUserExpenses() {
+        Long userId = authService.getAuthenticatedUserId();
+        // Собираем траты пользователя за последние 12 месяцев по категориям
+        List<Transaction> transactions = getUserTransactions(userId, "year");
+        Map<YearMonth, Map<String, Integer>> monthCategoryMap = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime yearAgo = now.minusYears(1);
+        for (Transaction t : transactions) {
+            if (!"Расход".equalsIgnoreCase(t.getType())) continue;
+            if (t.getDateTime().isBefore(yearAgo)) continue;
+            YearMonth ym = YearMonth.from(t.getDateTime());
+            monthCategoryMap.putIfAbsent(ym, new HashMap<>());
+            Map<String, Integer> catMap = monthCategoryMap.get(ym);
+            catMap.put(t.getCategory(), catMap.getOrDefault(t.getCategory(), 0) + t.getAmount());
+        }
+        // Формируем список из 12 месяцев (даже если по месяцу нет трат)
+        List<TransactionPredictRequest.MonthData> months = new ArrayList<>();
+        YearMonth thisMonth = YearMonth.from(now);
+        for (int i = 11; i >= 0; i--) {
+            YearMonth ym = thisMonth.minusMonths(i);
+            Map<String, Integer> cats = monthCategoryMap.getOrDefault(ym, new HashMap<>());
+            months.add(new TransactionPredictRequest.MonthData(ym.getMonthValue(), cats));
+        }
+        TransactionPredictRequest req = new TransactionPredictRequest(months);
+        String url = "http://localhost:8000/api/predict-expenses/";
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            String json = objectMapper.writeValueAsString(req);
+            HttpEntity<String> entity = new HttpEntity<>(json, headers);
+            return restTemplate.postForObject(url, entity, TransactionPredictResponse.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка сериализации запроса для ML-сервиса", e);
+        }
     }
 
     private List<Map<String, Integer>> getTransactionsGeneralsMaps(List<Transaction> transactions) {

@@ -14,6 +14,7 @@ import ru.itis.mainservice.dto.request.transaction.TransactionCreateRequest;
 import ru.itis.mainservice.dto.request.transaction.TransactionSettingsRequest;
 import ru.itis.mainservice.dto.response.transaction.TransactionListResponse;
 import ru.itis.mainservice.dto.response.transaction.TransactionSettingsResponse;
+import ru.itis.mainservice.dto.response.transaction.TransactionPredictResponse;
 
 import java.util.Collections;
 import java.util.List;
@@ -135,5 +136,19 @@ public class TransactionService {
             new ParameterizedTypeReference<List<Long>>() {},
             groupId
         ).getBody();
+    }
+
+    public TransactionPredictResponse predictUserExpenses() {
+        HttpHeaders headers = authService.getAuthHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        String url = apiBaseUrl + BASE_URL + "/predict-expenses";
+        ResponseEntity<TransactionPredictResponse> response = restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            entity,
+            TransactionPredictResponse.class
+        );
+        return response.getBody();
     }
 } 
