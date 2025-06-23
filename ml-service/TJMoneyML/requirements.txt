@@ -8,3 +8,4 @@ scikit-learn
 # REST API
 djangorestframework>=3.14.0
 djoser>=2.2.0
+gunicorn

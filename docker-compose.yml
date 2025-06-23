@@ -48,6 +48,15 @@ services:
     networks:
       - app-network
 
+  ml-service:
+    build:
+      context: ./ml-service/TJMoneyML
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
