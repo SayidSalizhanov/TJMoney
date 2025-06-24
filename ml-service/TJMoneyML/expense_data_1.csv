@@ -1,6 +1,8 @@
 Date,Account,Category,Subcategory,Note,INR,Income/Expense,Note,Amount,Currency,Account
 3/2/2022 10:11,CUB - online payment,Food,,Brownie,50,Expense,,50,INR,50
-3/2/2022 10:11,CUB - online payment,Other,,To lended people,300,Expense,,300,INR,300
+3/2/2022 10:10,CUB - online payment,Здоровье,,Медицинский осмотр,5000,Expense,,5000,INR,5000
+3/2/2022 10:09,CUB - online payment,Здоровье,,Анализы крови,2500,Expense,,2500,INR,2500
+3/2/2022 10:08,CUB - online payment,Здоровье,,Консультация врача,1500,Expense,,1500,INR,1500
 3/1/2022 19:50,CUB - online payment,Food,,Dinner,78,Expense,,78,INR,78
 3/1/2022 18:56,CUB - online payment,Transportation,,Metro,30,Expense,,30,INR,30
 3/1/2022 18:22,CUB - online payment,Food,,Snacks,67,Expense,,67,INR,67
