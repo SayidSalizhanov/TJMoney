@@ -151,6 +151,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TransactionPredictResponse predictUserExpenses() {
         Long userId = authService.getAuthenticatedUserId();
         // Собираем траты пользователя за последние 12 месяцев по категориям
@@ -181,7 +182,8 @@ public class TransactionServiceImpl implements TransactionService {
             headers.setContentType(MediaType.APPLICATION_JSON);
             String json = objectMapper.writeValueAsString(req);
             HttpEntity<String> entity = new HttpEntity<>(json, headers);
-            return restTemplate.postForObject(url, entity, TransactionPredictResponse.class);
+            TransactionPredictResponse response = restTemplate.postForObject(url, entity, TransactionPredictResponse.class);
+            return response;
         } catch (Exception e) {
             throw new RuntimeException("Ошибка сериализации запроса для ML-сервиса", e);
         }

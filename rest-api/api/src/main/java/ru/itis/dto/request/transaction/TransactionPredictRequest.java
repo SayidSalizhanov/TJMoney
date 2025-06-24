@@ -2,6 +2,7 @@ package ru.itis.dto.request.transaction;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Map;
 public class TransactionPredictRequest {
     @Setter
     @Getter
+    @ToString
     public static class MonthData {
         private int month;
         private Map<String, Integer> categories;
