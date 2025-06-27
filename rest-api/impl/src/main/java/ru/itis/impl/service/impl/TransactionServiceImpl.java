@@ -28,8 +28,16 @@ import ru.itis.impl.repository.UserRepository;
 import ru.itis.impl.service.AuthService;
 import ru.itis.impl.service.TransactionService;
 import ru.itis.impl.service.UserGroupRequireService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.client.RestTemplate;
+import ru.itis.dto.request.transaction.TransactionPredictRequest;
+import ru.itis.dto.response.transaction.TransactionPredictResponse;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.*;
 
 import static ru.itis.impl.enums.GroupMemberStatusEnum.ADMIN;
@@ -45,6 +53,9 @@ public class TransactionServiceImpl implements TransactionService {
     private final GroupMemberRepository groupMemberRepository;
 
     private final UserGroupRequireService userGroupRequireService;
+
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     @Transactional
@@ -137,6 +148,110 @@ public class TransactionServiceImpl implements TransactionService {
                 .build();
 
         return transactionRepository.save(transaction).getId();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TransactionPredictResponse predictUserExpenses() {
+        Long userId = authService.getAuthenticatedUserId();
+        System.out.println("=== DEBUG: predictUserExpenses для пользователя " + userId + " ===");
+        
+        // Собираем траты пользователя за последние 12 месяцев по категориям
+        List<Transaction> transactions = getUserTransactions(userId, "year");
+        System.out.println("Найдено транзакций: " + transactions.size());
+        
+        Map<YearMonth, Map<String, Integer>> monthCategoryMap = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime yearAgo = now.minusYears(1);
+        
+        for (Transaction t : transactions) {
+            if (!"Расход".equalsIgnoreCase(t.getType())) continue;
+            if (t.getDateTime().isBefore(yearAgo)) continue;
+            YearMonth ym = YearMonth.from(t.getDateTime());
+            monthCategoryMap.putIfAbsent(ym, new HashMap<>());
+            Map<String, Integer> catMap = monthCategoryMap.get(ym);
+            catMap.put(t.getCategory(), catMap.getOrDefault(t.getCategory(), 0) + t.getAmount());
+        }
+        
+        System.out.println("Месяцев с расходами: " + monthCategoryMap.size());
+        monthCategoryMap.forEach((ym, data) -> {
+            System.out.println("Месяц " + ym + ": " + data);
+        });
+        
+        // Формируем список из 12 месяцев (даже если по месяцу нет трат)
+        List<TransactionPredictRequest.MonthData> months = new ArrayList<>();
+        YearMonth thisMonth = YearMonth.from(now);
+        for (int i = 11; i >= 0; i--) {
+            YearMonth ym = thisMonth.minusMonths(i);
+            Map<String, Integer> cats = monthCategoryMap.getOrDefault(ym, new HashMap<>());
+            months.add(new TransactionPredictRequest.MonthData(ym.getMonthValue(), cats));
+        }
+        TransactionPredictRequest req = new TransactionPredictRequest(months);
+        String url = "http://localhost:8000/api/predict-expenses/";
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            String json = objectMapper.writeValueAsString(req);
+            System.out.println("Запрос к ML-сервису: " + json);
+            HttpEntity<String> entity = new HttpEntity<>(json, headers);
+            TransactionPredictResponse response = restTemplate.postForObject(url, entity, TransactionPredictResponse.class);
+            System.out.println("Ответ от ML-сервиса: " + response);
+            
+            // Добавляем исторические данные за последние 6 месяцев
+            Map<String, Double> historicalExpenses = new HashMap<>();
+            YearMonth currentMonth = YearMonth.from(now);
+            for (int i = 5; i >= 0; i--) {
+                YearMonth ym = currentMonth.minusMonths(i);
+                String monthKey = ym.getMonth().getDisplayName(java.time.format.TextStyle.SHORT, java.util.Locale.getDefault()) + " " + ym.getYear();
+                Map<String, Integer> monthData = monthCategoryMap.getOrDefault(ym, new HashMap<>());
+                // Считаем общий итог за месяц
+                double totalForMonth = monthData.values().stream().mapToDouble(Integer::doubleValue).sum();
+                historicalExpenses.put(monthKey, totalForMonth);
+                System.out.println("Исторические данные для " + monthKey + ": " + totalForMonth);
+            }
+            
+            System.out.println("Итоговые исторические данные: " + historicalExpenses);
+            
+            // Создаем новый ответ с историческими данными
+            // Используем данные из response, если они есть, иначе создаем пустые
+            Map<String, Double> predictedExpenses = response != null && response.getPredicted_expenses() != null 
+                ? response.getPredicted_expenses() : new HashMap<>();
+            Double total = response != null ? response.getTotal() : 0.0;
+            String message = response != null ? response.getMessage() : "Прогноз недоступен";
+            
+            TransactionPredictResponse responseWithHistory = new TransactionPredictResponse(
+                predictedExpenses,
+                total,
+                message,
+                historicalExpenses
+            );
+            
+            System.out.println("Финальный ответ: " + responseWithHistory);
+            return responseWithHistory;
+        } catch (Exception e) {
+            System.out.println("Ошибка при обращении к ML-сервису: " + e.getMessage());
+            e.printStackTrace();
+            // Если ML-сервис недоступен или возвращает ошибку, создаем ответ только с историческими данными
+            Map<String, Double> historicalExpenses = new HashMap<>();
+            YearMonth currentMonth = YearMonth.from(now);
+            for (int i = 5; i >= 0; i--) {
+                YearMonth ym = currentMonth.minusMonths(i);
+                String monthKey = ym.getMonth().getDisplayName(java.time.format.TextStyle.SHORT, java.util.Locale.getDefault()) + " " + ym.getYear();
+                Map<String, Integer> monthData = monthCategoryMap.getOrDefault(ym, new HashMap<>());
+                double totalForMonth = monthData.values().stream().mapToDouble(Integer::doubleValue).sum();
+                historicalExpenses.put(monthKey, totalForMonth);
+                System.out.println("Fallback исторические данные для " + monthKey + ": " + totalForMonth);
+            }
+            
+            System.out.println("Fallback итоговые исторические данные: " + historicalExpenses);
+            
+            return new TransactionPredictResponse(
+                new HashMap<>(),
+                0.0,
+                "ML-сервис недоступен. Показаны только исторические данные.",
+                historicalExpenses
+            );
+        }
     }
 
     private List<Map<String, Integer>> getTransactionsGeneralsMaps(List<Transaction> transactions) {

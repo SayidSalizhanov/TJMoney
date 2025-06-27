@@ -8,6 +8,7 @@ import ru.itis.dto.request.transaction.TransactionCreateRequest;
 import ru.itis.dto.request.transaction.TransactionSettingsRequest;
 import ru.itis.dto.response.transaction.TransactionListResponse;
 import ru.itis.dto.response.transaction.TransactionSettingsResponse;
+import ru.itis.dto.response.transaction.TransactionPredictResponse;
 import ru.itis.impl.service.CsvParsingService;
 import ru.itis.impl.service.TransactionService;
 
@@ -48,5 +49,10 @@ public class TransactionController implements TransactionApi {
     @Override
     public List<Long> uploadCsvTransactions(Long groupId, MultipartFile csvFile) {
         return csvParsingService.parseCsv(groupId, csvFile);
+    }
+
+    @Override
+    public TransactionPredictResponse predictUserExpenses() {
+        return transactionService.predictUserExpenses();
     }
 }

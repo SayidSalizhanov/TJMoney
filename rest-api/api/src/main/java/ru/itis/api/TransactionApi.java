@@ -7,6 +7,7 @@ import ru.itis.dto.request.transaction.TransactionCreateRequest;
 import ru.itis.dto.request.transaction.TransactionSettingsRequest;
 import ru.itis.dto.response.transaction.TransactionListResponse;
 import ru.itis.dto.response.transaction.TransactionSettingsResponse;
+import ru.itis.dto.response.transaction.TransactionPredictResponse;
 
 import java.util.List;
 
@@ -53,4 +54,8 @@ public interface TransactionApi {
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestPart("file") MultipartFile csvFile
     );
+
+    @GetMapping("/predict-expenses")
+    @ResponseStatus(HttpStatus.OK)
+    TransactionPredictResponse predictUserExpenses();
 }

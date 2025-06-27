@@ -11,6 +11,7 @@ import ru.itis.mainservice.dto.request.transaction.TransactionCreateRequest;
 import ru.itis.mainservice.dto.request.transaction.TransactionSettingsRequest;
 import ru.itis.mainservice.dto.response.transaction.TransactionListResponse;
 import ru.itis.mainservice.dto.response.transaction.TransactionSettingsResponse;
+import ru.itis.mainservice.dto.response.transaction.TransactionPredictResponse;
 import ru.itis.mainservice.service.TransactionService;
 
 import java.time.LocalDateTime;
@@ -138,5 +139,12 @@ public class TransactionController {
         }
         transactionService.uploadCsvTransactions(groupId, file);
         return "redirect:/transactions" + (groupId != null ? "?groupId=" + groupId : "");
+    }
+
+    @GetMapping("/predict-expenses")
+    public String predictUserExpenses(Model model) {
+        TransactionPredictResponse prediction = transactionService.predictUserExpenses();
+        model.addAttribute("prediction", prediction);
+        return "transactions/predict";
     }
 } 

@@ -1,8 +1,23 @@
 spring:
   application:
     name: main-service
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+  thymeleaf:
+    cache: false
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 server:
   port: 3000
 
 api:
-  base-url: http://localhost:8080
+  base-url: ${API_BASE_URL:http://localhost:8080}
+
+logging:
+  level:
+    root: INFO
+    ru.itis.mainservice: DEBUG
